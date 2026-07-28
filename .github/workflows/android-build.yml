@@ -14,19 +14,19 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: '8.0.x' # Wechsel auf das stabile .NET 8 SDK
+        dotnet-version: '8.0.x'
 
     - name: Install MAUI Workload
       run: dotnet workload install maui
 
     - name: Restore Dependencies
-      # Errechnet die Abhängigkeiten direkt für .NET 8
-      run: dotnet restore /p:TargetFramework=net8.0-android
+      # Ignoriert den Support-Ablauf von .NET 8 beim Laden der Pakete
+      run: dotnet restore /p:CheckEolTargetFramework=false
 
     - name: Build and Publish APK
-      # Zwingt den Compiler, das Projekt als net8.0-android zu bauen
+      # Ignoriert den Support-Ablauf von .NET 8 beim Kompilieren der APK
       run: |
-        dotnet publish -c Release -f net8.0-android /p:TargetFramework=net8.0-android /p:AndroidPackageFormat=apk /p:AndroidUnsignedApk=true
+        dotnet publish -c Release -f net8.0-android /p:AndroidPackageFormat=apk /p:AndroidUnsignedApk=true /p:CheckEolTargetFramework=false
 
     - name: Upload APK Artifact
       uses: actions/upload-artifact@v4
