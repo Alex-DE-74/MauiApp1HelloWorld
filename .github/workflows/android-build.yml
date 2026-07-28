@@ -1,7 +1,7 @@
 name: Build Android APK
 
 on:
-  workflow_dispatch: # Ermöglicht den manuellen Start per Knopfdruck
+  workflow_dispatch:
 
 jobs:
   build:
@@ -14,19 +14,19 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: '6.0.x'
+        dotnet-version: '8.0.x' # Wechsel auf das stabile .NET 8 SDK
 
     - name: Install MAUI Workload
       run: dotnet workload install maui
 
     - name: Restore Dependencies
-      # 1. HIER HINZUGEFÜGT: Erlaubt das Laden der alten .NET 6 Pakete
-      run: dotnet restore /p:CheckEolTargetFramework=false
+      # Errechnet die Abhängigkeiten direkt für .NET 8
+      run: dotnet restore /p:TargetFramework=net8.0-android
 
     - name: Build and Publish APK
-      # 2. HIER HINZUGEFÜGT: Erlaubt das Kompilieren des alten .NET 6 Codes
+      # Zwingt den Compiler, das Projekt als net8.0-android zu bauen
       run: |
-        dotnet publish -c Release -f net6.0-android /p:AndroidPackageFormat=apk /p:AndroidUnsignedApk=true /p:CheckEolTargetFramework=false
+        dotnet publish -c Release -f net8.0-android /p:TargetFramework=net8.0-android /p:AndroidPackageFormat=apk /p:AndroidUnsignedApk=true
 
     - name: Upload APK Artifact
       uses: actions/upload-artifact@v4
