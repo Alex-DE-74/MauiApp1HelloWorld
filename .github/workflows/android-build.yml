@@ -5,7 +5,7 @@ on:
 
 jobs:
   build:
-    runs-with: windows-latest
+    runs-on: windows-latest
 
     steps:
     - name: Checkout Code
@@ -14,7 +14,7 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: '8.0.x' # Passen Sie dies an, falls das Projekt .NET 7 nutzt
+        dotnet-version: '6.0.x' # Abgestimmt auf das Projekt
 
     - name: Install MAUI Workload
       run: dotnet workload install maui
@@ -24,7 +24,7 @@ jobs:
 
     - name: Build and Publish APK
       run: |
-        dotnet publish -c Release -f net8.0-android /p:AndroidPackageFormat=apk /p:AndroidUnsignedApk=true
+        dotnet publish -c Release -f net6.0-android /p:AndroidPackageFormat=apk /p:AndroidUnsignedApk=true
 
     - name: Upload APK Artifact
       uses: actions/upload-artifact@v4
