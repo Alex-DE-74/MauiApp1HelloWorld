@@ -20,11 +20,10 @@ jobs:
       run: dotnet workload install maui
 
     - name: Restore Dependencies
-      # Ignoriert den Support-Ablauf von .NET 8 beim Laden der Pakete
-      run: dotnet restore /p:CheckEolTargetFramework=false
+      # LÖSUNG: Wir sagen dem Server, er soll NUR die Android-Abhängigkeiten wiederherstellen
+      run: dotnet restore /p:TargetFramework=net8.0-android /p:CheckEolTargetFramework=false
 
     - name: Build and Publish APK
-      # Ignoriert den Support-Ablauf von .NET 8 beim Kompilieren der APK
       run: |
         dotnet publish -c Release -f net8.0-android /p:AndroidPackageFormat=apk /p:AndroidUnsignedApk=true /p:CheckEolTargetFramework=false
 
