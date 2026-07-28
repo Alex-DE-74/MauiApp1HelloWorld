@@ -14,18 +14,19 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: '8.0.x'
+        dotnet-version: '10.0.x' # Wechsel auf das unterstützte .NET 10 SDK
 
     - name: Install MAUI Workload
       run: dotnet workload install maui
 
     - name: Restore Dependencies
-      # LÖSUNG: Wir sagen dem Server, er soll NUR die Android-Abhängigkeiten wiederherstellen
-      run: dotnet restore /p:TargetFramework=net8.0-android /p:CheckEolTargetFramework=false
+      # Zwingt den Server, die Pakete für das aktuelle .NET 10 zu laden
+      run: dotnet restore /p:TargetFramework=net10.0-android
 
     - name: Build and Publish APK
+      # Kompiliert die App direkt als zukunftssichere .NET 10 Android App
       run: |
-        dotnet publish -c Release -f net8.0-android /p:AndroidPackageFormat=apk /p:AndroidUnsignedApk=true /p:CheckEolTargetFramework=false
+        dotnet publish -c Release -f net10.0-android /p:TargetFramework=net10.0-android /p:AndroidPackageFormat=apk /p:AndroidUnsignedApk=true
 
     - name: Upload APK Artifact
       uses: actions/upload-artifact@v4
