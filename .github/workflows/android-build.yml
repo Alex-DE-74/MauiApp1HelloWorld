@@ -14,17 +14,19 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: '6.0.x' # Abgestimmt auf das Projekt
+        dotnet-version: '6.0.x'
 
     - name: Install MAUI Workload
       run: dotnet workload install maui
 
     - name: Restore Dependencies
-      run: dotnet restore
+      # 1. HIER HINZUGEFÜGT: Erlaubt das Laden der alten .NET 6 Pakete
+      run: dotnet restore /p:CheckEolTargetFramework=false
 
     - name: Build and Publish APK
+      # 2. HIER HINZUGEFÜGT: Erlaubt das Kompilieren des alten .NET 6 Codes
       run: |
-        dotnet publish -c Release -f net6.0-android /p:AndroidPackageFormat=apk /p:AndroidUnsignedApk=true
+        dotnet publish -c Release -f net6.0-android /p:AndroidPackageFormat=apk /p:AndroidUnsignedApk=true /p:CheckEolTargetFramework=false
 
     - name: Upload APK Artifact
       uses: actions/upload-artifact@v4
