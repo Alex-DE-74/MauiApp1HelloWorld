@@ -24,7 +24,7 @@ public partial class MainPage : ContentPage
 	{
 		InitializeComponent();
 	}
-
+/*
     // KORREKTUR: override wieder aktiv. Startet, sobald die App geladen ist
     // Startet vollautomatisch, sobald das Menü auf dem Bildschirm erscheint
     protected override async void OnAppearing()
@@ -49,14 +49,14 @@ public partial class MainPage : ContentPage
                 {
                     await TextToSpeech.Default.SpeakAsync("Hallo Elina! Schön dass du da bist. Lass uns den Tag fit verbringen");
                 }
-                catch { /* Lautlos fangen, falls Hardware blockiert */ }
+                catch { } // Lautlos fangen, falls Hardware blockiert 
             });
 
             // ERFÜLLT DIE COMPILER-WARNUNG: Nutzt das von .NET 10 verlangte DisplayAlertAsync
             await this.DisplayAlertAsync("Hallo Elina! 🏃‍♂️", "Schön dass du da bist. Lass uns den Tag fit verbringen", "Los geht's! 🚀");
         });
     }
-	
+*/	
 	private void OnCounterClicked(object sender, EventArgs e)
 	{
 		count++;
