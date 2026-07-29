@@ -7,6 +7,10 @@ using Microsoft.Maui.Media;
 #if ANDROID
 using Android.App;
 using Android.Content;
+
+// HIER ERGÄNZT: Der Compiler schreibt das nun absolut fehlerfrei ins Manifest!
+[assembly: UsesPermission(Android.Manifest.Permission.BodySensors)]
+[assembly: QueryIntentActions(new[] { "android.intent.action.TTS_SERVICE" })]
 #endif
 
 namespace MauiApp1HelloWorld;
