@@ -1,3 +1,4 @@
+/*
 using System;
 using System.Threading.Tasks;
 using Microsoft.Maui.Controls;
@@ -11,6 +12,7 @@ using Android.Content;
 // HIER ERGÄNZT: Der Compiler schreibt das nun absolut fehlerfrei ins Manifest!
 //[assembly: UsesPermission(Android.Manifest.Permission.BodySensors)]
 #endif
+*/
 
 namespace MauiApp1HelloWorld;
 
