@@ -30,11 +30,11 @@ public partial class MainPage : ContentPage
         base.OnAppearing();
 
         // 1. Sensor-Rechte direkt beim allerersten Start abfragen
-        var status = await Permissions.CheckStatusAsync<Permissions.Sensors>();
-        if (status != PermissionStatus.Granted)
-        {
-            await Permissions.RequestAsync<Permissions.Sensors>();
-        }
+        //var status = await Permissions.CheckStatusAsync<Permissions.Sensors>();
+        //if (status != PermissionStatus.Granted)
+        //{
+        //    await Permissions.RequestAsync<Permissions.Sensors>();
+        //}
 
         // 2. PARALLELE BEGRÜSSUNG: Über den Dispatcher abgesichert, damit die UI nicht einfriert
         Dispatcher.Dispatch(async () =>
