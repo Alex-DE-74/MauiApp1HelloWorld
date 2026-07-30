@@ -222,7 +222,7 @@ public partial class MainPage : ContentPage
         DateTime jetzt = DateTime.Now;
         
         // Erstellt das Ziel-Datum für heute mit der gewünschten Uhrzeit
-        DateTime zielZeit = new DateTime(jetzt.Year, jetzt.Month, jetzz.Day, stunde, minute, 0);
+        DateTime zielZeit = new DateTime(jetzt.Year, jetzt.Month, jetzt.Day, stunde, minute, 0);
 
         // Falls die Uhrzeit für heute schon vorbei ist, stellen wir den Wecker für morgen ein
         if (zielZeit <= jetzt)
