@@ -35,12 +35,25 @@
                 Clicked="OnCounterClicked"
                 HorizontalOptions="Center" />
 
-              <Button
+            <Button
                 x:Name="ChallengeBtn"
                 Text="Start Challenge"
                 SemanticProperties.Hint="Shake your device 10 times"
                 Clicked="OnChallengeClicked"
                 HorizontalOptions="Center" />
+<!-- Ermöglicht dem Nutzer das Auswählen der Uhrzeit -->
+<TimePicker 
+    x:Name="MeinTimePicker"
+    Time="07:00:00"
+    Format="HH:mm"
+    HorizontalOptions="Center" />
+
+<!-- Der Button, der den ausgewählten Wecker aktiviert -->
+<Button
+    x:Name="AlarmBtn"
+    Text="Wecker stellen"
+    Clicked="OnAlarmStellenClicked"
+    HorizontalOptions="Center" />
 
         </VerticalStackLayout>
     </ScrollView>
