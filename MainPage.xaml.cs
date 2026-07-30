@@ -78,8 +78,8 @@ public partial class MainPage : ContentPage
 
 		SemanticScreenReader.Announce(CounterBtn.Text);
 
-		//StartShakeChallenge();
-		SetzeWeckerV2(10);
+		StartShakeChallenge();
+		//SetzeWeckerV2(10);
 	}
     private int _shakeCount = 0;
     private bool _isAlarmActive = false;
