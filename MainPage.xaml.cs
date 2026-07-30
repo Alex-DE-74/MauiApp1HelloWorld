@@ -77,7 +77,63 @@ public partial class MainPage : ContentPage
 			CounterBtn.Text = $"Clicked {count} times";
 
 		SemanticScreenReader.Announce(CounterBtn.Text);
+
+		StartShakeChallenge();
 	}
+    private int _shakeCount = 0;
+    private bool _isAlarmActive = false;
+
+    public void StartShakeChallenge()
+    {
+        MainThread.BeginInvokeOnMainThread(() =>
+        {
+            _isAlarmActive = true;
+            _shakeCount = 0;
+            CounterBtn.Text = "Schütteln: 0 / 10";
+
+            if (Accelerometer.Default.IsSupported && !Accelerometer.Default.IsMonitoring)
+            {
+                Accelerometer.Default.ReadingChanged += OnAccelerometerReadingChanged;
+                Accelerometer.Default.Start(SensorSpeed.UI);
+            }
+        });
+    }
+
+    private void OnAccelerometerReadingChanged(object? sender, AccelerometerChangedEventArgs e)
+    {
+        var data = e.Reading;
+        double gForce = Math.Sqrt(data.Acceleration.X * data.Acceleration.X + 
+                                  data.Acceleration.Y * data.Acceleration.Y + 
+                                  data.Acceleration.Z * data.Acceleration.Z);
+
+        if (gForce > 1.5) 
+        {
+            MainThread.BeginInvokeOnMainThread(() =>
+            {
+                if (!_isAlarmActive) return;
+
+                _shakeCount++;
+                CounterBtn.Text = $"Schütteln: {_shakeCount} / 10";
+
+                if (_shakeCount >= 10)
+                {
+                    StopShakeChallenge();
+                    CounterBtn.Text = "🎉 Geschafft! 🎉";
+                    _isAlarmActive = false;
+                    _shakeCount = 0;
+                }
+            });
+        }
+    }
+
+    private void StopShakeChallenge()
+    {
+        if (Accelerometer.Default.IsSupported && Accelerometer.Default.IsMonitoring)
+        {
+            Accelerometer.Default.ReadingChanged -= OnAccelerometerReadingChanged;
+            Accelerometer.Default.Stop();
+        }
+    }
 
 }
 
