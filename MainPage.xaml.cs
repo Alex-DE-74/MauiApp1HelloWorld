@@ -79,7 +79,7 @@ public partial class MainPage : ContentPage
 		SemanticScreenReader.Announce(CounterBtn.Text);
 
 		//StartShakeChallenge();
-		SetzeWecker(10);
+		SetzeWeckerV2(10);
 	}
     private int _shakeCount = 0;
     private bool _isAlarmActive = false;
@@ -159,4 +159,58 @@ public partial class MainPage : ContentPage
         }
 #endif
     }
+    public void SetzeWeckerV2(int sekundenBisAlarm)
+    {
+#if ANDROID
+        try
+        {
+            var context = Android.App.Application.Context;
+            var alarmManager = (Android.App.AlarmManager)context.GetSystemService(Android.Context.Context.AlarmService);
+
+            // Prüft ab Android 12 (API 31), ob wir die Erlaubnis für exakte Wecker haben
+            if (alarmManager != null && Android.OS.Build.VERSION.SdkInt >= Android.OS.BuildVersionCodes.S)
+            {
+                if (!alarmManager.CanScheduleExactAlarms())
+                {
+                    MainThread.BeginInvokeOnMainThread(async () =>
+                    {
+                        bool oeffnen = await this.DisplayAlertAsync(
+                            "Berechtigung nötig ⚠️", 
+                            "Bitte erlaube der App in den Android-Einstellungen, exakte Wecker zu stellen.", 
+                            "Zu den Einstellungen", 
+                            "Abbrechen");
+
+                        if (oeffnen)
+                        {
+                            var intentSettings = new Android.Content.Intent(Android.Provider.Settings.ActionRequestScheduleExactAlarm);
+                            intentSettings.AddFlags(Android.Content.Intent.FlagsActivityNewTask);
+                            context.StartActivity(intentSettings);
+                        }
+                    });
+                    return; // Stoppt hier, bis das Recht erteilt wurde
+                }
+            }
+
+            // Wecker stellen
+            var intent = new Android.Content.Intent(context, typeof(AlarmReceiver));
+            var pendingIntent = Android.App.PendingIntent.GetBroadcast(
+                context, 
+                0, 
+                intent, 
+                Android.App.PendingIntentFlags.UpdateCurrent | Android.App.PendingIntentFlags.Immutable);
+
+            long triggerAtMs = Java.Lang.JavaSystem.CurrentTimeMillis() + (sekundenBisAlarm * 1000);
+
+            if (alarmManager != null)
+            {
+                alarmManager.SetExactAndAllowWhileIdle(Android.App.AlarmType.RtcWakeup, triggerAtMs, pendingIntent);
+            }
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Wecker Fehler: {ex.Message}");
+        }
+#endif
+    }
+
 }
