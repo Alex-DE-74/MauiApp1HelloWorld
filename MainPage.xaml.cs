@@ -79,7 +79,7 @@ public partial class MainPage : ContentPage
 		SemanticScreenReader.Announce(CounterBtn.Text);
 
 		//StartShakeChallenge();
-		SetzeWecker();
+		SetzeWecker(10);
 	}
     private int _shakeCount = 0;
     private bool _isAlarmActive = false;
@@ -148,14 +148,13 @@ public partial class MainPage : ContentPage
             intent, 
             Android.App.PendingIntentFlags.UpdateCurrent | Android.App.PendingIntentFlags.Immutable);
 
-        var alarmManager = (Android.App.AlarmManager)context.GetSystemService(Android.Context.Context.AlarmService);
+        var alarmManager = (Android.App.AlarmManager)context.GetSystemService(Android.Content.Context.AlarmService);
         
-        // Berechnet die Zielzeit in Millisekunden ab jetzt
         long triggerAtMs = Java.Lang.JavaSystem.CurrentTimeMillis() + (sekundenBisAlarm * 1000);
 
         if (alarmManager != null)
         {
-            // Setzt den Wecker so, dass er das Gerät aus dem Tiefschlaf aufweckt (RTC_WAKEUP)
+            // KORREKTUR: Nutzt die unter .NET 10 korrekte Android-Konstante direkt aus dem AlarmManager
             alarmManager.SetExactAndAllowWhileIdle(Android.App.AlarmType.RtcWakeup, triggerAtMs, pendingIntent);
         }
 #endif
