@@ -166,7 +166,9 @@ public partial class MainPage : ContentPage
         try
         {
             var context = Android.App.Application.Context;
-            var alarmManager = (Android.App.AlarmManager)context.GetSystemService(Android.App.Context.AlarmService);
+            
+            // KORREKTUR: Nutzt Android.Content.Context für den AlarmService
+            var alarmManager = (Android.App.AlarmManager)context.GetSystemService(Android.Content.Context.AlarmService);
 
             // Prüft ab Android 12 (API 31), ob wir die Erlaubnis für exakte Wecker haben
             if (alarmManager != null && Android.OS.Build.VERSION.SdkInt >= Android.OS.BuildVersionCodes.S)
@@ -183,7 +185,6 @@ public partial class MainPage : ContentPage
 
                         if (oeffnen)
                         {
-                            // KORREKTUR: Korrekter Name des Intent-Flags für den Task-Start
                             var intentSettings = new Android.Content.Intent(Android.Provider.Settings.ActionRequestScheduleExactAlarm);
                             intentSettings.AddFlags(Android.Content.ActivityFlags.NewTask);
                             context.StartActivity(intentSettings);
@@ -214,5 +215,6 @@ public partial class MainPage : ContentPage
         }
 #endif
     }
+
 	
 }
