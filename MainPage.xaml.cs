@@ -159,13 +159,14 @@ public partial class MainPage : ContentPage
         }
 #endif
     }
+
     public void SetzeWeckerV2(int sekundenBisAlarm)
     {
 #if ANDROID
         try
         {
             var context = Android.App.Application.Context;
-            var alarmManager = (Android.App.AlarmManager)context.GetSystemService(Android.Context.Context.AlarmService);
+            var alarmManager = (Android.App.AlarmManager)context.GetSystemService(Android.App.Context.AlarmService);
 
             // Prüft ab Android 12 (API 31), ob wir die Erlaubnis für exakte Wecker haben
             if (alarmManager != null && Android.OS.Build.VERSION.SdkInt >= Android.OS.BuildVersionCodes.S)
@@ -182,8 +183,9 @@ public partial class MainPage : ContentPage
 
                         if (oeffnen)
                         {
+                            // KORREKTUR: Korrekter Name des Intent-Flags für den Task-Start
                             var intentSettings = new Android.Content.Intent(Android.Provider.Settings.ActionRequestScheduleExactAlarm);
-                            intentSettings.AddFlags(Android.Content.Intent.FlagsActivityNewTask);
+                            intentSettings.AddFlags(Android.Content.ActivityFlags.NewTask);
                             context.StartActivity(intentSettings);
                         }
                     });
@@ -212,5 +214,5 @@ public partial class MainPage : ContentPage
         }
 #endif
     }
-
+	
 }
