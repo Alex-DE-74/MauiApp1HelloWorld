@@ -216,5 +216,26 @@ public partial class MainPage : ContentPage
 #endif
     }
 
+    // NEUE METHODE: Berechnet die Zeit bis zur Ziel-Uhrzeit und startet den Wecker
+    public void SetzeWeckerUhrzeit(int stunde, int minute)
+    {
+        DateTime jetzt = DateTime.Now;
+        
+        // Erstellt das Ziel-Datum für heute mit der gewünschten Uhrzeit
+        DateTime zielZeit = new DateTime(jetzt.Year, jetzt.Month, jetzen.Day, stunde, minute, 0);
+
+        // Falls die Uhrzeit für heute schon vorbei ist, stellen wir den Wecker für morgen ein
+        if (zielZeit <= jetzt)
+        {
+            zielZeit = zielZeit.AddDays(1);
+        }
+
+        // Berechnet die Differenz in Sekunden
+        TimeSpan zeitDifferenz = zielZeit - jetzt;
+        int sekundenBisAlarm = (int)zeitDifferenz.TotalSeconds;
+
+        // Ruft Ihre bestehende, funktionierende Methode mit den berechneten Sekunden auf
+        SetzeWeckerV2(sekundenBisAlarm);
+    }
 	
 }
