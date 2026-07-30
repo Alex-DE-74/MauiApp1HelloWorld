@@ -237,5 +237,14 @@ public partial class MainPage : ContentPage
         // Ruft Ihre bestehende, funktionierende Methode mit den berechneten Sekunden auf
         SetzeWeckerV2(sekundenBisAlarm);
     }
+private void OnAlarmStellenClicked(object sender, EventArgs e)
+{
+    // Holt die vom Benutzer im Menü ausgewählte Stunde und Minute
+    int ausgewaehlteStunde = MeinTimePicker.Time.Hours;
+    int ausgewaehlteMinute = MeinTimePicker.Time.Minutes;
+
+    // Ruft Ihre Berechnungsmethode mit den dynamischen Werten auf
+    SetzeWeckerUhrzeit(ausgewaehlteStunde, ausgewaehlteMinute);
+}
 	
 }
