@@ -24,7 +24,7 @@ public partial class MainPage : ContentPage
 	{
 		InitializeComponent();
 	}
-/*
+
     // KORREKTUR: override wieder aktiv. Startet, sobald die App geladen ist
     // Startet vollautomatisch, sobald das Menü auf dem Bildschirm erscheint
     protected override async void OnAppearing()
@@ -56,7 +56,7 @@ public partial class MainPage : ContentPage
             await this.DisplayAlertAsync("Hallo Elina! 🏃‍♂️", "Schön dass du da bist. Lass uns den Tag fit verbringen", "Los geht's! 🚀");
         });
     }
-*/	
+	
 	private void OnCounterClicked(object sender, EventArgs e)
 	{
 		count++;
