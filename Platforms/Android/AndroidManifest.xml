@@ -5,7 +5,7 @@
 	<uses-permission android:name="android.permission.INTERNET" />
 
 	<!-- ERGÄNZT: Erlaubt das Setzen von sekundengenauen Weckern (Ab Android 12+) -->
-	<uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+	<uses-permission android:name="android.permission.USE_EXACT_ALARM" />
 	
 	<!-- ERGÄNZT: Erlaubt es der App, das Handy aus dem Standby aufzuwecken -->
 	<uses-permission android:name="android.permission.WAKE_LOCK" />
