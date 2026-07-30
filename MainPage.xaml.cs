@@ -78,7 +78,8 @@ public partial class MainPage : ContentPage
 
 		SemanticScreenReader.Announce(CounterBtn.Text);
 
-		StartShakeChallenge();
+		//StartShakeChallenge();
+		SetzeWecker();
 	}
     private int _shakeCount = 0;
     private bool _isAlarmActive = false;
@@ -135,5 +136,28 @@ public partial class MainPage : ContentPage
         }
     }
 
-}
+    // Rufen Sie diese Methode in Ihrer "OnAlarmStellen"-Button-Methode auf
+    public void SetzeWecker(int sekundenBisAlarm)
+    {
+#if ANDROID
+        var context = Android.App.Application.Context;
+        var intent = new Android.Content.Intent(context, typeof(AlarmReceiver));
+        var pendingIntent = Android.App.PendingIntent.GetBroadcast(
+            context, 
+            0, 
+            intent, 
+            Android.App.PendingIntentFlags.UpdateCurrent | Android.App.PendingIntentFlags.Immutable);
 
+        var alarmManager = (Android.App.AlarmManager)context.GetSystemService(Android.Context.Context.AlarmService);
+        
+        // Berechnet die Zielzeit in Millisekunden ab jetzt
+        long triggerAtMs = Java.Lang.JavaSystem.CurrentTimeMillis() + (sekundenBisAlarm * 1000);
+
+        if (alarmManager != null)
+        {
+            // Setzt den Wecker so, dass er das Gerät aus dem Tiefschlaf aufweckt (RTC_WAKEUP)
+            alarmManager.SetExactAndAllowWhileIdle(Android.App.AlarmType.RtcWakeup, triggerAtMs, pendingIntent);
+        }
+#endif
+    }
+}
