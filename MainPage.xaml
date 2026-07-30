@@ -35,6 +35,13 @@
                 Clicked="OnCounterClicked"
                 HorizontalOptions="Center" />
 
+              <Button
+                x:Name="ChallengeBtn"
+                Text="Start Challenge"
+                SemanticProperties.Hint="Shake your device 10 times"
+                Clicked="OnChallengeClicked"
+                HorizontalOptions="Center" />
+
         </VerticalStackLayout>
     </ScrollView>
 
