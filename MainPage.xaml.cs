@@ -222,7 +222,7 @@ public partial class MainPage : ContentPage
         DateTime jetzt = DateTime.Now;
         
         // Erstellt das Ziel-Datum für heute mit der gewünschten Uhrzeit
-        DateTime zielZeit = new DateTime(jetzt.Year, jetzt.Month, jetzen.Day, stunde, minute, 0);
+        DateTime zielZeit = new DateTime(jetzt.Year, jetzt.Month, jetzz.Day, stunde, minute, 0);
 
         // Falls die Uhrzeit für heute schon vorbei ist, stellen wir den Wecker für morgen ein
         if (zielZeit <= jetzt)
@@ -240,8 +240,8 @@ public partial class MainPage : ContentPage
 private void OnAlarmStellenClicked(object sender, EventArgs e)
 {
     // Holt die vom Benutzer im Menü ausgewählte Stunde und Minute
-    int ausgewaehlteStunde = MeinTimePicker.Time.Hours;
-    int ausgewaehlteMinute = MeinTimePicker.Time.Minutes;
+    int ausgewaehlteStunde = MeinTimePicker.Time.Value.Hours;
+    int ausgewaehlteMinute = MeinTimePicker.Time.Value.Minutes;
 
     // Ruft Ihre Berechnungsmethode mit den dynamischen Werten auf
     SetzeWeckerUhrzeit(ausgewaehlteStunde, ausgewaehlteMinute);
