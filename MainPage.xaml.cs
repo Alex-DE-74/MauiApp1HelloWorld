@@ -159,18 +159,15 @@ public partial class MainPage : ContentPage
         }
 #endif
     }
-
     public void SetzeWeckerV2(int sekundenBisAlarm)
     {
 #if ANDROID
         try
         {
             var context = Android.App.Application.Context;
-            
-            // KORREKTUR: Nutzt Android.Content.Context für den AlarmService
             var alarmManager = (Android.App.AlarmManager)context.GetSystemService(Android.Content.Context.AlarmService);
 
-            // Prüft ab Android 12 (API 31), ob wir die Erlaubnis für exakte Wecker haben
+            // 1. WEGKER-PRÜFUNG (Bereits funktionierend)
             if (alarmManager != null && Android.OS.Build.VERSION.SdkInt >= Android.OS.BuildVersionCodes.S)
             {
                 if (!alarmManager.CanScheduleExactAlarms())
@@ -190,11 +187,35 @@ public partial class MainPage : ContentPage
                             context.StartActivity(intentSettings);
                         }
                     });
-                    return; // Stoppt hier, bis das Recht erteilt wurde
+                    return;
                 }
             }
 
-            // Wecker stellen
+            // 2. NEU: SPERRBILDSCHIRM-PRÜFUNG (Automatische Weiterleitung wie beim Wecker)
+            if (!Android.Provider.Settings.CanDrawOverlays(context))
+            {
+                MainThread.BeginInvokeOnMainThread(async () =>
+                {
+                    bool oeffnenSperrbildschirm = await this.DisplayAlertAsync(
+                        "Sperrbildschirm-Recht nötig 🔓", 
+                        "Damit der Wecker bei ausgeschaltetem Bildschirm anspringt, muss die App 'über anderen Apps eingeblendet' werden dürfen.", 
+                        "Zu den Einstellungen", 
+                        "Abbrechen");
+
+                    if (oeffnenSperrbildschirm)
+                    {
+                        // Leitet den Nutzer direkt auf die Android-Systemseite für Overlay/Sperrbildschirm-Rechte
+                        var intentOverlay = new Android.Content.Intent(
+                            Android.Provider.Settings.ActionManageOverlayPermission,
+                            Android.Net.Uri.Parse($"package:{context.PackageName}"));
+                        intentOverlay.AddFlags(Android.Content.ActivityFlags.NewTask);
+                        context.StartActivity(intentOverlay);
+                    }
+                });
+                return; // Stoppt das Stellen des Weckers, bis das Recht erteilt wurde
+            }
+
+            // 3. WECKER STELLEN (Wenn beide Rechte da sind)
             var intent = new Android.Content.Intent(context, typeof(AlarmReceiver));
             var pendingIntent = Android.App.PendingIntent.GetBroadcast(
                 context, 
@@ -206,8 +227,8 @@ public partial class MainPage : ContentPage
 
             if (alarmManager != null)
             {
-		var alarmClockInfo = new Android.App.AlarmManager.AlarmClockInfo(triggerAtMs, pendingIntent);
-        alarmManager.SetAlarmClock(alarmClockInfo, pendingIntent);
+                var alarmClockInfo = new Android.App.AlarmManager.AlarmClockInfo(triggerAtMs, pendingIntent);
+                alarmManager.SetAlarmClock(alarmClockInfo, pendingIntent);
             }
         }
         catch (Exception ex)
