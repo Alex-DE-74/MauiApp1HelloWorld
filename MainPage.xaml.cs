@@ -159,7 +159,7 @@ public partial class MainPage : ContentPage
         }
 #endif
     }
-    public void SetzeWecker(int sekundenBisAlarm)
+    public void SetzeWeckerV2(int sekundenBisAlarm)
     {
 #if ANDROID
         try
