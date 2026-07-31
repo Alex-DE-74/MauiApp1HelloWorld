@@ -217,6 +217,7 @@ public partial class MainPage : ContentPage
 
             // 3. WECKER STELLEN (Wenn beide Rechte da sind)
             var intent = new Android.Content.Intent(context, typeof(AlarmReceiver));
+			intent.AddFlags(Android.Content.ActivityFlags.IncludeStoppedPackages);
             var pendingIntent = Android.App.PendingIntent.GetBroadcast(
                 context, 
                 0, 
