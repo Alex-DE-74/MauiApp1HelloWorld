@@ -206,7 +206,8 @@ public partial class MainPage : ContentPage
 
             if (alarmManager != null)
             {
-                alarmManager.SetExactAndAllowWhileIdle(Android.App.AlarmType.RtcWakeup, triggerAtMs, pendingIntent);
+		var alarmClockInfo = new Android.App.AlarmManager.AlarmClockInfo(triggerAtMs, pendingIntent);
+        alarmManager.SetAlarmClock(alarmClockInfo, pendingIntent);
             }
         }
         catch (Exception ex)
