@@ -159,7 +159,7 @@ public partial class MainPage : ContentPage
         }
 #endif
     }
-    public void SetzeWeckerV2(int sekundenBisAlarm)
+    public void SetzeWecker(int sekundenBisAlarm)
     {
 #if ANDROID
         try
@@ -167,7 +167,7 @@ public partial class MainPage : ContentPage
             var context = Android.App.Application.Context;
             var alarmManager = (Android.App.AlarmManager)context.GetSystemService(Android.Content.Context.AlarmService);
 
-            // 1. WEGKER-PRÜFUNG (Bereits funktionierend)
+            // 1. WECKER-PRÜFUNG
             if (alarmManager != null && Android.OS.Build.VERSION.SdkInt >= Android.OS.BuildVersionCodes.S)
             {
                 if (!alarmManager.CanScheduleExactAlarms())
@@ -191,7 +191,7 @@ public partial class MainPage : ContentPage
                 }
             }
 
-            // 2. NEU: SPERRBILDSCHIRM-PRÜFUNG (Automatische Weiterleitung wie beim Wecker)
+            // 2. SPERRBILDSCHIRM-PRÜFUNG (Hier ist sie wieder drin!)
             if (!Android.Provider.Settings.CanDrawOverlays(context))
             {
                 MainThread.BeginInvokeOnMainThread(async () =>
@@ -204,7 +204,6 @@ public partial class MainPage : ContentPage
 
                     if (oeffnenSperrbildschirm)
                     {
-                        // Leitet den Nutzer direkt auf die Android-Systemseite für Overlay/Sperrbildschirm-Rechte
                         var intentOverlay = new Android.Content.Intent(
                             Android.Provider.Settings.ActionManageOverlayPermission,
                             Android.Net.Uri.Parse($"package:{context.PackageName}"));
@@ -212,17 +211,25 @@ public partial class MainPage : ContentPage
                         context.StartActivity(intentOverlay);
                     }
                 });
-                return; // Stoppt das Stellen des Weckers, bis das Recht erteilt wurde
+                return; 
             }
 
-            // 3. WECKER STELLEN (Wenn beide Rechte da sind)
+            // 3. WECKER STELLEN MIT ANDROID 14 HINTERGRUND-OPTION
             var intent = new Android.Content.Intent(context, typeof(AlarmReceiver));
-			intent.AddFlags(Android.Content.ActivityFlags.IncludeStoppedPackages);
+            intent.AddFlags(Android.Content.ActivityFlags.IncludeStoppedPackages);
+
+            var options = Android.App.ActivityOptions.MakeBasic();
+            if (Android.OS.Build.VERSION.SdkInt >= Android.OS.BuildVersionCodes.U) // Android 14+
+            {
+                options.SetPendingIntentBackgroundActivityStartMode(Android.App.BackgroundActivityStartMode.AllowByPermission);
+            }
+
             var pendingIntent = Android.App.PendingIntent.GetBroadcast(
                 context, 
                 0, 
                 intent, 
-                Android.App.PendingIntentFlags.UpdateCurrent | Android.App.PendingIntentFlags.Immutable);
+                Android.App.PendingIntentFlags.UpdateCurrent | Android.App.PendingIntentFlags.Immutable,
+                options.ToBundle()); 
 
             long triggerAtMs = Java.Lang.JavaSystem.CurrentTimeMillis() + (sekundenBisAlarm * 1000);
 
