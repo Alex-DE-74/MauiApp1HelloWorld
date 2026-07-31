@@ -159,7 +159,7 @@ public partial class MainPage : ContentPage
         }
 #endif
     }
-    public void SetzeWeckerV2(int sekundenBisAlarm)
+    public void SetzeWecker(int sekundenBisAlarm)
     {
 #if ANDROID
         try
@@ -167,7 +167,7 @@ public partial class MainPage : ContentPage
             var context = Android.App.Application.Context;
             var alarmManager = (Android.App.AlarmManager)context.GetSystemService(Android.Content.Context.AlarmService);
 
-            // 1. WECKER-PRÜFUNG
+            // 1. WECKER-PRÜFUNG (Prüft exakte Alarme ab Android 12)
             if (alarmManager != null && Android.OS.Build.VERSION.SdkInt >= Android.OS.BuildVersionCodes.S)
             {
                 if (!alarmManager.CanScheduleExactAlarms())
@@ -191,7 +191,7 @@ public partial class MainPage : ContentPage
                 }
             }
 
-            // 2. SPERRBILDSCHIRM-PRÜFUNG (Hier ist sie wieder drin!)
+            // 2. SPERRBILDSCHIRM-PRÜFUNG (Overlay-Berechtigung)
             if (!Android.Provider.Settings.CanDrawOverlays(context))
             {
                 MainThread.BeginInvokeOnMainThread(async () =>
@@ -214,22 +214,15 @@ public partial class MainPage : ContentPage
                 return; 
             }
 
-            // 3. WECKER STELLEN MIT ANDROID 14 HINTERGRUND-OPTION
+            // 3. WECKER RECHTSKONFORM STELLEN (Exakt 4 Parameter in .NET MAUI)
             var intent = new Android.Content.Intent(context, typeof(AlarmReceiver));
             intent.AddFlags(Android.Content.ActivityFlags.IncludeStoppedPackages);
-
-            var options = Android.App.ActivityOptions.MakeBasic();
-            if (Android.OS.Build.VERSION.SdkInt >= Android.OS.BuildVersionCodes.U) // Android 14+
-            {
-                options.SetPendingIntentBackgroundActivityStartMode(Android.App.BackgroundActivityStartMode.AllowByPermission);
-            }
 
             var pendingIntent = Android.App.PendingIntent.GetBroadcast(
                 context, 
                 0, 
                 intent, 
-                Android.App.PendingIntentFlags.UpdateCurrent | Android.App.PendingIntentFlags.Immutable,
-                options.ToBundle()); 
+                Android.App.PendingIntentFlags.UpdateCurrent | Android.App.PendingIntentFlags.Immutable); 
 
             long triggerAtMs = Java.Lang.JavaSystem.CurrentTimeMillis() + (sekundenBisAlarm * 1000);
 
