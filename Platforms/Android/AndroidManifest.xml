@@ -10,4 +10,8 @@
 	<!-- ERGÄNZT: Erlaubt es der App, das Handy aus dem Standby aufzuwecken -->
 	<uses-permission android:name="android.permission.WAKE_LOCK" />
 
+	<!-- Beide Spezial-Rechte für die maximale Kompatibilität beim Aufwachen -->
+	<uses-permission android:name="android.permission.DISABLE_KEYGUARD" />
+	<uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+
 </manifest>
