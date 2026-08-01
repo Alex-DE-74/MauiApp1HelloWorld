@@ -163,6 +163,23 @@ public partial class MainPage : ContentPage
     public async Task SetzeWeckerV2(int sekundenBisAlarm)
     {
 #if ANDROID
+    // Android 13+: Benachrichtigungsberechtigung anfordern
+    if (Android.OS.Build.VERSION.SdkInt >= Android.OS.BuildVersionCodes.Tiramisu)
+    {
+        var status = await Permissions.RequestAsync<Permissions.Notifications>();
+
+        if (status != PermissionStatus.Granted)
+        {
+            await this.DisplayAlertAsync(
+                "Benachrichtigungen erforderlich",
+                "Damit der Wecker Statusmeldungen anzeigen kann, müssen Benachrichtigungen erlaubt werden.",
+                "OK");
+
+            return;
+        }
+    }
+#endif	
+#if ANDROID
         try
         {
             var context = Android.App.Application.Context;
