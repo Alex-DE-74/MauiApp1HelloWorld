@@ -8,6 +8,15 @@ public class AlarmReceiver : BroadcastReceiver
 {
     public override void OnReceive(Context context, Intent intent)
     {
+    var builder = new AndroidX.Core.App.NotificationCompat.Builder(context, "alarm_channel_id")
+    .SetSmallIcon(Android.Resource.Drawable.IcLockIdleAlarm)
+    .SetContentTitle("DEBUG")
+    .SetContentText("AlarmReceiver wurde gestartet")
+    .SetPriority(AndroidX.Core.App.NotificationCompat.PriorityHigh);
+
+        var manager = (NotificationManager)context.GetSystemService(Context.NotificationService);
+        manager?.Notify(12345, builder.Build());
+        
         Android.Widget.Toast.MakeText(
         context,
         "AlarmReceiver gestartet",
