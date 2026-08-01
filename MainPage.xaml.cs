@@ -12,6 +12,7 @@ using Android.Content;
 
 #endif
 */
+using System.Threading.Tasks;
 
 namespace MauiApp1HelloWorld;
 
@@ -159,7 +160,7 @@ public partial class MainPage : ContentPage
         }
 #endif
     }
-    public void SetzeWeckerV2(int sekundenBisAlarm)
+    public async Task SetzeWeckerV2(int sekundenBisAlarm)
     {
 #if ANDROID
         try
@@ -240,7 +241,7 @@ public partial class MainPage : ContentPage
     }
 
     // NEUE METHODE: Berechnet die Zeit bis zur Ziel-Uhrzeit und startet den Wecker
-    public void SetzeWeckerUhrzeit(int stunde, int minute)
+    public async Task SetzeWeckerUhrzeit(int stunde, int minute)
     {
         DateTime jetzt = DateTime.Now;
         
@@ -258,16 +259,16 @@ public partial class MainPage : ContentPage
         int sekundenBisAlarm = (int)zeitDifferenz.TotalSeconds;
 
         // Ruft Ihre bestehende, funktionierende Methode mit den berechneten Sekunden auf
-        SetzeWeckerV2(sekundenBisAlarm);
+        await SetzeWeckerV2(sekundenBisAlarm);
     }
-private void OnAlarmStellenClicked(object sender, EventArgs e)
+private async void OnAlarmStellenClicked(object sender, EventArgs e)
 {
     // Holt die vom Benutzer im Menü ausgewählte Stunde und Minute
     int ausgewaehlteStunde = MeinTimePicker.Time.Value.Hours;
     int ausgewaehlteMinute = MeinTimePicker.Time.Value.Minutes;
 
     // Ruft Ihre Berechnungsmethode mit den dynamischen Werten auf
-    SetzeWeckerUhrzeit(ausgewaehlteStunde, ausgewaehlteMinute);
+    await SetzeWeckerUhrzeit(ausgewaehlteStunde, ausgewaehlteMinute);
 }
 	
 }
