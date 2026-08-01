@@ -167,7 +167,7 @@ public partial class MainPage : ContentPage
     // Android 13+: Benachrichtigungsberechtigung anfordern
     if (Android.OS.Build.VERSION.SdkInt >= Android.OS.BuildVersionCodes.Tiramisu)
     {
-        var status = await Permissions.RequestAsync<Permissions.Notifications>();
+        var status = await Permissions.RequestAsync<Permissions.PostNotifications>();
 
         if (status != PermissionStatus.Granted)
         {
