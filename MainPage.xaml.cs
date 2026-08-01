@@ -24,21 +24,6 @@ public partial class MainPage : ContentPage
 		InitializeComponent();
 	}
 
-protected override void OnCreate(Bundle? savedInstanceState)
-{
-    base.OnCreate(savedInstanceState);
-
-    if (Build.VERSION.SdkInt >= BuildVersionCodes.O)
-    {
-        var channel = new NotificationChannel(
-            "alarm_channel_id",
-            "Wecker",
-            NotificationImportance.High);
-
-        var manager = (NotificationManager)GetSystemService(NotificationService);
-        manager.CreateNotificationChannel(channel);
-    }
-}
     // KORREKTUR: override wieder aktiv. Startet, sobald die App geladen ist
     // Startet vollautomatisch, sobald das Menü auf dem Bildschirm erscheint
     protected override async void OnAppearing()
