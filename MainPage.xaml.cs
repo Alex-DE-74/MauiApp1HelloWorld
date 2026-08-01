@@ -13,6 +13,7 @@ using Android.Content;
 #endif
 */
 using System.Threading.Tasks;
+using Microsoft.Maui.ApplicationModel;
 
 namespace MauiApp1HelloWorld;
 
