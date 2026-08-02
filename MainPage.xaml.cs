@@ -168,7 +168,9 @@ public partial class MainPage : ContentPage
         Android.Provider.Settings.ActionRequestIgnoreBatteryOptimizations,
         Android.Net.Uri.Parse("package:" + contextBo.PackageName));
 
-    contextBo.StartActivity(intentBo);
+    intentBo.AddFlags(Android.Content.ActivityFlags.NewTask);
+	
+	contextBo.StartActivity(intentBo);
 #if ANDROID
     // Android 13+: Benachrichtigungsberechtigung anfordern
     if (Android.OS.Build.VERSION.SdkInt >= Android.OS.BuildVersionCodes.Tiramisu)
