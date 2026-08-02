@@ -49,7 +49,7 @@ public class AlarmReceiver : BroadcastReceiver
             .SetContentText("AlarmReceiver wurde gestartet")
             .SetPriority(AndroidX.Core.App.NotificationCompat.PriorityHigh)
             .SetCategory(AndroidX.Core.App.NotificationCompat.CategoryAlarm) 
-            .SetVisibility(AndroidX.Core.App.NotificationCompat.Builder.VisibilityPublic) 
+            .SetVisibility(AndroidX.Core.App.NotificationCompat.VisibilityPublic)
             .SetFullScreenIntent(fullScreenPendingIntent, true) 
             .SetAutoCancel(true);
 
