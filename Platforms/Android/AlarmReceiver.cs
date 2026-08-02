@@ -31,8 +31,56 @@ public class AlarmReceiver : BroadcastReceiver
             }
         });
     }
+    private void ZeigeKritischeNotification(Android.Content.Context context)
+    {
+    var channelId = "alarm_channel_id";
+    var manager = (Android.App.NotificationManager)context.GetSystemService(Android.Content.Context.NotificationService);
 
-private void ZeigeKritischeNotification(Android.Content.Context context)
+    // 1. Kanal einmalig mit hoher Wichtigkeit registrieren
+    if (Android.OS.Build.VERSION.SdkInt >= Android.OS.BuildVersionCodes.O)
+    {
+        var channel = new Android.App.NotificationChannel(channelId, "Kritische Alarme", Android.App.NotificationImportance.High)
+        {
+            LockscreenVisibility = Android.App.NotificationVisibility.Public
+        };
+        channel.EnableVibration(true);
+        channel.SetBypassDnd(true); 
+        manager?.CreateNotificationChannel(channel);
+    }
+
+    // 2. Das Intent für Klick und Vollbild (Öffnet Ihre MainActivity)
+    var intent = new Android.Content.Intent(context, typeof(MainActivity));
+    intent.AddFlags(Android.Content.ActivityFlags.ClearTop);
+    
+    var pendingIntent = Android.App.PendingIntent.GetActivity(
+        context, 
+        99, 
+        intent, 
+        Android.App.PendingIntentFlags.UpdateCurrent | Android.App.PendingIntentFlags.Immutable);
+
+    // 3. Der Builder (Kombination aus Ihrer Einfachheit + Android 14 Schutz)
+    var builder = new AndroidX.Core.App.NotificationCompat.Builder(context, channelId)
+        .SetSmallIcon(Android.Resource.Drawable.IcLockIdleAlarm)
+        .SetContentTitle("DEBUG")
+        .SetContentText("AlarmReceiver wurde gestartet")
+        
+        // Diese Parameter garantieren das Aufpoppen im Vorder- und Hintergrund:
+        .SetPriority(AndroidX.Core.App.NotificationCompat.PriorityMax) 
+        .SetDefaults(AndroidX.Core.App.NotificationCompat.DefaultAll) 
+        .SetVibrate(new long[] { 1000, 1000, 1000 }) // Harte Vibration erzwingen
+        .SetCategory(AndroidX.Core.App.NotificationCompat.CategoryAlarm) 
+        .SetVisibility(AndroidX.Core.App.NotificationCompat.VisibilityPublic) 
+        
+        // WICHTIG: Das sorgt für das Aufwachen im Hintergrund UND das Banner im Vordergrund
+        .SetContentIntent(pendingIntent) 
+        .SetFullScreenIntent(pendingIntent, true) 
+        
+        .SetAutoCancel(true);
+
+    manager?.Notify(12345, builder.Build());
+}
+
+private void ZeigeKritischeNotificationVx(Android.Content.Context context)
 {
     var channelId = "alarm_channel_id";
     var manager = (Android.App.NotificationManager)context.GetSystemService(Android.Content.Context.NotificationService);
