@@ -9,9 +9,9 @@ public class AlarmReceiver : BroadcastReceiver
     public override void OnReceive(Context context, Intent intent)
     {
         // Der Aufruf bleibt kurz und knackig
-        //ZeigeKritischeNotification(context);
+        ZeigeKritischeNotification(context);
 
-        SysAlert0(context);
+        //SysAlert0(context);
         
         // Toast       
         Android.Widget.Toast.MakeText(
@@ -46,8 +46,51 @@ private void SysAlert0(Android.Content.Context context)
     var manager = (NotificationManager)context.GetSystemService(Context.NotificationService);
     manager?.Notify(12345, builder.Build());
 }
+private void ZeigeKritischeNotification(Context context)
+{
+    // Wir nutzen eine frische Kanal-ID, damit Android die alten Einstellungen komplett vergisst
+    var channelId = "final_alarm_channel_v5";
+    var manager = (NotificationManager)context.GetSystemService(Context.NotificationService);
+
+    if (Android.OS.Build.VERSION.SdkInt >= Android.OS.BuildVersionCodes.O)
+    {
+        var channel = new Android.App.NotificationChannel(channelId, "Kritische Alarme", Android.App.NotificationImportance.High)
+        {
+            LockscreenVisibility = Android.App.NotificationVisibility.Public
+        };
+        channel.EnableVibration(true);
+        channel.SetBypassDnd(true);
+        manager?.CreateNotificationChannel(channel);
+    }
+
+    // Der Broadcast-Trick für den Sperrbildschirm (blockiert die UI im Vordergrund nicht)
+    var selfIntent = new Intent(context, typeof(AlarmReceiver));
+    var fullScreenPendingIntent = PendingIntent.GetBroadcast(
+        context, 
+        99, 
+        selfIntent, 
+        PendingIntentFlags.UpdateCurrent | PendingIntentFlags.Immutable);
+
+    // Exakt Ihr originaler Builder – erweitert um die Rechte für den Sperrbildschirm
+    var builder = new AndroidX.Core.App.NotificationCompat.Builder(context, channelId)
+        .SetSmallIcon(Android.Resource.Drawable.IcLockIdleAlarm)
+        .SetContentTitle("DEBUG")
+        .SetContentText("AlarmReceiver wurde gestartet")
+        
+        // Garantiert das Aufploppen im Vordergrund (Ihr funktionierender Zustand):
+        .SetPriority(AndroidX.Core.App.NotificationCompat.PriorityHigh)
+        
+        // Schützt den Sperrbildschirm und weckt ihn auf:
+        .SetVisibility(AndroidX.Core.App.NotificationCompat.VisibilityPublic)
+        .SetCategory(AndroidX.Core.App.NotificationCompat.CategoryAlarm)
+        .SetFullScreenIntent(fullScreenPendingIntent, true) 
+        
+        .SetAutoCancel(true);
+
+    manager?.Notify(12345, builder.Build());
+}
     
-    private void ZeigeKritischeNotification(Android.Content.Context context)
+    private void ZeigeKritischeNotificationVx3(Android.Content.Context context)
 {
     // Wir nutzen einen frischen Kanal, um jeglichen Cache-Fehler auszuschließen!
     var channelId = "final_alarm_channel_v3";
