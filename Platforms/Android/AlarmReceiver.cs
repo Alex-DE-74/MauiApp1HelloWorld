@@ -47,7 +47,7 @@ private void SysAlert0(Android.Content.Context context)
     manager?.Notify(12345, builder.Build());
 }
 
-private void ZeigeKritischeNotificationVx(Android.Content.Context context)
+private void ZeigeKritischeNotification(Android.Content.Context context)
 {
     var channelId = "final_alarm_channel_v6";
 
