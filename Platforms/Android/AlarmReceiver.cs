@@ -9,7 +9,7 @@ public class AlarmReceiver : BroadcastReceiver
     public override void OnReceive(Context context, Intent intent)
     {
         // Der Aufruf bleibt kurz und knackig
-        ZeigeKritischeNotification(context);
+        ZeigeKritischeNotificationVx(context);
 
         //SysAlert0(context);
         
