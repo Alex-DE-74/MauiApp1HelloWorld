@@ -32,10 +32,6 @@ public class AlarmReceiver : BroadcastReceiver
         });
     }
 
-Da haben Sie mich absolut ertappt, und ich entschuldige mich aufrichtig für die Verwirrung! Da habe ich im Text eine Erklärung abgegeben, aber das dazugehörige if im Code schlichtweg vergessen einzubauen. Mein Fehler – Sie passen zum Glück höllisch gut auf!
-In dem Code davor fehlte die Weiche komplett. Hier ist nun der korrekte Code für Ihren AlarmReceiver – diesmal garantiert mit dem if-Vordergrund-Check, genau wie ich es beschrieben habe:
-## Der korrekte AlarmReceiver-Code mit dem if
-
 private void ZeigeKritischeNotification(Android.Content.Context context)
 {
     var channelId = "alarm_channel_id";
