@@ -47,7 +47,101 @@ private void SysAlert0(Android.Content.Context context)
     manager?.Notify(12345, builder.Build());
 }
 
-private void ZeigeKritischeNotification(Android.Content.Context context)
+private void ZeigeKritischeNotificationVx(Android.Content.Context context)
+{
+    // Die mit der MainActivity synchronisierte Kanal-ID
+    var channelId = "final_alarm_channel_v6";
+
+    // 1. PRÜFUNG: LÄUFT DIE APP AKTUELL IM VORDERGRUND?
+    bool appIstImVordergrund = false;
+    var activityManager = (Android.App.ActivityManager)context.GetSystemService(Android.Content.Context.ActivityService);
+    var laufendeProzesse = activityManager?.RunningAppProcesses;
+    
+    if (laufendeProzesse != null)
+    {
+        foreach (var prozess in laufendeProzesse)
+        {
+            if (prozess.Importance == Android.App.Importance.Foreground && prozess.ProcessName == context.PackageName)
+            {
+                appIstImVordergrund = true;
+                break;
+            }
+        }
+    }
+
+    // 2. DIE STRUKTURELLE WEICHE (Vollständige Isolation von Buildern und Managern)
+    if (appIstImVordergrund)
+    {
+        // ─────────────────────────────────────────────────────────────────────────────
+        // WELT 1: APP IST OFFEN (Vordergrund-Banner erzwingen)
+        // ─────────────────────────────────────────────────────────────────────────────
+        
+        // Nutzt den standardmäßigen Cast, der für die AndroidX-Banner-Kompatibilität im Vordergrund sorgt
+        var managerVordergrund = (NotificationManager)context.GetSystemService(Context.NotificationService);
+        
+        if (Android.OS.Build.VERSION.SdkInt >= Android.OS.BuildVersionCodes.O)
+        {
+            var channel = new Android.App.NotificationChannel(channelId, "Kritische Alarme", Android.App.NotificationImportance.High);
+            managerVordergrund?.CreateNotificationChannel(channel);
+        }
+
+        // ISOLIERTER BUILDER: Basiert exakt auf Ihrem funktionierenden, puren 5-Zeiler.
+        // Enthält KEIN FullScreenIntent, da dieses unter HyperOS das Vordergrund-Banner blockiert.
+        var builderVordergrund = new AndroidX.Core.App.NotificationCompat.Builder(context, channelId)
+            .SetSmallIcon(Android.Resource.Drawable.IcLockIdleAlarm)
+            .SetContentTitle("DEBUG")
+            .SetContentText("AlarmReceiver wurde gestartet")
+            .SetPriority(AndroidX.Core.App.NotificationCompat.PriorityHigh) // Ihr verlässlicher Standardwert
+            .SetAutoCancel(true);
+
+        managerVordergrund?.Notify(12345, builderVordergrund.Build());
+    }
+    else
+    {
+        // ─────────────────────────────────────────────────────────────────────────────
+        // WELT 2: APP IST WEGGEWISCHT / HANDY GESPERRT (Sperrbildschirm aufwecken)
+        // ─────────────────────────────────────────────────────────────────────────────
+        
+        // ZWINGEND: Der harte, native Android-SDK-Cast, um die komplett tote App im Kernel-Kontext zu erreichen
+        var managerHintergrund = (Android.App.NotificationManager)context.GetSystemService(Android.Content.Context.NotificationService);
+        
+        if (Android.OS.Build.VERSION.SdkInt >= Android.OS.BuildVersionCodes.O)
+        {
+            var channel = new Android.App.NotificationChannel(channelId, "Kritische Alarme", Android.App.NotificationImportance.High)
+            {
+                LockscreenVisibility = Android.App.NotificationVisibility.Public
+            };
+            channel.EnableVibration(true);
+            channel.SetBypassDnd(true); // Umgeht optional "Bitte nicht stören" im Tiefschlaf
+            managerHintergrund?.CreateNotificationChannel(channel);
+        }
+
+        // Das Activity-Intent, welches das System zwingt, die App-Struktur im toten Zustand hochzufahren
+        var fullScreenIntent = new Android.Content.Intent(context, typeof(MainActivity));
+        var fullScreenPendingIntent = Android.App.PendingIntent.GetActivity(
+            context, 
+            99, 
+            fullScreenIntent, 
+            Android.App.PendingIntentFlags.UpdateCurrent | Android.App.PendingIntentFlags.Immutable);
+
+        // ISOLIERTER BUILDER: Exklusiv für den Sperrbildschirm.
+        // Das FullScreenIntent ist hier sicher eingesperrt und kann das Vordergrund-Banner im RAM niemals mutieren.
+        var builderHintergrund = new AndroidX.Core.App.NotificationCompat.Builder(context, channelId)
+            .SetSmallIcon(Android.Resource.Drawable.IcLockIdleAlarm)
+            .SetContentTitle("DEBUG")
+            .SetContentText("AlarmReceiver wurde gestartet")
+            .SetPriority(AndroidX.Core.App.NotificationCompat.PriorityMax) // Max-Priorität für den Kernel-Weckruf
+            .SetDefaults(AndroidX.Core.App.NotificationCompat.DefaultAll)  // Erzwingt physische Hardware-Signale (wichtig für HyperOS)
+            .SetCategory(AndroidX.Core.App.NotificationCompat.CategoryAlarm) 
+            .SetVisibility(AndroidX.Core.App.NotificationCompat.VisibilityPublic) 
+            .SetFullScreenIntent(fullScreenPendingIntent, true) // Weckt das schwarze Display physisch auf
+            .SetAutoCancel(true);
+
+        managerHintergrund?.Notify(12345, builderHintergrund.Build());
+    }
+}
+
+private void ZeigeKritischeNotificationVx6(Android.Content.Context context)
 {
     var channelId = "final_alarm_channel_v6";
 
