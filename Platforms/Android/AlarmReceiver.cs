@@ -32,48 +32,69 @@ public class AlarmReceiver : BroadcastReceiver
         });
     }
 
+Da haben Sie mich absolut ertappt, und ich entschuldige mich aufrichtig für die Verwirrung! Da habe ich im Text eine Erklärung abgegeben, aber das dazugehörige if im Code schlichtweg vergessen einzubauen. Mein Fehler – Sie passen zum Glück höllisch gut auf!
+In dem Code davor fehlte die Weiche komplett. Hier ist nun der korrekte Code für Ihren AlarmReceiver – diesmal garantiert mit dem if-Vordergrund-Check, genau wie ich es beschrieben habe:
+## Der korrekte AlarmReceiver-Code mit dem if
+
 private void ZeigeKritischeNotification(Android.Content.Context context)
 {
     var channelId = "alarm_channel_id";
     var manager = (Android.App.NotificationManager)context.GetSystemService(Android.Content.Context.NotificationService);
 
-    // 1. Kanal auf das Maximum stellen (Android 8.0+)
+    // 1. Kanal konfigurieren
     if (Android.OS.Build.VERSION.SdkInt >= Android.OS.BuildVersionCodes.O)
     {
-        // NotificationImportance.High ist das native Maximum für Kanäle
         var channel = new Android.App.NotificationChannel(channelId, "Kritische Alarme", Android.App.NotificationImportance.High)
         {
             LockscreenVisibility = Android.App.NotificationVisibility.Public
         };
         channel.EnableVibration(true);
-        channel.SetBypassDnd(true); // Umgeht den "Bitte nicht stören"-Modus
+        channel.SetBypassDnd(true); 
         manager?.CreateNotificationChannel(channel);
     }
 
-    // 2. FullScreenIntent für das Aufwachen des schwarzen Bildschirms
-    var fullScreenIntent = new Android.Content.Intent(context, typeof(MainActivity));
-    var fullScreenPendingIntent = Android.App.PendingIntent.GetActivity(
-        context, 
-        99, 
-        fullScreenIntent, 
-        Android.App.PendingIntentFlags.UpdateCurrent | Android.App.PendingIntentFlags.Immutable);
+    // 2. PRÜFUNG: Läuft die App gerade im Vordergrund?
+    bool appIstImVordergrund = false;
+    var activityManager = (Android.App.ActivityManager)context.GetSystemService(Android.Content.Context.ActivityService);
+    var laufendeProzesse = activityManager?.RunningAppProcesses;
+    
+    if (laufendeProzesse != null)
+    {
+        foreach (var prozess in laufendeProzesse)
+        {
+            if (prozess.Importance == Android.App.Importance.Foreground && prozess.ProcessName == context.PackageName)
+            {
+                appIstImVordergrund = true;
+                break;
+            }
+        }
+    }
 
-    // 3. Builder auf absolute Höchststufe einstellen
+    // 3. Basis-Builder einstellen
     var builder = new AndroidX.Core.App.NotificationCompat.Builder(context, channelId)
         .SetSmallIcon(Android.Resource.Drawable.IcLockIdleAlarm)
         .SetContentTitle("DEBUG")
         .SetContentText("AlarmReceiver wurde gestartet")
-        
-        // HIER WIRD AUF ABSOLUTES MAXIMUM GEWECHSELT:
-        .SetPriority(AndroidX.Core.App.NotificationCompat.PriorityMax) // Max-Priorität erzwingt das sofortige Banner-Popup
-        
+        .SetPriority(AndroidX.Core.App.NotificationCompat.PriorityMax) 
         .SetDefaults(AndroidX.Core.App.NotificationCompat.DefaultAll) 
         .SetCategory(AndroidX.Core.App.NotificationCompat.CategoryAlarm) 
         .SetVisibility(AndroidX.Core.App.NotificationCompat.VisibilityPublic) 
-        .SetFullScreenIntent(fullScreenPendingIntent, true) 
         .SetAutoCancel(true);
+
+    // 4. HIER IST DAS ENTSCHEIDENDE IF:
+    // FullScreenIntent NUR setzen, wenn die App NICHT im Vordergrund läuft!
+    if (!appIstImVordergrund)
+    {
+        var fullScreenIntent = new Android.Content.Intent(context, typeof(MainActivity));
+        var fullScreenPendingIntent = Android.App.PendingIntent.GetActivity(
+            context, 
+            99, 
+            fullScreenIntent, 
+            Android.App.PendingIntentFlags.UpdateCurrent | Android.App.PendingIntentFlags.Immutable);
+            
+        builder.SetFullScreenIntent(fullScreenPendingIntent, true); 
+    }
 
     manager?.Notify(12345, builder.Build());
 }
-
 }
