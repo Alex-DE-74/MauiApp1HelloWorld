@@ -164,7 +164,7 @@ public partial class MainPage : ContentPage
     public async Task SetzeWeckerV2(int sekundenBisAlarm)
     {
 	var contextBo = Android.App.Application.Context;
-	var intentBo = new Intent(
+	var intentBo = new Android.Content.Intent(
         Android.Provider.Settings.ActionRequestIgnoreBatteryOptimizations,
         Android.Net.Uri.Parse("package:" + contextBo.PackageName));
 
@@ -279,7 +279,7 @@ public partial class MainPage : ContentPage
         long triggerAtMs = Java.Lang.JavaSystem.CurrentTimeMillis() + (sekundenBisAlarm * 1000);
 
         // Wecker rechtskonform stellen (Mit getrennten Intents)
-       bvar alarmClockInfo = new Android.App.AlarmManager.AlarmClockInfo(triggerAtMs, showIntent);
+        var alarmClockInfo = new Android.App.AlarmManager.AlarmClockInfo(triggerAtMs, showIntent);
         alarmManager.SetAlarmClock(alarmClockInfo, pendingIntent);
     }
 	
