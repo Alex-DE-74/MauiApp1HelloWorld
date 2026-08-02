@@ -31,7 +31,52 @@ public class AlarmReceiver : BroadcastReceiver
             }
         });
     }
+
     private void ZeigeKritischeNotification(Android.Content.Context context)
+{
+    // Wir nutzen einen frischen Kanal, um jeglichen Cache-Fehler auszuschließen!
+    var channelId = "final_alarm_channel_v3";
+    var manager = (Android.App.NotificationManager)context.GetSystemService(Android.Content.Context.NotificationService);
+
+    if (Android.OS.Build.VERSION.SdkInt >= Android.OS.BuildVersionCodes.O)
+    {
+        var channel = new Android.App.NotificationChannel(channelId, "Kritische Alarme", Android.App.NotificationImportance.High)
+        {
+            LockscreenVisibility = Android.App.NotificationVisibility.Public
+        };
+        channel.EnableVibration(true);
+        channel.SetBypassDnd(true);
+        manager?.CreateNotificationChannel(channel);
+    }
+
+    // TRICK: Wir senden das FullScreenIntent an den Receiver selbst (GetBroadcast statt GetActivity!)
+    var selfIntent = new Android.Content.Intent(context, typeof(AlarmReceiver));
+    var fullScreenPendingIntent = Android.App.PendingIntent.GetBroadcast(
+        context, 
+        99, 
+        selfIntent, 
+        Android.App.PendingIntentFlags.UpdateCurrent | Android.App.PendingIntentFlags.Immutable);
+
+    // Der perfekte Builder (Ihr originaler 5-Zeiler + Sperrbildschirm-Aufwecker)
+    var builder = new AndroidX.Core.App.NotificationCompat.Builder(context, channelId)
+        .SetSmallIcon(Android.Resource.Drawable.IcLockIdleAlarm)
+        .SetContentTitle("DEBUG")
+        .SetContentText("AlarmReceiver wurde gestartet")
+        
+        // Holt das Banner im Vordergrund zurück (Ihr originaler Zustand):
+        .SetPriority(AndroidX.Core.App.NotificationCompat.PriorityHigh)
+        
+        // Schützt den Sperrbildschirm und weckt ihn auf:
+        .SetVisibility(AndroidX.Core.App.NotificationCompat.VisibilityPublic)
+        .SetCategory(AndroidX.Core.App.NotificationCompat.CategoryAlarm)
+        .SetFullScreenIntent(fullScreenPendingIntent, true) // Jetzt als Broadcast -> blockiert im Vordergrund nicht mehr!
+        
+        .SetAutoCancel(true);
+
+    manager?.Notify(12345, builder.Build());
+}
+
+    private void ZeigeKritischeNotificationVx2(Android.Content.Context context)
     {
     var channelId = "alarm_channel_id";
     var manager = (Android.App.NotificationManager)context.GetSystemService(Android.Content.Context.NotificationService);
