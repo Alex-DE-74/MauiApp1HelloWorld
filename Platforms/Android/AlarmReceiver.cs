@@ -247,7 +247,7 @@ private void ZeigeKritischeNotificationVx4(Context context)
 
 private void ZeigeKritischeNotificationVx(Android.Content.Context context)
 {
-    var channelId = "alarm_channel_id";
+    var channelId = "final_alarm_channel_v6";
     var manager = (Android.App.NotificationManager)context.GetSystemService(Android.Content.Context.NotificationService);
 
     // 1. Kanal konfigurieren
