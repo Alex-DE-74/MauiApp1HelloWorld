@@ -239,22 +239,9 @@ public partial class MainPage : ContentPage
             }
 
             // 3. WECKER RECHTSKONFORM STELLEN (Exakt 4 Parameter in .NET MAUI)
-            var intent = new Android.Content.Intent(context, typeof(AlarmReceiver));
-            intent.AddFlags(Android.Content.ActivityFlags.IncludeStoppedPackages);
+            // Ersetzt Ihren alten Code komplett durch diesen Einzeiler:
+            StarteExaktenWecker(context, sekundenBisAlarm);
 
-            var pendingIntent = Android.App.PendingIntent.GetBroadcast(
-                context, 
-                0, 
-                intent, 
-                Android.App.PendingIntentFlags.UpdateCurrent | Android.App.PendingIntentFlags.Immutable); 
-
-            long triggerAtMs = Java.Lang.JavaSystem.CurrentTimeMillis() + (sekundenBisAlarm * 1000);
-
-            if (alarmManager != null)
-            {
-                var alarmClockInfo = new Android.App.AlarmManager.AlarmClockInfo(triggerAtMs, pendingIntent);
-                alarmManager.SetAlarmClock(alarmClockInfo, pendingIntent);
-            }
         }
         catch (Exception ex)
         {
@@ -263,7 +250,39 @@ public partial class MainPage : ContentPage
 #endif
     }
 
-    // NEUE METHODE: Berechnet die Zeit bis zur Ziel-Uhrzeit und startet den Wecker
+     public void StarteExaktenWecker(Android.Content.Context context, long sekundenBisAlarm)
+    {
+        var alarmManager = (Android.App.AlarmManager)context.GetSystemService(Android.Content.Context.AlarmService);
+    
+        if (alarmManager == null) return;
+
+        // 1. Der Empfänger für den eigentlichen Alarm (BroadcastReceiver)
+        var intent = new Android.Content.Intent(context, typeof(AlarmReceiver));
+        intent.AddFlags(Android.Content.ActivityFlags.IncludeStoppedPackages);
+    
+        var pendingIntent = Android.App.PendingIntent.GetBroadcast(
+            context, 
+            0, 
+            intent, 
+            Android.App.PendingIntentFlags.UpdateCurrent | Android.App.PendingIntentFlags.Immutable); 
+
+        // 2. NEU: Ziel bei Klick auf das System-Weckersymbol (Öffnet die MainActivity)
+        var mainActivityIntent = new Android.Content.Intent(context, typeof(MainActivity));
+        var showIntent = Android.App.PendingIntent.GetActivity(
+            context, 
+            1, // Eigener RequestCode zur eindeutigen Trennung
+            mainActivityIntent, 
+            Android.App.PendingIntentFlags.UpdateCurrent | Android.App.PendingIntentFlags.Immutable);
+
+        // Zeitberechnung
+        long triggerAtMs = Java.Lang.JavaSystem.CurrentTimeMillis() + (sekundenBisAlarm * 1000);
+
+        // Wecker rechtskonform stellen (Mit getrennten Intents)
+       bvar alarmClockInfo = new Android.App.AlarmManager.AlarmClockInfo(triggerAtMs, showIntent);
+        alarmManager.SetAlarmClock(alarmClockInfo, pendingIntent);
+    }
+	
+   // NEUE METHODE: Berechnet die Zeit bis zur Ziel-Uhrzeit und startet den Wecker
     public async Task SetzeWeckerUhrzeit(int stunde, int minute)
     {
         DateTime jetzt = DateTime.Now;
