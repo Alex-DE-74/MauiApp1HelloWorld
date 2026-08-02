@@ -48,6 +48,68 @@ private void SysAlert0(Android.Content.Context context)
 }
 private void ZeigeKritischeNotification(Context context)
 {
+    // Wir erhöhen auf v6, um den Cache für diesen finalen Test komplett zu leeren
+    var channelId = "final_alarm_channel_v6";
+    var manager = (NotificationManager)context.GetSystemService(Context.NotificationService);
+
+    if (Android.OS.Build.VERSION.SdkInt >= Android.OS.BuildVersionCodes.O)
+    {
+        var channel = new Android.App.NotificationChannel(channelId, "Kritische Alarme", Android.App.NotificationImportance.High)
+        {
+            LockscreenVisibility = Android.App.NotificationVisibility.Public
+        };
+        channel.EnableVibration(true);
+        channel.SetBypassDnd(true);
+        manager?.CreateNotificationChannel(channel);
+    }
+
+    // 1. PRÜFUNG: Läuft die App JETZT GERADE im Vordergrund?
+    bool appIstImVordergrund = false;
+    var activityManager = (Android.App.ActivityManager)context.GetSystemService(Context.ActivityService);
+    var laufendeProzesse = activityManager?.RunningAppProcesses;
+    
+    if (laufendeProzesse != null)
+    {
+        foreach (var prozess in laufendeProzesse)
+        {
+            if (prozess.Importance == Android.App.Importance.Foreground && prozess.ProcessName == context.PackageName)
+            {
+                appIstImVordergrund = true;
+                break;
+            }
+        }
+    }
+
+    // 2. Ihr originaler, perfekt funktionierender 5-Zeiler als Basis
+    var builder = new AndroidX.Core.App.NotificationCompat.Builder(context, channelId)
+        .SetSmallIcon(Android.Resource.Drawable.IcLockIdleAlarm)
+        .SetContentTitle("DEBUG")
+        .SetContentText("AlarmReceiver wurde gestartet")
+        .SetPriority(AndroidX.Core.App.NotificationCompat.PriorityHigh) // Garantiert Ihr Banner-Plopp im Vordergrund
+        .SetVisibility(AndroidX.Core.App.NotificationCompat.VisibilityPublic)
+        .SetAutoCancel(true);
+
+    // 3. DIE RECHTLICHE WEICHE:
+    if (!appIstImVordergrund)
+    {
+        // NUR wenn die App zu oder im Hintergrund ist, nutzen wir die Activity,
+        // die stark genug ist, den toten Prozess und den Sperrbildschirm aufzuwecken!
+        var fullScreenIntent = new Intent(context, typeof(MainActivity));
+        var fullScreenPendingIntent = PendingIntent.GetActivity(
+            context, 
+            99, 
+            fullScreenIntent, 
+            PendingIntentFlags.UpdateCurrent | PendingIntentFlags.Immutable);
+            
+        builder.SetFullScreenIntent(fullScreenPendingIntent, true); 
+        builder.SetCategory(AndroidX.Core.App.NotificationCompat.CategoryAlarm);
+    }
+
+    manager?.Notify(12345, builder.Build());
+}
+
+private void ZeigeKritischeNotificationVx4(Context context)
+{
     // Wir nutzen eine frische Kanal-ID, damit Android die alten Einstellungen komplett vergisst
     var channelId = "final_alarm_channel_v5";
     var manager = (NotificationManager)context.GetSystemService(Context.NotificationService);
