@@ -47,6 +47,95 @@ private void SysAlert0(Android.Content.Context context)
     manager?.Notify(12345, builder.Build());
 }
 
+private void ZeigeKritischeNotificationVx(Android.Content.Context context)
+{
+    // Synchronisiert auf die frische v7-ID
+    var channelId = "final_alarm_channel_v7";
+
+    // 1. PRÜFUNG: Läuft die App gerade aktiv im Vordergrund?
+    bool appIstImVordergrund = false;
+    var activityManager = (Android.App.ActivityManager)context.GetSystemService(Android.Content.Context.ActivityService);
+    var laufendeProzesse = activityManager?.RunningAppProcesses;
+    
+    if (laufendeProzesse != null)
+    {
+        foreach (var prozess in laufendeProzesse)
+        {
+            if (prozess.Importance == Android.App.Importance.Foreground && prozess.ProcessName == context.PackageName)
+            {
+                appIstImVordergrund = true;
+                break;
+            }
+        }
+    }
+
+    // Das definierte Vibrationsmuster (Wichtig für den physischen Hardware-Aufruf)
+    long[] vibrationsMuster = new long[] { 0, 500, 250, 500 };
+
+    // 2. DIE WEICHE
+    if (appIstImVordergrund)
+    {
+        // WELT 1: APP IST OFFEN
+        var managerVordergrund = (NotificationManager)context.GetSystemService(Context.NotificationService);
+        
+        if (Android.OS.Build.VERSION.SdkInt >= Android.OS.BuildVersionCodes.O)
+        {
+            var channel = new Android.App.NotificationChannel(channelId, "Kritische Alarme", Android.App.NotificationImportance.High);
+            // Auch hier die Hardware-Flags spiegeln
+            channel.EnableVibration(true);
+            channel.SetVibrationPattern(vibrationsMuster);
+            managerVordergrund?.CreateNotificationChannel(channel);
+        }
+
+        // Ihr funktionierender 5-Zeiler – jetzt mit harter Hardware-Vibration erweitert
+        var builderVordergrund = new AndroidX.Core.App.NotificationCompat.Builder(context, channelId)
+            .SetSmallIcon(Android.Resource.Drawable.IcLockIdleAlarm)
+            .SetContentTitle("DEBUG")
+            .SetContentText("AlarmReceiver wurde gestartet")
+            .SetPriority(AndroidX.Core.App.NotificationCompat.PriorityHigh)
+            .SetDefaults(AndroidX.Core.App.NotificationCompat.DefaultAll) // Holt die System-Standards
+            .SetVibrate(vibrationsMuster) // Erzwingt das physische Schütteln im Vordergrund
+            .SetAutoCancel(true);
+
+        managerVordergrund?.Notify(12345, builderVordergrund.Build());
+    }
+    else
+    {
+        // WELT 2: APP IST WEGGEWISCHT
+        var managerHintergrund = (Android.App.NotificationManager)context.GetSystemService(Android.Content.Context.NotificationService);
+        
+        if (Android.OS.Build.VERSION.SdkInt >= Android.OS.BuildVersionCodes.O)
+        {
+            var channel = new Android.App.NotificationChannel(channelId, "Kritische Alarme", Android.App.NotificationImportance.High)
+            {
+                LockscreenVisibility = Android.App.NotificationVisibility.Public
+            };
+            channel.EnableVibration(true);
+            channel.SetVibrationPattern(vibrationsMuster);
+            channel.SetBypassDnd(true); 
+            managerHintergrund?.CreateNotificationChannel(channel);
+        }
+
+        var fullScreenIntent = new Android.Content.Intent(context, typeof(MainActivity));
+        var fullScreenPendingIntent = Android.App.PendingIntent.GetActivity(
+            context, 99, fullScreenIntent, Android.App.PendingIntentFlags.UpdateCurrent | Android.App.PendingIntentFlags.Immutable);
+
+        var builderHintergrund = new AndroidX.Core.App.NotificationCompat.Builder(context, channelId)
+            .SetSmallIcon(Android.Resource.Drawable.IcLockIdleAlarm)
+            .SetContentTitle("DEBUG")
+            .SetContentText("AlarmReceiver wurde gestartet")
+            .SetPriority(AndroidX.Core.App.NotificationCompat.PriorityMax) 
+            .SetDefaults(AndroidX.Core.App.NotificationCompat.DefaultAll) 
+            .SetVibrate(vibrationsMuster) // Erzwingt das physische Schütteln, was den Sperrbildschirm weckt
+            .SetCategory(AndroidX.Core.App.NotificationCompat.CategoryAlarm) 
+            .SetVisibility(AndroidX.Core.App.NotificationCompat.VisibilityPublic) 
+            .SetFullScreenIntent(fullScreenPendingIntent, true) 
+            .SetAutoCancel(true);
+
+        managerHintergrund?.Notify(12345, builderHintergrund.Build());
+    }
+}
+
 private void ZeigeKritischeNotification(Android.Content.Context context)
 {
     // Die mit der MainActivity synchronisierte Kanal-ID
@@ -418,7 +507,7 @@ private void ZeigeKritischeNotificationVx4(Context context)
     manager?.Notify(12345, builder.Build());
 }
 
-private void ZeigeKritischeNotificationVx(Android.Content.Context context)
+private void ZeigeKritischeNotificationVx0(Android.Content.Context context)
 {
     var channelId = "final_alarm_channel_v6";
     var manager = (Android.App.NotificationManager)context.GetSystemService(Android.Content.Context.NotificationService);
