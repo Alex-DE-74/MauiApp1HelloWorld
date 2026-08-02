@@ -9,8 +9,10 @@ public class AlarmReceiver : BroadcastReceiver
     public override void OnReceive(Context context, Intent intent)
     {
         // Der Aufruf bleibt kurz und knackig
-        ZeigeKritischeNotification(context);
-                
+        //ZeigeKritischeNotification(context);
+
+        SysAlert0(context);
+        
         // Toast       
         Android.Widget.Toast.MakeText(
         context,
@@ -32,6 +34,19 @@ public class AlarmReceiver : BroadcastReceiver
         });
     }
 
+private void SysAlert0(Android.Content.Context context)
+{
+    // Ihr originaler, minimalistischer 5-Zeiler
+    var builder = new AndroidX.Core.App.NotificationCompat.Builder(context, "alarm_channel_id")
+        .SetSmallIcon(Android.Resource.Drawable.IcLockIdleAlarm)
+        .SetContentTitle("DEBUG")
+        .SetContentText("AlarmReceiver wurde gestartet")
+        .SetPriority(AndroidX.Core.App.NotificationCompat.PriorityHigh);
+
+    var manager = (Android.App.NotificationManager)context.GetSystemService(Android.Content.Context.NotificationService);
+    manager?.Notify(12345, builder.Build());
+}
+    
     private void ZeigeKritischeNotification(Android.Content.Context context)
 {
     // Wir nutzen einen frischen Kanal, um jeglichen Cache-Fehler auszuschließen!
