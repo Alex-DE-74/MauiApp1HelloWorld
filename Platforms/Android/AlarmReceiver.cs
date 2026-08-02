@@ -46,7 +46,86 @@ private void SysAlert0(Android.Content.Context context)
     var manager = (NotificationManager)context.GetSystemService(Context.NotificationService);
     manager?.Notify(12345, builder.Build());
 }
-private void ZeigeKritischeNotification(Context context)
+
+private void ZeigeKritischeNotificationVx(Android.Content.Context context)
+{
+    var channelId = "final_alarm_channel_v6";
+
+    // 1. PRÜFUNG: Läuft die App gerade aktiv im Vordergrund?
+    bool appIstImVordergrund = false;
+    var activityManager = (Android.App.ActivityManager)context.GetSystemService(Android.Content.Context.ActivityService);
+    var laufendeProzesse = activityManager?.RunningAppProcesses;
+    
+    if (laufendeProzesse != null)
+    {
+        foreach (var prozess in laufendeProzesse)
+        {
+            if (prozess.Importance == Android.App.Importance.Foreground && prozess.ProcessName == context.PackageName)
+            {
+                appIstImVordergrund = true;
+                break;
+            }
+        }
+    }
+
+    // 2. Der Basis-Builder (Ihr funktionierender Ursprung)
+    var builder = new AndroidX.Core.App.NotificationCompat.Builder(context, channelId)
+        .SetSmallIcon(Android.Resource.Drawable.IcLockIdleAlarm)
+        .SetContentTitle("DEBUG")
+        .SetContentText("AlarmReceiver wurde gestartet")
+        .SetPriority(AndroidX.Core.App.NotificationCompat.PriorityMax) 
+        .SetDefaults(AndroidX.Core.App.NotificationCompat.DefaultAll) 
+        .SetCategory(AndroidX.Core.App.NotificationCompat.CategoryAlarm) 
+        .SetVisibility(AndroidX.Core.App.NotificationCompat.VisibilityPublic) 
+        .SetAutoCancel(true);
+
+    // 3. DIE ABSOLUTE TRENNUNG DER MANAGER UND FLAGS
+    if (appIstImVordergrund)
+    {
+        // FALL A: APP IST OFFEN -> AndroidX-Kompatibilitäts-Cast für das Vordergrund-Banner
+        var managerVordergrund = (NotificationManager)context.GetSystemService(Context.NotificationService);
+        
+        // Kanal-Check im Vordergrund
+        if (Android.OS.Build.VERSION.SdkInt >= Android.OS.BuildVersionCodes.O)
+        {
+            var channel = new Android.App.NotificationChannel(channelId, "Kritische Alarme", Android.App.NotificationImportance.High);
+            managerVordergrund?.CreateNotificationChannel(channel);
+        }
+
+        managerVordergrund?.Notify(12345, builder.Build());
+    }
+    else
+    {
+        // FALL B: APP IST WEGGEWISCHT -> Harter, nativer System-Cast, um die tote App zu retten
+        var managerHintergrund = (Android.App.NotificationManager)context.GetSystemService(Android.Content.Context.NotificationService);
+        
+        // Kanal-Check im Hintergrund
+        if (Android.OS.Build.VERSION.SdkInt >= Android.OS.BuildVersionCodes.O)
+        {
+            var channel = new Android.App.NotificationChannel(channelId, "Kritische Alarme", Android.App.NotificationImportance.High)
+            {
+                LockscreenVisibility = Android.App.NotificationVisibility.Public
+            };
+            channel.EnableVibration(true);
+            channel.SetBypassDnd(true);
+            managerHintergrund?.CreateNotificationChannel(channel);
+        }
+
+        // FullScreenIntent NUR im Hintergrund/Sperrbildschirm anhängen
+        var fullScreenIntent = new Android.Content.Intent(context, typeof(MainActivity));
+        var fullScreenPendingIntent = Android.App.PendingIntent.GetActivity(
+            context, 
+            99, 
+            fullScreenIntent, 
+            Android.App.PendingIntentFlags.UpdateCurrent | Android.App.PendingIntentFlags.Immutable);
+            
+        builder.SetFullScreenIntent(fullScreenPendingIntent, true); 
+
+        managerHintergrund?.Notify(12345, builder.Build());
+    }
+}
+
+private void ZeigeKritischeNotificationVx5(Context context)
 {
     // Wir erhöhen auf v6, um den Cache für diesen finalen Test komplett zu leeren
     var channelId = "final_alarm_channel_v6";
