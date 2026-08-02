@@ -163,11 +163,12 @@ public partial class MainPage : ContentPage
     }
     public async Task SetzeWeckerV2(int sekundenBisAlarm)
     {
-	var intent = new Intent(
-    Android.Provider.Settings.ActionRequestIgnoreBatteryOptimizations,
-    Android.Net.Uri.Parse("package:" + context.PackageName));
+	var contextBo = Android.App.Application.Context;
+	var intentBo = new Intent(
+        Android.Provider.Settings.ActionRequestIgnoreBatteryOptimizations,
+        Android.Net.Uri.Parse("package:" + contextBo.PackageName));
 
-    context.StartActivity(intent);
+    contextBo.StartActivity(intentBo);
 #if ANDROID
     // Android 13+: Benachrichtigungsberechtigung anfordern
     if (Android.OS.Build.VERSION.SdkInt >= Android.OS.BuildVersionCodes.Tiramisu)
