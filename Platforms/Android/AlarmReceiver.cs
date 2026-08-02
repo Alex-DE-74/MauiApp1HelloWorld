@@ -43,7 +43,7 @@ private void SysAlert0(Android.Content.Context context)
         .SetContentText("AlarmReceiver wurde gestartet")
         .SetPriority(AndroidX.Core.App.NotificationCompat.PriorityHigh);
 
-    var manager = (Android.App.NotificationManager)context.GetSystemService(Android.Content.Context.NotificationService);
+    var manager = (NotificationManager)context.GetSystemService(Context.NotificationService);
     manager?.Notify(12345, builder.Build());
 }
     
