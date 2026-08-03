@@ -21,4 +21,15 @@
 	<uses-permission android:name="android.permission.VIBRATE" />
 
 	<uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
+<queries>
+    <!-- ZWINGEND: Erlaubt den direkten Zugriff auf Xiaomis Sicherheits-App -->
+    <package android:name="com.miui.securitycenter" />
+
+    <!-- RECHTSKONFORMER FALLBACK: Erlaubt den Aufruf, falls HyperOS nur die Action nutzt -->
+    <intent>
+        <action android:name="miui.intent.action.OP_AUTO_START" />
+    </intent>
+</queries>
+
+
 </manifest>
