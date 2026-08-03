@@ -22,7 +22,7 @@ public class MainActivity : MauiAppCompatActivity
         if (Build.VERSION.SdkInt >= BuildVersionCodes.O)
         {
             var channel = new NotificationChannel(
-                "final_alarm_channel_v7",
+                "kanal_vordergrund_banner_v7",
                 "MauiApp1HelloWorld",
                 NotificationImportance.High);
 
