@@ -35,7 +35,6 @@ public class MainActivity : MauiAppCompatActivity
 
     protected void ShowAlarmTime()
     {
-        base.OnCreate(savedInstanceState);
 
         var prefs = GetSharedPreferences("alarm", FileCreationMode.Private);
 
