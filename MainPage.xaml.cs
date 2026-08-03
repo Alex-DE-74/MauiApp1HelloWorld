@@ -15,6 +15,11 @@ using Android.Content;
 using System.Threading.Tasks;
 using Microsoft.Maui.ApplicationModel;
 
+using Android.Content;
+using Android.OS;
+using AndroidX.Core.Content;
+//using System.Threading.Tasks;
+
 namespace MauiApp1HelloWorld;
 
 public partial class MainPage : ContentPage
@@ -163,10 +168,6 @@ public partial class MainPage : ContentPage
     }
 
 	#if ANDROID
-using Android.Content;
-using Android.OS;
-using AndroidX.Core.Content;
-using System.Threading.Tasks;
 
 public async Task PruefeUndOeffneAutostartWennNoetigAsync()
 {
