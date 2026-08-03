@@ -36,7 +36,7 @@ public class MainActivity : MauiAppCompatActivity
     protected void ShowAlarmTime()
     {
 
-        var prefs = GetSharedPreferences("alarm", FileCreationMode.Private);
+        var prefs = GetSharedPreferences("alarm", Android.Content.FileCreationMode.Private);
 
         long lastAlarm = prefs.GetLong("lastAlarm", 0);
 
@@ -55,16 +55,16 @@ public class MainActivity : MauiAppCompatActivity
             text = $"Receiver zuletzt: {zeit:dd.MM.yyyy HH:mm:ss}";
         }
 
-        Toast.MakeText(this, text, ToastLength.Long)?.Show();
+        Android.Widget.Toast.MakeText(this, text, Android.Widget.ToastLength.Long)?.Show();
 
         new Handler(Looper.MainLooper).PostDelayed(() =>
         {
-            Toast.MakeText(this, text, ToastLength.Long)?.Show();
+            Android.Widget.Toast.MakeText(this, text, Android.Widget.ToastLength.Long)?.Show();
         }, 3500);
 
         new Handler(Looper.MainLooper).PostDelayed(() =>
         {
-            Toast.MakeText(this, text, ToastLength.Long)?.Show();
+            Android.Widget.Toast.MakeText(this, text, Android.Widget.ToastLength.Long)?.Show();
         }, 7000);
     }
 
