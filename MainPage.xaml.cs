@@ -248,10 +248,6 @@ private void ResolveHyperOsAutostartRestriction()
         }
         catch 
 #if ANDROID
-using Android.Content;
-using Android.OS;
-using AndroidX.Core.Content;
-using System.Threading.Tasks;
 
 public async Task PruefeUndOeffneAutostartWennNoetigAsync()
 {
