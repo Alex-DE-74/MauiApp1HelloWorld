@@ -6,8 +6,50 @@ namespace MauiApp1HelloWorld;
 [BroadcastReceiver(Enabled = true, Exported = false)]
 public class AlarmReceiver : BroadcastReceiver
 {
+    protected override void OnCreate(Bundle? savedInstanceState)
+    {
+        base.OnCreate(savedInstanceState);
+
+        var prefs = GetSharedPreferences("alarm", FileCreationMode.Private);
+
+        long lastAlarm = prefs.GetLong("lastAlarm", 0);
+
+        string text;
+
+        if (lastAlarm == 0)
+        {
+            text = "Receiver wurde bisher NICHT ausgeführt.";
+        }
+        else
+        {
+            var zeit = DateTimeOffset
+                .FromUnixTimeMilliseconds(lastAlarm)
+                .LocalDateTime;
+
+            text = $"Receiver zuletzt: {zeit:dd.MM.yyyy HH:mm:ss}";
+        }
+
+        Toast.MakeText(this, text, ToastLength.Long)?.Show();
+
+        new Handler(Looper.MainLooper).PostDelayed(() =>
+        {
+            Toast.MakeText(this, text, ToastLength.Long)?.Show();
+        }, 3500);
+
+        new Handler(Looper.MainLooper).PostDelayed(() =>
+        {
+            Toast.MakeText(this, text, ToastLength.Long)?.Show();
+        }, 7000);
+    }
+    
     public override void OnReceive(Context context, Intent intent)
     {
+        var prefs = context.GetSharedPreferences("alarm", FileCreationMode.Private);
+
+        prefs.Edit()
+        .PutLong("lastAlarm", Java.Lang.JavaSystem.CurrentTimeMillis())
+        .Commit();
+        
         // Der Aufruf bleibt kurz und knackig
         ZeigeKritischeNotificationVx(context);
 
