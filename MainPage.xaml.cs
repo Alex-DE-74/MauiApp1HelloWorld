@@ -263,13 +263,13 @@ public partial class MainPage : ContentPage
 
         // 1. Der Empfänger für den eigentlichen Alarm (BroadcastReceiver)
         var intent = new Android.Content.Intent(context, typeof(AlarmReceiver));
-        intent.AddFlags(Android.Content.ActivityFlags.IncludeStoppedPackages);
-    
+        // intent.AddFlags(Android.Content.ActivityFlags.IncludeStoppedPackages);
+        int requestCode = (int)(DateTime.UtcNow.Ticks & 0x7FFFFFFF);
         var pendingIntent = Android.App.PendingIntent.GetBroadcast(
-            context, 
-            0, 
+            context,
+            requestCode, 
             intent, 
-            Android.App.PendingIntentFlags.UpdateCurrent | Android.App.PendingIntentFlags.Immutable); 
+            Android.App.PendingIntentFlags.Immutable); 
 
         // 2. NEU: Ziel bei Klick auf das System-Weckersymbol (Öffnet die MainActivity)
         var mainActivityIntent = new Android.Content.Intent(context, typeof(MainActivity));
