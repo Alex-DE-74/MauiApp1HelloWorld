@@ -173,6 +173,8 @@ public partial class MainPage : ContentPage
 	
 	contextBo.StartActivity(intentBo);
 	*/
+
+	await PruefeUndOeffneAutostartWennNoetigAsync();
 #if ANDROID
     // Android 13+: Benachrichtigungsberechtigung anfordern
     if (Android.OS.Build.VERSION.SdkInt >= Android.OS.BuildVersionCodes.Tiramisu)
