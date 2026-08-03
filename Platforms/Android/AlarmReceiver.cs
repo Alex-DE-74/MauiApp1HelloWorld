@@ -49,6 +49,93 @@ private void SysAlert0(Android.Content.Context context)
 
 private void ZeigeKritischeNotificationVx(Android.Content.Context context)
 {
+    // 1. PRÜFUNG: Läuft die App gerade aktiv im Vordergrund?
+    bool appIstImVordergrund = false;
+    var activityManager = (Android.App.ActivityManager)context.GetSystemService(Android.Content.Context.ActivityService);
+    var laufendeProzesse = activityManager?.RunningAppProcesses;
+    
+    if (laufendeProzesse != null)
+    {
+        foreach (var prozess in laufendeProzesse)
+        {
+            if (prozess.Importance == Android.App.Importance.Foreground && prozess.ProcessName == context.PackageName)
+            {
+                appIstImVordergrund = true;
+                break;
+            }
+        }
+    }
+
+    // 2. DIE STRUKTURELLE WEICHE (Vollständige Trennung der Kanal-IDs, Manager und Builder)
+    if (appIstImVordergrund)
+    {
+        // ─────────────────────────────────────────────────────────────────────────────
+        // WELT 1: APP IST OFFEN (Nutzt exklusiv die reine Vordergrund-ID)
+        // ─────────────────────────────────────────────────────────────────────────────
+        var vordergrundKanalId = "kanal_vordergrund_banner_v7";
+        var managerVordergrund = (NotificationManager)context.GetSystemService(Context.NotificationService);
+        
+        if (Android.OS.Build.VERSION.SdkInt >= Android.OS.BuildVersionCodes.O)
+        {
+            var channel = new Android.App.NotificationChannel(vordergrundKanalId, "App Hinweise", Android.App.NotificationImportance.High);
+            managerVordergrund?.CreateNotificationChannel(channel);
+        }
+
+        // Purer 5-Zeiler (OHNE FullScreenIntent) -> Erzeugt das unblockierte Banner von oben
+        var builderVordergrund = new AndroidX.Core.App.NotificationCompat.Builder(context, vordergrundKanalId)
+            .SetSmallIcon(Android.Resource.Drawable.IcLockIdleAlarm)
+            .SetContentTitle("DEBUG")
+            .SetContentText("AlarmReceiver wurde gestartet")
+            .SetPriority(AndroidX.Core.App.NotificationCompat.PriorityHigh)
+            .SetAutoCancel(true);
+
+        managerVordergrund?.Notify(12345, builderVordergrund.Build());
+    }
+    else
+    {
+        // ─────────────────────────────────────────────────────────────────────────────
+        // WELT 2: APP IST WEGGEWISCHT / HANDY GESPERRT (Nutzt den isolierten Wecker-Kanal)
+        // ─────────────────────────────────────────────────────────────────────────────
+        var weckerKanalId = "kanal_wecker_tot_v7";
+        var managerHintergrund = (Android.App.NotificationManager)context.GetSystemService(Android.Content.Context.NotificationService);
+        
+        if (Android.OS.Build.VERSION.SdkInt >= Android.OS.BuildVersionCodes.O)
+        {
+            var channel = new Android.App.NotificationChannel(weckerKanalId, "Kritische Alarme", Android.App.NotificationImportance.High)
+            {
+                LockscreenVisibility = Android.App.NotificationVisibility.Public
+            };
+            channel.EnableVibration(true);
+            channel.SetBypassDnd(true); 
+            managerHintergrund?.CreateNotificationChannel(channel);
+        }
+
+        var fullScreenIntent = new Android.Content.Intent(context, typeof(MainActivity));
+        var fullScreenPendingIntent = Android.App.PendingIntent.GetActivity(
+            context, 
+            99, 
+            fullScreenIntent, 
+            Android.App.PendingIntentFlags.UpdateCurrent | Android.App.PendingIntentFlags.Immutable);
+
+        // Max-Priorität und FullScreenIntent -> Weckt das Display im Tiefschlaf auf.
+        // Da dieser Kanal niemals im Vordergrund genutzt wird, sperrt HyperOS die Rechte nicht!
+        var builderHintergrund = new AndroidX.Core.App.NotificationCompat.Builder(context, weckerKanalId)
+            .SetSmallIcon(Android.Resource.Drawable.IcLockIdleAlarm)
+            .SetContentTitle("DEBUG")
+            .SetContentText("AlarmReceiver wurde gestartet")
+            .SetPriority(AndroidX.Core.App.NotificationCompat.PriorityMax) 
+            .SetDefaults(AndroidX.Core.App.NotificationCompat.DefaultAll)  
+            .SetCategory(AndroidX.Core.App.NotificationCompat.CategoryAlarm) 
+            .SetVisibility(AndroidX.Core.App.NotificationCompat.VisibilityPublic) 
+            .SetFullScreenIntent(fullScreenPendingIntent, true) 
+            .SetAutoCancel(true);
+
+        managerHintergrund?.Notify(12345, builderHintergrund.Build());
+    }
+}
+
+private void ZeigeKritischeNotificationVx8(Android.Content.Context context)
+{
     // Synchronisiert auf die frische v7-ID
     var channelId = "final_alarm_channel_v7";
 
@@ -136,7 +223,7 @@ private void ZeigeKritischeNotificationVx(Android.Content.Context context)
     }
 }
 
-private void ZeigeKritischeNotification(Android.Content.Context context)
+private void ZeigeKritischeNotificationVx7(Android.Content.Context context)
 {
     // Die mit der MainActivity synchronisierte Kanal-ID
     var channelId = "final_alarm_channel_v6";
