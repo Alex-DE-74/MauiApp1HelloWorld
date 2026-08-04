@@ -167,7 +167,7 @@ public partial class MainPage : ContentPage
 #endif
     }
 
-	#if ANDROID
+#if ANDROID
 
 public async Task PruefeUndOeffneAutostartWennNoetigAsync()
 {
@@ -248,6 +248,78 @@ private void ResolveHyperOsAutostartRestriction()
         }
         catch 
 #if ANDROID
+
+public async Task PruefeUndOeffneAutostartWennNoetigAsync()
+{
+    var context = Android.App.Application.Context;
+
+    // SICHERHEITS-CHECK 1: Ist es überhaupt ein Xiaomi / HyperOS Gerät?
+    string hersteller = Build.Manufacturer?.ToLower() ?? "";
+    bool istXiaomi = hersteller.Contains("xiaomi") || hersteller.Contains("redmi") || hersteller.Contains("poco");
+
+    if (!istXiaomi) return; 
+
+    // SICHERHEITS-CHECK 2: Ist der Android-Standard-Schalter aktiv?
+    if (Build.VERSION.SdkInt >= BuildVersionCodes.R)
+    {
+        try
+        {
+            // FEHLERBEHEBUNG: Die Abfrage liegt in 'PackageManagerCompat' statt 'IntentCompat'
+            var future = PackageManagerCompat.GetUnusedAppRestrictionsStatus(context);
+            
+            // Konvertiert das Java-Future in einen für C# await-baren Task
+            int status = (int)await Task.Run(() => future.Get());
+            
+            // 0 steht für UnusedAppRestrictionsConstants.StatusRestricted (Schalter ist an)
+            if (status == 0) 
+            {
+                await Microsoft.Maui.Controls.Application.Current.Dispatcher.DispatchAsync(async () =>
+                {
+                    await Microsoft.Maui.Controls.Application.Current.MainPage.DisplayAlert(
+                        "HyperOS Optimierung",
+                        "Bitte deaktiviere im nächsten Bildschirm die Option 'App-Aktivität bei Nichtbenutzung pausieren', damit deine Wecker nach dem Wegwischen zuverlässig funktionieren.",
+                        "Zu den Einstellungen");
+                });
+
+                ResolveHyperOsAutostartRestriction();
+            }
+        }
+        catch (System.Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Fehler bei der Hibernation-Abfrage: {ex.Message}");
+        }
+    }
+}
+
+private void ResolveHyperOsAutostartRestriction()
+{
+    var context = Android.App.Application.Context;
+    
+    if (Build.VERSION.SdkInt >= BuildVersionCodes.R)
+    {
+        try
+        {
+            // IntentCompat ist korrekt für das Erzeugen des Einstellungs-Intents zuständig
+            var intent = IntentCompat.CreateManageUnusedAppRestrictionsIntent(context, context.PackageName);
+            intent.AddFlags(ActivityFlags.NewTask);
+            context.StartActivity(intent);
+        }
+        catch (System.Exception)
+        {
+            // Letzter Fallback auf Xiaomi-Sicherheitszentrum direkt
+            TryOpenXiaomiSecurityDirectly(context);
+        }
+    }
+}
+
+private void TryOpenXiaomiSecurityDirectly(Context context)
+{
+    var intent = new Intent();
+#if ANDROID
+using Android.Content;
+using Android.OS;
+using AndroidX.Core.Content;
+using System.Threading.Tasks;
 
 public async Task PruefeUndOeffneAutostartWennNoetigAsync()
 {
