@@ -173,40 +173,51 @@ public async Task PruefeUndOeffneAutostartWennNoetigAsync()
 {
     var context = Android.App.Application.Context;
 
-    // SICHERHEITS-CHECK 1: Ist es überhaupt ein Xiaomi / HyperOS Gerät?
+    // 1. HERSTELLER-CHECK: Nur auf Xiaomi, Redmi und POCO ausführen
     string hersteller = Build.Manufacturer?.ToLower() ?? "";
     bool istXiaomi = hersteller.Contains("xiaomi") || hersteller.Contains("redmi") || hersteller.Contains("poco");
 
-    if (!istXiaomi) return; 
+    if (!istXiaomi) return; // Kein Xiaomi? Sofort beenden.
 
-    // SICHERHEITS-CHECK 2: Ist der Android-Standard-Schalter aktiv?
+    // 2. STATUS-CHECK (Verfügbar ab Android 11 / API 30)
     if (Build.VERSION.SdkInt >= BuildVersionCodes.R)
     {
         try
         {
-            // FEHLERBEHEBUNG: Die Abfrage liegt in 'PackageManagerCompat' statt 'IntentCompat'
             var future = PackageManagerCompat.GetUnusedAppRestrictionsStatus(context);
             
-            // Konvertiert das Java-Future in einen für C# await-baren Task
+            // Holt das Ergebnis aus dem Java-Future (Zahlenwert 1-4)
             int status = (int)await Task.Run(() => future.Get());
-            
-            // 0 steht für UnusedAppRestrictionsConstants.StatusRestricted (Schalter ist an)
-            if (status == 0) 
+
+            // DIE KORREKTE GOOGLE-LOGIK:
+            // Status 1 = DISABLED (Der Nutzer hat den Schalter bereits deaktiviert -> Alles sicher!)
+            // Status >= 2 = RESTRICTED (Der Schalter ist AKTIV und blockiert deine App!)
+            if (status >= 2) 
             {
+                // Wechselt sauber auf den MAUI UI-Thread für den Dialog
                 await Microsoft.Maui.Controls.Application.Current.Dispatcher.DispatchAsync(async () =>
                 {
-                    await Microsoft.Maui.Controls.Application.Current.MainPage.DisplayAlert(
+                    bool userKlick = await Microsoft.Maui.Controls.Application.Current.MainPage.DisplayAlert(
                         "HyperOS Optimierung",
-                        "Bitte deaktiviere im nächsten Bildschirm die Option 'App-Aktivität bei Nichtbenutzung pausieren', damit deine Wecker nach dem Wegwischen zuverlässig funktionieren.",
-                        "Zu den Einstellungen");
-                });
+                        "Bitte deaktiviere im nächsten Bildschirm die Option 'App-Aktivität bei Nichtbenutzung pausieren', damit deine Wecker im Hintergrund zuverlässig funktionieren.",
+                        "Zu den Einstellungen",
+                        "Abbrechen");
 
-                ResolveHyperOsAutostartRestriction();
+                    if (userKlick)
+                    {
+                        ResolveHyperOsAutostartRestriction();
+                    }
+                });
+            }
+            else
+            {
+                // Status ist 1 (oder im Fehlerfall 0). Der Schalter ist bereits aus.
+                System.Diagnostics.Debug.WriteLine("App ist bereits vor der Hibernation geschützt.");
             }
         }
         catch (System.Exception ex)
         {
-            System.Diagnostics.Debug.WriteLine($"Fehler bei der Hibernation-Abfrage: {ex.Message}");
+            System.Diagnostics.Debug.WriteLine($"Fehler bei der API-Abfrage: {ex.Message}");
         }
     }
 }
@@ -219,14 +230,14 @@ private void ResolveHyperOsAutostartRestriction()
     {
         try
         {
-            // IntentCompat ist korrekt für das Erzeugen des Einstellungs-Intents zuständig
+            // Erzeugt den systemkonformen Intent für ungenutzte Apps
             var intent = IntentCompat.CreateManageUnusedAppRestrictionsIntent(context, context.PackageName);
             intent.AddFlags(ActivityFlags.NewTask);
             context.StartActivity(intent);
         }
         catch (System.Exception)
         {
-            // Letzter Fallback auf Xiaomi-Sicherheitszentrum direkt
+            // Fallback auf die direkte Xiaomi-Berechtigungsebene
             TryOpenXiaomiSecurityDirectly(context);
         }
     }
@@ -254,7 +265,7 @@ private void TryOpenXiaomiSecurityDirectly(Context context)
         }
         catch
         {
-            // Absoluter Notanker: Normale App-Info-Seite
+            // Letzter Rettungsanker: Normale App-Details-Seite
             var appInfoIntent = new Intent(Android.Provider.Settings.ActionApplicationDetailsSettings);
             var uri = Android.Net.Uri.FromParts("package", context.PackageName, null);
             appInfoIntent.SetData(uri);
@@ -263,6 +274,7 @@ private void TryOpenXiaomiSecurityDirectly(Context context)
         }
     }
 }
+
 #endif
 
     public async Task SetzeWeckerV2(int sekundenBisAlarm)
