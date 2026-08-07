@@ -89,8 +89,17 @@ public partial class MainPage : ContentPage
 
 		SemanticScreenReader.Announce(CounterBtn.Text);
 
-		_shakeChallenge.Start(15);
+		StartShakeChallenge();
 	}
+  
+    public void StartShakeChallenge()
+    {
+        MainThread.BeginInvokeOnMainThread(() =>
+        {
+            CounterBtn.Text = "Schütteln: 0 / 10";
+            _shakeChallenge.Start(10);
+        });
+    }
 
     
     // Nutzt die dynamischen Daten aus den Event-Argumenten
@@ -147,8 +156,10 @@ public partial class MainPage : ContentPage
 	contextBo.StartActivity(intentBo);
 	*/
 
-	await Xiaomi.PruefeUndOeffneAutostartWennNoetigAsync();
-#if ANDROID
+	// await Xiaomi.PruefeUndOeffneAutostartWennNoetigAsync();
+	await HyperOs.PruefeUndOeffneEchtenHyperOsAutostartAsync();
+
+	#if ANDROID
     // Android 13+: Benachrichtigungsberechtigung anfordern
     if (Android.OS.Build.VERSION.SdkInt >= Android.OS.BuildVersionCodes.Tiramisu)
     {
