@@ -14,20 +14,17 @@ public static class HyperOs
         if (!istXiaomi) return; // Kein Xiaomi? Sofort abbrechen.
 
         // 2. SETTINGS-CHECK: Wurde das Menü in der Vergangenheit bereits aufgerufen?
-        // Nutzen der persistenten MAUI-Preferences
         bool wurdeBereitsGezeigt = Microsoft.Maui.Storage.Preferences.Default.Get("HyperOsAutostartGezeigt", false);
 
         if (wurdeBereitsGezeigt)
         {
-            System.Diagnostics.Debug.WriteLine("[WEKER] Autostart-Einstellung wurde bereits früher aufgerufen.");
-            return; 
+            return; // Verhindert das mehrfache Aufrufen
         }
 
-        // 3. DIALOG ANZEIGEN: Erzwingt den Sprung auf den MAUI Haupt-UI-Thread
+        // 3. DIALOG ANZEIGEN: Erzwingt den Sprung auf den MAUI Haupt-UI-Thread [STEM]
         bool userKlick = false;
         await Microsoft.Maui.ApplicationModel.MainThread.InvokeOnMainThreadAsync(async () =>
         {
-            // Wichtig: Da wir nicht mehr in der MainPage sind, rufen wir das Popup über Application.Current auf
             if (Microsoft.Maui.Controls.Application.Current?.MainPage != null)
             {
                 userKlick = await Microsoft.Maui.Controls.Application.Current.MainPage.DisplayAlert(
@@ -41,44 +38,46 @@ public static class HyperOs
         // 4. BEI ZUSTIMMUNG: Xiaomi-Sicherheitszentrum ansteuern
         if (userKlick)
         {
-            // Zustand in den lokalen App-Settings abspeichern
+            // Zustand sofort in den lokalen App-Settings abspeichern
             Microsoft.Maui.Storage.Preferences.Default.Set("HyperOsAutostartGezeigt", true);
 
             var context = Android.App.Application.Context;
-            var intent = new Android.Content.Intent();
             
-            // Direkter Pfad zur Autostart-Verwaltung im Xiaomi Security-Center
-            intent.SetComponent(new Android.Content.ComponentName(
-                "com.miui.securitycenter", 
-                "com.miui.permcenter.autostart.AutoStartManagementActivity"));
-            intent.AddFlags(Android.Content.ActivityFlags.NewTask);
-
+            // LÖSUNG: Wir versuchen nacheinander alle bekannten HyperOS-Wege mit der nötigen Kategorie
             try
             {
-                context.StartActivity(intent);
+                // Weg 1: Der direkte Pfad über die Komponente
+                var intent1 = new Android.Content.Intent();
+                intent1.SetComponent(new Android.Content.ComponentName(
+                    "com.miui.securitycenter", 
+                    "com.miui.permcenter.autostart.AutoStartManagementActivity"));
+                intent1.AddCategory(Android.Content.Intent.CategoryDefault); // ZWINGEND ERFORDERLICH!
+                intent1.AddFlags(Android.Content.ActivityFlags.NewTask);
+                context.StartActivity(intent1);
             }
             catch (System.Exception)
             {
                 try
                 {
-                    // Fallback 1: Falls die Activity in dieser HyperOS-Version verschoben wurde
-                    var fallbackIntent = new Android.Content.Intent("miui.intent.action.OP_AUTO_START");
-                    fallbackIntent.AddFlags(Android.Content.ActivityFlags.NewTask);
-                    context.StartActivity(fallbackIntent);
+                    // Weg 2: Der modernere HyperOS Fallback über die globale Action
+                    var intent2 = new Android.Content.Intent("miui.intent.action.OP_AUTO_START");
+                    intent2.AddCategory(Android.Content.Intent.CategoryDefault); // ZWINGEND ERFORDERLICH!
+                    intent2.AddFlags(Android.Content.ActivityFlags.NewTask);
+                    context.StartActivity(intent2);
                 }
                 catch (System.Exception)
                 {
-                    // Fallback 2: Die allgemeine App-Info-Seite
-                    var appInfoIntent = new Android.Content.Intent(Android.Provider.Settings.ActionApplicationDetailsSettings);
+                    // Weg 3: Absoluter Notanker -> Öffnet die App-Info-Seite, wo der Nutzer den Autostart findet
+                    var intent3 = new Android.Content.Intent(Android.Provider.Settings.ActionApplicationDetailsSettings);
                     var uri = Android.Net.Uri.FromParts("package", context.PackageName, null);
-                    appInfoIntent.SetData(uri);
-                    appInfoIntent.AddFlags(Android.Content.ActivityFlags.NewTask);
-                    context.StartActivity(appInfoIntent);
+                    intent3.SetData(uri);
+                    intent3.AddFlags(Android.Content.ActivityFlags.NewTask);
+                    context.StartActivity(intent3);
                 }
             }
         }
 #else
-        // Macht die Methode auf iOS, Windows etc. zu einer sicheren, leeren Operation
+        // Für andere Plattformen
         await Task.CompletedTask;
 #endif
     }
