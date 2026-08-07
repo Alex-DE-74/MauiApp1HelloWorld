@@ -23,7 +23,8 @@ namespace MauiApp1HelloWorld;
 public static class Xiaomi
 {
 	
-
+#if ANDROID
+	
 public static async Task PruefeUndOeffneAutostartWennNoetigAsync()
 {
     var context = Android.App.Application.Context;
