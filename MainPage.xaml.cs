@@ -88,7 +88,7 @@ public partial class MainPage : ContentPage
 
 		SemanticScreenReader.Announce(CounterBtn.Text);
 
-		_shakeChallenge.Start(15)
+		_shakeChallenge.Start(15);
 	}
 
     
