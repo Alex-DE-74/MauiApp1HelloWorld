@@ -24,6 +24,7 @@ public partial class MainPage : ContentPage
 {
 	int count = 0;
 
+    private readonly ShakeChallenge _shakeChallenge;
 
     public MainPage()
     {
