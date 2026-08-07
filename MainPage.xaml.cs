@@ -1,6 +1,5 @@
 /*
 using System;
-using System.Threading.Tasks;
 using Microsoft.Maui.Controls;
 using Microsoft.Maui.Devices.Sensors;
 using Microsoft.Maui.Media;
@@ -18,7 +17,6 @@ using Microsoft.Maui.ApplicationModel;
 using Android.Content;
 using Android.OS;
 using AndroidX.Core.Content;
-//using System.Threading.Tasks;
 
 namespace MauiApp1HelloWorld;
 
@@ -26,12 +24,17 @@ public partial class MainPage : ContentPage
 {
 	int count = 0;
 
-	public MainPage()
-	{
-		InitializeComponent();
-	}
 
-    // KORREKTUR: override wieder aktiv. Startet, sobald die App geladen ist
+    public MainPage()
+    {
+        InitializeComponent();
+
+        _shakeChallenge = new ShakeChallenge();
+        _shakeChallenge.ShakeCountChanged += OnShakeCountChanged;
+        _shakeChallenge.ChallengeCompleted += OnShakeChallengeCompleted;
+    }
+	
+	// KORREKTUR: override wieder aktiv. Startet, sobald die App geladen ist
     // Startet vollautomatisch, sobald das Menü auf dem Bildschirm erscheint
     protected override async void OnAppearing()
     {
@@ -85,62 +88,25 @@ public partial class MainPage : ContentPage
 
 		SemanticScreenReader.Announce(CounterBtn.Text);
 
-		StartShakeChallenge();
-		//SetzeWeckerV2(10);
+		_shakeChallenge.Start(15)
 	}
-    private int _shakeCount = 0;
-    private bool _isAlarmActive = false;
 
-    public void StartShakeChallenge()
+    
+    // Nutzt die dynamischen Daten aus den Event-Argumenten
+    private void OnShakeCountChanged(object? sender, ShakeEventArgs e)
     {
         MainThread.BeginInvokeOnMainThread(() =>
         {
-            _isAlarmActive = true;
-            _shakeCount = 0;
-            CounterBtn.Text = "Schütteln: 0 / 10";
-
-            if (Accelerometer.Default.IsSupported && !Accelerometer.Default.IsMonitoring)
-            {
-                Accelerometer.Default.ReadingChanged += OnAccelerometerReadingChanged;
-                Accelerometer.Default.Start(SensorSpeed.UI);
-            }
+            CounterBtn.Text = $"Schütteln: {e.CurrentCount} / {e.TargetLimit}";
         });
     }
 
-    private void OnAccelerometerReadingChanged(object? sender, AccelerometerChangedEventArgs e)
+    private void OnShakeChallengeCompleted(object? sender, EventArgs e)
     {
-        var data = e.Reading;
-        double gForce = Math.Sqrt(data.Acceleration.X * data.Acceleration.X + 
-                                  data.Acceleration.Y * data.Acceleration.Y + 
-                                  data.Acceleration.Z * data.Acceleration.Z);
-
-        if (gForce > 1.5) 
+        MainThread.BeginInvokeOnMainThread(() =>
         {
-            MainThread.BeginInvokeOnMainThread(() =>
-            {
-                if (!_isAlarmActive) return;
-
-                _shakeCount++;
-                CounterBtn.Text = $"Schütteln: {_shakeCount} / 10";
-
-                if (_shakeCount >= 10)
-                {
-                    StopShakeChallenge();
-                    CounterBtn.Text = "🎉 Geschafft! 🎉";
-                    _isAlarmActive = false;
-                    _shakeCount = 0;
-                }
-            });
-        }
-    }
-
-    private void StopShakeChallenge()
-    {
-        if (Accelerometer.Default.IsSupported && Accelerometer.Default.IsMonitoring)
-        {
-            Accelerometer.Default.ReadingChanged -= OnAccelerometerReadingChanged;
-            Accelerometer.Default.Stop();
-        }
+            CounterBtn.Text = "🎉 Geschafft! 🎉";
+        });
     }
 
     // Rufen Sie diese Methode in Ihrer "OnAlarmStellen"-Button-Methode auf
