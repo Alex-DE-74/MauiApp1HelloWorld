@@ -11,6 +11,61 @@ public static class HyperOs
         string hersteller = Android.OS.Build.Manufacturer?.ToLower() ?? "";
         bool istXiaomi = hersteller.Contains("xiaomi") || hersteller.Contains("redmi") || hersteller.Contains("poco");
 
+        if (!istXiaomi) return; // Kein Xiaomi? Sofort beenden.
+
+        // 2. SETTINGS-CHECK: Verhindert, dass der Dialog bei jedem Weckerstellen nervt
+        bool wurdeBereitsGezeigt = Microsoft.Maui.Storage.Preferences.Default.Get("HyperOsAutostartGezeigt", false);
+        if (wurdeBereitsGezeigt) return;
+
+        // 3. DIALOG ANZEIGEN: Erzwingt den Sprung auf den MAUI Haupt-UI-Thread
+        bool userKlick = false;
+        await Microsoft.Maui.ApplicationModel.MainThread.InvokeOnMainThreadAsync(async () =>
+        {
+            if (Microsoft.Maui.Controls.Application.Current?.MainPage != null)
+            {
+                userKlick = await Microsoft.Maui.Controls.Application.Current.MainPage.DisplayAlert(
+                    "HyperOS Hintergrund-Schutz",
+                    "Damit deine Wecker nach dem Wegwischen der App zuverlässig funktionieren, aktiviere bitte im nächsten Bildschirm den Schalter 'Hintergrund-Autostart'.",
+                    "Zu den Einstellungen",
+                    "Abbrechen");
+            }
+        });
+
+        // 4. BEI ZUSTIMMUNG: Direkt in die App-Info-Details springen
+        if (userKlick)
+        {
+            // Zustand sofort persistent speichern
+            Microsoft.Maui.Storage.Preferences.Default.Set("HyperOsAutostartGezeigt", true);
+
+            var context = Android.App.Application.Context;
+            
+            try
+            {
+                // Dieser Aufruf ist vom Android-System geschützt und wird von HyperOS NIEMALS blockiert.
+                // Er führt den Nutzer direkt auf die Einstellungsseite UNSERER eigenen App.
+                var intent = new Android.Content.Intent(Android.Provider.Settings.ActionApplicationDetailsSettings);
+                var uri = Android.Net.Uri.FromParts("package", context.PackageName, null);
+                intent.SetData(uri);
+                intent.AddFlags(Android.Content.ActivityFlags.NewTask);
+                context.StartActivity(intent);
+            }
+            catch (System.Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"[WEKER-ERROR] Notanker fehlgeschlagen: {ex.Message}");
+            }
+        }
+#else
+        await Task.CompletedTask;
+#endif
+    }
+    
+    public static async Task PruefeUndOeffneEchtenHyperOsAutostartAsync_v1()
+    {
+#if ANDROID
+        // 1. HERSTELLER-CHECK: Nur auf Xiaomi, Redmi und POCO ausführen
+        string hersteller = Android.OS.Build.Manufacturer?.ToLower() ?? "";
+        bool istXiaomi = hersteller.Contains("xiaomi") || hersteller.Contains("redmi") || hersteller.Contains("poco");
+
         if (!istXiaomi) return; // Kein Xiaomi? Sofort abbrechen.
 
         // 2. SETTINGS-CHECK: Wurde das Menü in der Vergangenheit bereits aufgerufen?
