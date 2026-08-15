@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+	<application android:allowBackup="true" android:icon="@mipmap/appicon" android:roundIcon="@mipmap/appicon_round" android:supportsRtl="true"></application>
+	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+	<uses-permission android:name="android.permission.INTERNET" />
+
+	<!-- ERGÄNZT: Erlaubt das Setzen von sekundengenauen Weckern (Ab Android 12+) -->
+	<uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+
+	<uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" />
+	
+	<!-- ERGÄNZT: Erlaubt es der App, das Handy aus dem Standby aufzuwecken -->
+	<uses-permission android:name="android.permission.WAKE_LOCK" />
+
+	<!-- Beide Spezial-Rechte für die maximale Kompatibilität beim Aufwachen -->
+	<uses-permission android:name="android.permission.DISABLE_KEYGUARD" />
+	<uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+
+	<uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
+	<uses-permission android:name="android.permission.VIBRATE" />
+
+	<uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
+<queries>
+    <!-- ZWINGEND: Erlaubt den direkten Zugriff auf Xiaomis Sicherheits-App -->
+    <package android:name="com.miui.securitycenter" />
+
+    <!-- RECHTSKONFORMER FALLBACK: Erlaubt den Aufruf, falls HyperOS nur die Action nutzt -->
+    <intent>
+        <action android:name="miui.intent.action.OP_AUTO_START" />
+    </intent>
+</queries>
+
+<!-- Das MUSS ins Manifest, das tun die Attribute nicht! -->
+<uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+	
+</manifest>
