@@ -8,18 +8,40 @@
 
     <Grid>
 
-        <!-- Normaler Seiteninhalt -->
+        <!--
+            Hauptbereich.
+            Die Kopfzeile bleibt stehen,
+            nur die Liste darunter scrollt.
+        -->
         <Grid
             Padding="20"
-            RowDefinitions="Auto,*,Auto">
+            RowDefinitions="Auto,*">
 
-            <Label
+            <!-- Kopfzeile -->
+            <Grid
                 Grid.Row="0"
-                Text="Übungen"
-                FontSize="28"
-                FontAttributes="Bold"
-                Margin="0,0,0,15" />
+                ColumnDefinitions="*,Auto"
+                Margin="0,0,0,15">
 
+                <Label
+                    Grid.Column="0"
+                    Text="Übungen"
+                    FontSize="28"
+                    FontAttributes="Bold"
+                    VerticalOptions="Center" />
+
+                <Button
+                    Grid.Column="1"
+                    Text="+ Übung"
+                    FontSize="16"
+                    Padding="15,8"
+                    Clicked="OnAddExerciseClicked"
+                    VerticalOptions="Center" />
+
+            </Grid>
+
+
+            <!-- Scrollbarer Übungsbereich -->
             <CollectionView
                 x:Name="ExercisesCollection"
                 Grid.Row="1"
@@ -27,15 +49,19 @@
 
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
+
                         <Grid
-                            Padding="0,10"
+                            Padding="0,8"
                             ColumnDefinitions="Auto,*,Auto">
 
+                            <!-- Aktiv / Inaktiv -->
                             <CheckBox
                                 Grid.Column="0"
                                 IsChecked="{Binding IsActive}"
+                                CheckedChanged="OnActiveChanged"
                                 VerticalOptions="Center" />
 
+                            <!-- Name -->
                             <Label
                                 Grid.Column="1"
                                 Text="{Binding Name}"
@@ -43,29 +69,29 @@
                                 VerticalOptions="Center"
                                 Margin="10,0" />
 
+                            <!-- Bearbeiten -->
                             <Button
                                 Grid.Column="2"
                                 Text="✏"
-                                FontSize="18" />
+                                FontSize="18"
+                                Padding="12,5"
+                                Clicked="OnEditExerciseClicked"
+                                VerticalOptions="Center" />
 
                         </Grid>
+
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
 
             </CollectionView>
 
-            <Button
-                Grid.Row="2"
-                Text="+ Übung"
-                FontSize="18"
-                HeightRequest="55"
-                Margin="0,15,0,0"
-                Clicked="OnAddExerciseClicked" />
-
         </Grid>
 
 
-        <!-- Floating Editor -->
+        <!--
+            Floating Editor Overlay.
+            Standardmäßig unsichtbar.
+        -->
         <Grid
             x:Name="ExerciseEditorOverlay"
             IsVisible="False"
@@ -93,7 +119,8 @@
                         x:Name="ExerciseNameEntry"
                         Placeholder="Übungsname"
                         FontSize="18"
-                        ReturnType="Done" />
+                        ReturnType="Done"
+                        Completed="OnExerciseNameCompleted" />
 
                     <Grid
                         ColumnDefinitions="*,*"
