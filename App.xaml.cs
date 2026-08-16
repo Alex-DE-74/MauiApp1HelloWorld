@@ -1,4 +1,4 @@
-﻿namespace MauiApp1HelloWorld;
+﻿namespace KidJumpUp;
 
 public partial class App : Application
 {
