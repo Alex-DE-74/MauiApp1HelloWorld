@@ -3,170 +3,111 @@
 <ContentPage
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    x:Class="KidJumpUp.Pages.ExercisesPage"
-    Title="Übungen">
+    x:Class="KidJumpUp.Pages.ExercisePlanPage"
+    Title="Planen">
 
-    <Grid>
+    <Grid
+        Padding="20"
+        RowDefinitions="Auto,*,Auto">
 
-        <!--
-            Hauptbereich.
-            Die Kopfzeile bleibt sichtbar.
-            Nur die Übungsliste scrollt.
-        -->
-        <Grid
-            Padding="20"
-            RowDefinitions="Auto,*">
+        <!-- Kopf -->
+        <VerticalStackLayout
+            Grid.Row="0"
+            Spacing="4"
+            Margin="0,0,0,15">
 
-            <!-- Kopfzeile -->
+            <Label
+                Text="Planen"
+                FontSize="28"
+                FontAttributes="Bold" />
+
             <Grid
-                Grid.Row="0"
-                ColumnDefinitions="*,Auto"
-                Margin="0,0,0,15">
-
-                <Label
-                    Grid.Column="0"
-                    Text="Übungen"
-                    FontSize="28"
-                    FontAttributes="Bold"
-                    VerticalOptions="Center" />
+                ColumnDefinitions="Auto,*,Auto"
+                Margin="0,8,0,0">
 
                 <Button
-                    Grid.Column="1"
-                    Text="+ Übung"
-                    FontSize="16"
-                    Padding="15,8"
-                    Clicked="OnAddExerciseClicked"
-                    VerticalOptions="Center" />
-
-            </Grid>
-
-
-            <!-- Scrollbare Übungsliste -->
-            <CollectionView
-                x:Name="ExercisesCollection"
-                Grid.Row="1"
-                SelectionMode="None">
-
-                <CollectionView.ItemTemplate>
-                    <DataTemplate>
-
-                        <Grid
-                            Padding="0,8"
-                            ColumnDefinitions="Auto,*,Auto,Auto">
-
-                            <!-- Aktiv / Inaktiv -->
-                            <CheckBox
-                                Grid.Column="0"
-                                IsChecked="{Binding IsActive}"
-                                CheckedChanged="OnActiveChanged"
-                                VerticalOptions="Center" />
-
-                            <!-- Übungsname -->
-                            <Label
-                                Grid.Column="1"
-                                Text="{Binding Name}"
-                                FontSize="20"
-                                VerticalOptions="Center"
-                                Margin="10,0" />
-
-                            <!-- Bearbeiten -->
-                            <Button
-                                Grid.Column="2"
-                                Text="✏"
-                                FontSize="18"
-                                Padding="12,5"
-                                Margin="0,0,8,0"
-                                Clicked="OnEditExerciseClicked"
-                                VerticalOptions="Center" />
-
-                            <!-- Löschen -->
-                            <Button
-                                Grid.Column="3"
-                                Text="🗑"
-                                FontSize="18"
-                                Padding="12,5"
-                                Clicked="OnDeleteExerciseClicked"
-                                VerticalOptions="Center">
-
-                                <Button.Triggers>
-                                    <DataTrigger
-                                        TargetType="Button"
-                                        Binding="{Binding CanDelete}"
-                                        Value="False">
-
-                                        <Setter
-                                            Property="Opacity"
-                                            Value="0.35" />
-
-                                    </DataTrigger>
-                                </Button.Triggers>
-
-                            </Button>
-
-                        </Grid>
-
-                    </DataTemplate>
-                </CollectionView.ItemTemplate>
-
-            </CollectionView>
-
-        </Grid>
-
-
-        <!--
-            Floating Editor Overlay
-        -->
-        <Grid
-            x:Name="ExerciseEditorOverlay"
-            IsVisible="False"
-            BackgroundColor="#80000000"
-            Padding="30">
-
-            <Border
-                BackgroundColor="{AppThemeBinding Light=White, Dark=#252525}"
-                StrokeShape="RoundRectangle 16"
-                Padding="20"
-                HorizontalOptions="Center"
-                VerticalOptions="Center"
-                MaximumWidthRequest="400">
+                    Grid.Column="0"
+                    Text="◀"
+                    Clicked="OnPreviousDayClicked" />
 
                 <VerticalStackLayout
-                    Spacing="15">
+                    Grid.Column="1"
+                    HorizontalOptions="Center"
+                    Spacing="2">
 
                     <Label
-                        x:Name="EditorTitle"
-                        Text="Neue Übung"
-                        FontSize="24"
-                        FontAttributes="Bold" />
+                        x:Name="DayTitleLabel"
+                        FontSize="22"
+                        FontAttributes="Bold"
+                        HorizontalTextAlignment="Center" />
 
-                    <Entry
-                        x:Name="ExerciseNameEntry"
-                        Placeholder="Übungsname"
-                        FontSize="18"
-                        ReturnType="Done"
-                        Completed="OnExerciseNameCompleted" />
-
-                    <Grid
-                        ColumnDefinitions="*,*"
-                        ColumnSpacing="10">
-
-                        <Button
-                            Grid.Column="0"
-                            Text="Abbrechen"
-                            Clicked="OnCancelExerciseClicked" />
-
-                        <Button
-                            Grid.Column="1"
-                            Text="Speichern"
-                            Clicked="OnSaveExerciseClicked" />
-
-                    </Grid>
+                    <Label
+                        x:Name="DateLabel"
+                        FontSize="14"
+                        HorizontalTextAlignment="Center" />
 
                 </VerticalStackLayout>
 
-            </Border>
+                <Button
+                    Grid.Column="2"
+                    Text="▶"
+                    Clicked="OnNextDayClicked" />
 
-        </Grid>
+            </Grid>
+
+        </VerticalStackLayout>
+
+
+        <!-- Übungen -->
+        <CollectionView
+            x:Name="ExercisesCollection"
+            Grid.Row="1"
+            SelectionMode="None">
+
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+
+                    <Grid
+                        Padding="0,8"
+                        ColumnDefinitions="Auto,*,Auto">
+
+                        <CheckBox
+                            Grid.Column="0"
+                            VerticalOptions="Center"
+                            CheckedChanged="OnExerciseCheckedChanged" />
+
+                        <Label
+                            Grid.Column="1"
+                            Text="{Binding Name}"
+                            FontSize="20"
+                            VerticalOptions="Center"
+                            Margin="10,0" />
+
+                        <Entry
+                            Grid.Column="2"
+                            Placeholder="Ziel"
+                            Keyboard="Numeric"
+                            WidthRequest="80"
+                            HorizontalTextAlignment="Center"
+                            VerticalOptions="Center"
+                            TextChanged="OnTargetTextChanged" />
+
+                    </Grid>
+
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+
+        </CollectionView>
+
+
+        <!-- Speichern -->
+        <Button
+            Grid.Row="2"
+            Text="Speichern"
+            FontSize="18"
+            HeightRequest="55"
+            Margin="0,15,0,0"
+            Clicked="OnSaveClicked" />
 
     </Grid>
 
