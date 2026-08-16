@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<ContentPage
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Class="KidJumpUp.Pages.ExercisesPage"
+    Title="Übungen">
+
+    <Grid Padding="20"
+          RowDefinitions="Auto,* ,Auto">
+
+        <Label
+            Grid.Row="0"
+            Text="Übungen"
+            FontSize="28"
+            FontAttributes="Bold"
+            Margin="0,0,0,15" />
+
+        <CollectionView
+            x:Name="ExercisesCollection"
+            Grid.Row="1"
+            SelectionMode="None">
+
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Grid
+                        Padding="0,10"
+                        ColumnDefinitions="Auto,*,Auto">
+
+                        <CheckBox
+                            Grid.Column="0"
+                            IsChecked="{Binding IsActive}"
+                            VerticalOptions="Center" />
+
+                        <Label
+                            Grid.Column="1"
+                            Text="{Binding Name}"
+                            FontSize="20"
+                            VerticalOptions="Center"
+                            Margin="10,0" />
+
+                        <Button
+                            Grid.Column="2"
+                            Text="✏"
+                            FontSize="18" />
+
+                    </Grid>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+
+        </CollectionView>
+
+        <Button
+            Grid.Row="2"
+            Text="+ Übung"
+            FontSize="18"
+            HeightRequest="55"
+            Margin="0,15,0,0"
+            Clicked="OnAddExerciseClicked" />
+
+    </Grid>
+
+</ContentPage>
