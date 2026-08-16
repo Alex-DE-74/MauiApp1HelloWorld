@@ -3,34 +3,25 @@ using KidJumpUp.Models;
 
 namespace KidJumpUp.Services;
 
-public class ExcercisePlanService
+public class ExercisePlanService
 {
     private readonly AppDatabase _database;
 
-    public ExcercisePlanService(AppDatabase database)
+    public ExercisePlanService(AppDatabase database)
     {
         _database = database;
     }
 
 
-    // =========================================================
-    // Plan laden
-    // =========================================================
-
-    public async Task<DailyPlan?> GetPlanAsync(
-        DateOnly date)
+    public async Task<DailyPlan?> GetPlanAsync(DateOnly date)
     {
         return await _database.GetDailyPlanAsync(
             ToDatabaseDate(date));
     }
 
 
-    // =========================================================
-    // Übungen eines Tages laden
-    // =========================================================
-
-    public async Task<List<DailyExercise>>
-        GetDailyExercisesAsync(DateOnly date)
+    public async Task<List<DailyExercise>> GetDailyExercisesAsync(
+        DateOnly date)
     {
         var plan = await GetPlanAsync(date);
 
@@ -42,36 +33,27 @@ public class ExcercisePlanService
     }
 
 
-    // =========================================================
-    // Plan speichern
-    // =========================================================
-
     public async Task SavePlanAsync(
         DateOnly date,
-        IEnumerable<ExercisePlanItem> items)
+        Dictionary<int, int> selectedExercises)
     {
-        var selectedItems = items
-            .Where(x => x.IsSelected)
-            .ToList();
-
         var databaseDate = ToDatabaseDate(date);
 
-        var plan =
-            await _database.GetDailyPlanAsync(
-                databaseDate);
+        var plan = await _database.GetDailyPlanAsync(
+            databaseDate);
+
 
         // -----------------------------------------------------
-        // Es wurde nichts ausgewählt.
+        // Keine Übung ausgewählt
         // -----------------------------------------------------
 
-        if (selectedItems.Count == 0)
+        if (selectedExercises.Count == 0)
         {
             if (plan == null)
                 return;
 
             var existingExercises =
-                await _database.GetDailyExercisesAsync(
-                    plan.Id);
+                await _database.GetDailyExercisesAsync(plan.Id);
 
             foreach (var dailyExercise in existingExercises)
             {
@@ -79,7 +61,7 @@ public class ExcercisePlanService
                     await _database.GetTrainingResultCountAsync(
                         dailyExercise.Id);
 
-                // Mit Ergebnis niemals löschen.
+                // Bereits vorhandene Ergebnisse schützen.
                 if (resultCount == 0)
                 {
                     await _database.DeleteDailyExerciseAsync(
@@ -88,8 +70,7 @@ public class ExcercisePlanService
             }
 
             var remaining =
-                await _database.GetDailyExercisesAsync(
-                    plan.Id);
+                await _database.GetDailyExercisesAsync(plan.Id);
 
             if (remaining.Count == 0)
             {
@@ -101,7 +82,7 @@ public class ExcercisePlanService
 
 
         // -----------------------------------------------------
-        // DailyPlan anlegen, falls noch nicht vorhanden.
+        // DailyPlan bei Bedarf anlegen
         // -----------------------------------------------------
 
         if (plan == null)
@@ -116,25 +97,23 @@ public class ExcercisePlanService
 
 
         // -----------------------------------------------------
-        // Bestehende DailyExercises laden.
+        // Bestehende DailyExercises
         // -----------------------------------------------------
 
         var existing =
-            await _database.GetDailyExercisesAsync(
-                plan.Id);
+            await _database.GetDailyExercisesAsync(plan.Id);
 
-        var selectedIds = selectedItems
-            .Select(x => x.ExerciseId)
-            .ToHashSet();
+        var existingByExerciseId =
+            existing.ToDictionary(x => x.ExerciseId);
 
 
         // -----------------------------------------------------
-        // Nicht mehr ausgewählte Übungen entfernen.
+        // Nicht mehr ausgewählte Übungen entfernen
         // -----------------------------------------------------
 
         foreach (var dailyExercise in existing)
         {
-            if (selectedIds.Contains(
+            if (selectedExercises.ContainsKey(
                     dailyExercise.ExerciseId))
             {
                 continue;
@@ -144,7 +123,7 @@ public class ExcercisePlanService
                 await _database.GetTrainingResultCountAsync(
                     dailyExercise.Id);
 
-            // Historie schützen.
+            // Niemals eine DailyExercise mit Ergebnis löschen.
             if (resultCount == 0)
             {
                 await _database.DeleteDailyExerciseAsync(
@@ -154,35 +133,24 @@ public class ExcercisePlanService
 
 
         // -----------------------------------------------------
-        // Aktuellen Stand erneut laden.
+        // Neue Übungen hinzufügen /
+        // Ziele bestehender Übungen aktualisieren
         // -----------------------------------------------------
 
-        existing =
-            await _database.GetDailyExercisesAsync(
-                plan.Id);
-
-        var existingByExerciseId =
-            existing.ToDictionary(
-                x => x.ExerciseId);
-
-
-        // -----------------------------------------------------
-        // Neue Übungen hinzufügen bzw.
-        // Target aktualisieren.
-        // -----------------------------------------------------
-
-        foreach (var item in selectedItems)
+        foreach (var selected in selectedExercises)
         {
+            var exerciseId = selected.Key;
+            var target = selected.Value;
+
             if (existingByExerciseId.TryGetValue(
-                    item.ExerciseId,
+                    exerciseId,
                     out var dailyExercise))
             {
-                // Target darf geändert werden.
-                if (dailyExercise.Target != item.Target)
+                if (dailyExercise.Target != target)
                 {
-                    dailyExercise.Target = item.Target;
+                    dailyExercise.Target = target;
 
-                    await _database.InsertOrUpdateDailyExerciseAsync(
+                    await _database.SaveDailyExerciseAsync(
                         dailyExercise);
                 }
             }
@@ -192,17 +160,13 @@ public class ExcercisePlanService
                     new DailyExercise
                     {
                         DailyPlanId = plan.Id,
-                        ExerciseId = item.ExerciseId,
-                        Target = item.Target
+                        ExerciseId = exerciseId,
+                        Target = target
                     });
             }
         }
     }
 
-
-    // =========================================================
-    // Hat eine DailyExercise bereits Ergebnisse?
-    // =========================================================
 
     public async Task<bool> HasTrainingResultsAsync(
         int dailyExerciseId)
@@ -215,8 +179,7 @@ public class ExcercisePlanService
     }
 
 
-    private static string ToDatabaseDate(
-        DateOnly date)
+    private static string ToDatabaseDate(DateOnly date)
     {
         return date.ToString("yyyy-MM-dd");
     }
