@@ -1,7 +1,7 @@
 using Android.Content;
 using Android.App;
 
-namespace MauiApp1HelloWorld;
+namespace KidJumpUp;
 
 // [BroadcastReceiver(Enabled = true, Exported = false)]
 public class NotificationService
