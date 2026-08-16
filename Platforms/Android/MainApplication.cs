@@ -1,7 +1,7 @@
 ﻿using Android.App;
 using Android.Runtime;
 
-namespace MauiApp1HelloWorld;
+namespace KidJumpUp;
 
 [Application]
 public class MainApplication : MauiApplication
