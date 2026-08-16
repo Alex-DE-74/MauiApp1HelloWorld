@@ -80,7 +80,7 @@ private async void OnTestExercisesClicked(object sender, EventArgs e)
 	
 private async void OnTestExercisesPlanClicked(object sender, EventArgs e)
 {
-    await Shell.Current.GoToAsync(nameof(ExercisesPlanPage));
+    await Shell.Current.GoToAsync(nameof(ExercisePlanPage));
 }
 		private void OnCounterClicked(object sender, EventArgs e)
 	{
