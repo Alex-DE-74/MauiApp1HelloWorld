@@ -70,6 +70,11 @@ public partial class MainPage : ContentPage
 			//await this.DisplayAlertAsync("Hallo Elina! 🏃‍♂️", "Schön dass du da bist. Lass uns den Tag fit verbringen", "Los geht's! 🚀");
 		});
 	}
+
+private async void OnTestPlanClicked(object sender, EventArgs e)
+{
+    await Shell.Current.GoToAsync(nameof(ExercisesPage));
+}
 	
 	private void OnCounterClicked(object sender, EventArgs e)
 	{
