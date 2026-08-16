@@ -32,7 +32,7 @@
                 x:Name="TestBtnExercises"
                 Text="Training Exercises Test"
                 SemanticProperties.Hint="Click for navigate to test page"
-                Clicked="OnTestExcercisesClicked"
+                Clicked="OnTestExercisesClicked"
                 HorizontalOptions="Center" />
 
               <Button
