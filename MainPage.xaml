@@ -29,13 +29,20 @@
                 HorizontalOptions="Center" />
 
             <Button
-                x:Name="TestBtn"
-                Text="Training Plan Test"
+                x:Name="TestBtnExercises"
+                Text="Training Exercises Test"
                 SemanticProperties.Hint="Click for navigate to test page"
-                Clicked="OnTestPlanClicked"
+                Clicked="OnTestExcercisesClicked"
                 HorizontalOptions="Center" />
 
               <Button
+                x:Name="TestBtnExcercisesPlan"
+                Text="Training Excercises Plan Test"
+                SemanticProperties.Hint="Click for navigate to test page"
+                Clicked="OnTestExcerisesPlanClicked"
+                HorizontalOptions="Center" />
+
+            <Button
                 x:Name="CounterBtn"
                 Text="Click me"
                 SemanticProperties.Hint="Counts the number of times you click"
