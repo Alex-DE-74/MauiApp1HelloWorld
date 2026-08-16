@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.Maui.ApplicationModel;
 using Microsoft.Maui.Controls;
 
-namespace MauiApp1HelloWorld;
+namespace KidJumpUp;
 
 public class BerechtigungsManager
 {
