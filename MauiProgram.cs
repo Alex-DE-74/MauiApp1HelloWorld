@@ -9,7 +9,7 @@ public static class MauiProgram
 	{
 		var builder = MauiApp.CreateBuilder();
 		builder.Services.AddSingleton<AppDatabase>()
-        .Services.AddSingleton<ExerciseService>();l
+        .Services.AddSingleton<ExerciseService>()
         .Services.AddTransient<ExercisesPage>()
 		.UseMauiApp<App>()
 			.ConfigureFonts(fonts =>
