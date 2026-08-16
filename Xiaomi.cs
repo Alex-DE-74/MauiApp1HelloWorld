@@ -18,7 +18,7 @@ using Android.Content;
 using Android.OS;
 using AndroidX.Core.Content;
 
-namespace MauiApp1HelloWorld;
+namespace KidJumpUp;
 
 public static class Xiaomi
 {
