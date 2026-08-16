@@ -42,6 +42,24 @@ public partial class ExercisesPage : ContentPage
         ExerciseNameEntry.Focus();
     }
 
+    private void OnEditExerciseClicked(object sender, EventArgs e)
+    {
+        if (sender is not Button button)
+            return;
+
+        if (button.BindingContext is not Exercise exercise)
+            return;
+
+        _editingExercise = exercise;
+
+        EditorTitle.Text = "Übung bearbeiten";
+        ExerciseNameEntry.Text = exercise.Name;
+
+        ExerciseEditorOverlay.IsVisible = true;
+
+        ExerciseNameEntry.Focus();
+    }
+
     private void OnCancelExerciseClicked(object sender, EventArgs e)
     {
         CloseEditor();
@@ -83,10 +101,50 @@ public partial class ExercisesPage : ContentPage
         await LoadExercisesAsync();
     }
 
+    private async void OnActiveChanged(object sender, CheckedChangedEventArgs e)
+    {
+        if (sender is not CheckBox checkBox)
+            return;
+
+        if (checkBox.BindingContext is not Exercise exercise)
+            return;
+
+        exercise.IsActive = e.Value;
+
+        await _exerciseService.SaveExerciseAsync(exercise);
+    }
+
+    private void OnExerciseNameCompleted(object sender, EventArgs e)
+    {
+        // Enter/Done auf der Android-Tastatur
+        // schließt die Tastatur.
+        ExerciseNameEntry.Unfocus();
+    }
+
     private void CloseEditor()
     {
+        ExerciseNameEntry.Unfocus();
+
+#if ANDROID
+        var handler = ExerciseNameEntry.Handler;
+
+        if (handler?.PlatformView is Android.Widget.EditText editText)
+        {
+            var inputMethodManager =
+                Android.App.Application.Context
+                    .GetSystemService(Android.Content.Context.InputMethodService)
+                    as Android.Views.InputMethods.InputMethodManager;
+
+            inputMethodManager?.HideSoftInputFromWindow(
+                editText.WindowToken,
+                Android.Views.InputMethods.HideSoftInputFlags.None);
+        }
+#endif
+
         ExerciseEditorOverlay.IsVisible = false;
+
         ExerciseNameEntry.Text = string.Empty;
+
         _editingExercise = null;
     }
 }
