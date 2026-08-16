@@ -7,6 +7,8 @@ public partial class ExercisesPage : ContentPage
 {
     private readonly ExerciseService _exerciseService;
 
+    private Exercise? _editingExercise;
+
     public ExercisesPage(ExerciseService exerciseService)
     {
         InitializeComponent();
@@ -28,9 +30,63 @@ public partial class ExercisesPage : ContentPage
         ExercisesCollection.ItemsSource = exercises;
     }
 
-    private async void OnAddExerciseClicked(object sender, EventArgs e)
+    private void OnAddExerciseClicked(object sender, EventArgs e)
     {
-        // Kommt im nächsten Schritt:
-        // Floating Editor anzeigen
+        _editingExercise = null;
+
+        EditorTitle.Text = "Neue Übung";
+        ExerciseNameEntry.Text = string.Empty;
+
+        ExerciseEditorOverlay.IsVisible = true;
+
+        ExerciseNameEntry.Focus();
+    }
+
+    private void OnCancelExerciseClicked(object sender, EventArgs e)
+    {
+        CloseEditor();
+    }
+
+    private async void OnSaveExerciseClicked(object sender, EventArgs e)
+    {
+        var name = ExerciseNameEntry.Text?.Trim();
+
+        if (string.IsNullOrWhiteSpace(name))
+        {
+            await DisplayAlert(
+                "Übung",
+                "Bitte einen Übungsnamen eingeben.",
+                "OK");
+
+            return;
+        }
+
+        if (_editingExercise == null)
+        {
+            var exercise = new Exercise
+            {
+                Name = name,
+                IsActive = true
+            };
+
+            await _exerciseService.SaveExerciseAsync(exercise);
+        }
+        else
+        {
+            _editingExercise.Name = name;
+
+            await _exerciseService.SaveExerciseAsync(_editingExercise);
+        }
+
+        CloseEditor();
+
+        await LoadExercisesAsync();
+    }
+
+    private void CloseEditor()
+    {
+        ExerciseEditorOverlay.IsVisible = false;
+        ExerciseNameEntry.Text = string.Empty;
+        _editingExercise = null;
     }
 }
