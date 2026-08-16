@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<ContentPage
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Class="KidJumpUp.Pages.ExercisePlanPage"
+    Title="Planen">
+
+    <Grid
+        Padding="20"
+        RowDefinitions="Auto,Auto,*,Auto">
+
+        <!-- Kopfbereich -->
+        <VerticalStackLayout
+            Grid.Row="0"
+            Spacing="4"
+            Margin="0,0,0,15">
+
+            <Label
+                Text="Planen"
+                FontSize="28"
+                FontAttributes="Bold" />
+
+            <Grid
+                ColumnDefinitions="Auto,*,Auto"
+                Margin="0,8,0,0">
+
+                <Button
+                    Grid.Column="0"
+                    Text="◀"
+                    Clicked="OnPreviousDayClicked" />
+
+                <VerticalStackLayout
+                    Grid.Column="1"
+                    HorizontalOptions="Center"
+                    Spacing="2">
+
+                    <Label
+                        x:Name="DayTitleLabel"
+                        FontSize="22"
+                        FontAttributes="Bold"
+                        HorizontalTextAlignment="Center" />
+
+                    <Label
+                        x:Name="DateLabel"
+                        FontSize="14"
+                        HorizontalTextAlignment="Center" />
+
+                </VerticalStackLayout>
+
+                <Button
+                    Grid.Column="2"
+                    Text="▶"
+                    Clicked="OnNextDayClicked" />
+
+            </Grid>
+
+        </VerticalStackLayout>
+
+
+        <!-- Übungen -->
+        <CollectionView
+            x:Name="ExercisesCollection"
+            Grid.Row="2"
+            SelectionMode="None">
+
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+
+                    <Grid
+                        Padding="0,8"
+                        ColumnDefinitions="Auto,*,Auto">
+
+                        <CheckBox
+                            Grid.Column="0"
+                            IsChecked="{Binding IsSelected}"
+                            CheckedChanged="OnExerciseCheckedChanged"
+                            VerticalOptions="Center" />
+
+                        <Label
+                            Grid.Column="1"
+                            Text="{Binding Name}"
+                            FontSize="20"
+                            VerticalOptions="Center"
+                            Margin="10,0" />
+
+                        <Entry
+                            Grid.Column="2"
+                            Text="{Binding TargetText}"
+                            Keyboard="Numeric"
+                            Placeholder="Ziel"
+                            WidthRequest="80"
+                            HorizontalTextAlignment="Center"
+                            VerticalOptions="Center"
+                            TextChanged="OnTargetTextChanged" />
+
+                    </Grid>
+
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+
+        </CollectionView>
+
+
+        <!-- Speichern -->
+        <Button
+            Grid.Row="3"
+            Text="Speichern"
+            FontSize="18"
+            HeightRequest="55"
+            Margin="0,15,0,0"
+            Clicked="OnSaveClicked" />
+
+    </Grid>
+
+</ContentPage>
