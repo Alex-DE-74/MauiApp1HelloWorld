@@ -78,7 +78,7 @@ private async void OnTestExercisesClicked(object sender, EventArgs e)
     await Shell.Current.GoToAsync(nameof(ExercisesPage));
 }
 	
-private async void OnTestExercisesPlanClicked(object sender, EventArgs e)
+private async void OnTestExercisePlanClicked(object sender, EventArgs e)
 {
     await Shell.Current.GoToAsync(nameof(ExercisePlanPage));
 }
