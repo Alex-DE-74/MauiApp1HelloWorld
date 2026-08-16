@@ -128,7 +128,7 @@
 
                         <Button
                             Text="Abbrechen"
-                            Clicked="OnCancelEditorClicked" />
+                            Clicked="OnCancelExerciseClicked' />
 
                         <Button
                             Text="Speichern"
