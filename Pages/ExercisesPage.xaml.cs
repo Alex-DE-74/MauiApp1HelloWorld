@@ -101,7 +101,9 @@ public partial class ExercisesPage : ContentPage
         await LoadExercisesAsync();
     }
 
-    private async void OnActiveChanged(object sender, CheckedChangedEventArgs e)
+    private async void OnActiveChanged(
+        object sender,
+        CheckedChangedEventArgs e)
     {
         if (sender is not CheckBox checkBox)
             return;
@@ -114,10 +116,65 @@ public partial class ExercisesPage : ContentPage
         await _exerciseService.SaveExerciseAsync(exercise);
     }
 
-    private void OnExerciseNameCompleted(object sender, EventArgs e)
+    private async void OnDeleteExerciseClicked(
+        object sender,
+        EventArgs e)
     {
-        // Enter/Done auf der Android-Tastatur
-        // schließt die Tastatur.
+        if (sender is not Button button)
+            return;
+
+        if (button.BindingContext is not Exercise exercise)
+            return;
+
+        // Noch einmal aktuell aus der Datenbank prüfen.
+        var usageCount =
+            await _exerciseService.GetUsageCountAsync(exercise.Id);
+
+        if (usageCount > 0)
+        {
+            await DisplayAlert(
+                "⚠ Trainingsplan vorhanden",
+                "Diese Übung wurde bereits in einem Trainingsplan " +
+                "verwendet und kann deshalb nicht gelöscht werden.",
+                "OK");
+
+            return;
+        }
+
+        var confirmed = await DisplayAlert(
+            "Übung löschen?",
+            $"„{exercise.Name}“ wirklich löschen?",
+            "Löschen",
+            "Abbrechen");
+
+        if (!confirmed)
+            return;
+
+        var deleted =
+            await _exerciseService.DeleteExerciseAsync(exercise);
+
+        if (!deleted)
+        {
+            // Zwischen Prüfung und Löschung könnte theoretisch
+            // ein anderer Vorgang die Übung verwendet haben.
+            await DisplayAlert(
+                "⚠ Löschen nicht möglich",
+                "Die Übung wurde inzwischen in einem Trainingsplan " +
+                "verwendet und kann deshalb nicht gelöscht werden.",
+                "OK");
+
+            await LoadExercisesAsync();
+
+            return;
+        }
+
+        await LoadExercisesAsync();
+    }
+
+    private void OnExerciseNameCompleted(
+        object sender,
+        EventArgs e)
+    {
         ExerciseNameEntry.Unfocus();
     }
 
@@ -132,8 +189,9 @@ public partial class ExercisesPage : ContentPage
         {
             var inputMethodManager =
                 Android.App.Application.Context
-                    .GetSystemService(Android.Content.Context.InputMethodService)
-                    as Android.Views.InputMethods.InputMethodManager;
+                    .GetSystemService(
+                        Android.Content.Context.InputMethodService)
+                as Android.Views.InputMethods.InputMethodManager;
 
             inputMethodManager?.HideSoftInputFromWindow(
                 editText.WindowToken,
