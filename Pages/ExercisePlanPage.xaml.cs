@@ -1,3 +1,4 @@
+using KidJumpUp.Models;
 using KidJumpUp.Services;
 
 namespace KidJumpUp.Pages;
@@ -5,20 +6,25 @@ namespace KidJumpUp.Pages;
 public partial class ExercisePlanPage : ContentPage
 {
     private readonly ExerciseService _exerciseService;
-    private readonly DailyPlanService _dailyPlanService;
+    private readonly ExercisePlanService _exercisePlanService;
 
     private DateOnly _selectedDate;
 
     private bool _loading;
 
+    // Noch nicht gespeicherter UI-Zustand:
+    // ExerciseId -> Target
+    private readonly Dictionary<int, int> _selectedExercises = new();
+
+
     public ExercisePlanPage(
         ExerciseService exerciseService,
-        DailyPlanService dailyPlanService)
+        ExercisePlanService exercisePlanService)
     {
         InitializeComponent();
 
         _exerciseService = exerciseService;
-        _dailyPlanService = dailyPlanService;
+        _exercisePlanService = exercisePlanService;
 
         // Standardmäßig Morgen.
         _selectedDate = DateOnly.FromDateTime(
@@ -45,39 +51,29 @@ public partial class ExercisePlanPage : ContentPage
         {
             UpdateDateDisplay();
 
+            _selectedExercises.Clear();
+
             var exercises =
                 await _exerciseService.GetExercisesAsync();
 
             var dailyExercises =
-                await _dailyPlanService
+                await _exercisePlanService
                     .GetDailyExercisesAsync(
                         _selectedDate);
 
-            var dailyByExerciseId =
-                dailyExercises.ToDictionary(
-                    x => x.ExerciseId);
+            foreach (var dailyExercise in dailyExercises)
+            {
+                _selectedExercises[
+                    dailyExercise.ExerciseId] =
+                    dailyExercise.Target;
+            }
 
-            var items = exercises
+            ExercisesCollection.ItemsSource = exercises
                 .Where(x => x.IsActive)
-                .Select(x =>
-                {
-                    dailyByExerciseId.TryGetValue(
-                        x.Id,
-                        out var dailyExercise);
-
-                    return new ExercisePlanItem
-                    {
-                        ExerciseId = x.Id,
-                        Name = x.Name,
-                        IsSelected =
-                            dailyExercise != null,
-                        Target =
-                            dailyExercise?.Target ?? 0
-                    };
-                })
                 .ToList();
 
-            ExercisesCollection.ItemsSource = items;
+            // Die Controls werden beim Erzeugen der
+            // CollectionView-Zeilen gesetzt.
         }
         finally
         {
@@ -146,12 +142,24 @@ public partial class ExercisePlanPage : ContentPage
             return;
 
         if (checkBox.BindingContext
-            is not ExercisePlanItem item)
+            is not Exercise exercise)
         {
             return;
         }
 
-        item.IsSelected = e.Value;
+        if (e.Value)
+        {
+            if (!_selectedExercises.ContainsKey(
+                    exercise.Id))
+            {
+                _selectedExercises[exercise.Id] = 0;
+            }
+        }
+        else
+        {
+            _selectedExercises.Remove(
+                exercise.Id);
+        }
     }
 
 
@@ -163,7 +171,13 @@ public partial class ExercisePlanPage : ContentPage
             return;
 
         if (entry.BindingContext
-            is not ExercisePlanItem item)
+            is not Exercise exercise)
+        {
+            return;
+        }
+
+        if (!_selectedExercises.ContainsKey(
+                exercise.Id))
         {
             return;
         }
@@ -172,12 +186,13 @@ public partial class ExercisePlanPage : ContentPage
                 e.NewTextValue,
                 out var target))
         {
-            item.Target = Math.Max(0, target);
+            _selectedExercises[exercise.Id] =
+                Math.Max(0, target);
         }
         else if (string.IsNullOrWhiteSpace(
                      e.NewTextValue))
         {
-            item.Target = 0;
+            _selectedExercises[exercise.Id] = 0;
         }
     }
 
@@ -186,15 +201,10 @@ public partial class ExercisePlanPage : ContentPage
         object sender,
         EventArgs e)
     {
-        if (ExercisesCollection.ItemsSource
-            is not IEnumerable<ExercisePlanItem> items)
-        {
-            return;
-        }
-
-        await _dailyPlanService.SavePlanAsync(
+        await _exercisePlanService.SavePlanAsync(
             _selectedDate,
-            items);
+            new Dictionary<int, int>(
+                _selectedExercises));
 
         await DisplayAlert(
             "Gespeichert",
@@ -225,24 +235,7 @@ public partial class ExercisePlanPage : ContentPage
             return "gestern";
         }
 
-        return _selectedDate
-            .ToString("dd.MM.yyyy");
+        return _selectedDate.ToString(
+            "dd.MM.yyyy");
     }
-}
-
-
-public class ExercisePlanItem
-{
-    public int ExerciseId { get; set; }
-
-    public string Name { get; set; } = string.Empty;
-
-    public bool IsSelected { get; set; }
-
-    public int Target { get; set; }
-
-    public string TargetText
-        => Target == 0
-            ? string.Empty
-            : Target.ToString();
 }
