@@ -1,4 +1,6 @@
-﻿namespace KidJumpUp;
+using KidJumpUp.Pages;
+
+namespace KidJumpUp;
 
 /*
 using System;
