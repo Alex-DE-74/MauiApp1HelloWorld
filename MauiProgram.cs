@@ -22,7 +22,7 @@ public static class MauiProgram
             .AddSingleton<AppDatabase>()
             .AddSingleton<ExerciseService>()
             .AddTransient<ExercisesPage>()
-            .AddSingleton<ExcercisePlanService>()
+            .AddSingleton<ExercisePlanService>()
             .AddTransient<ExercisePlanPage>();
         
         return builder.Build();
