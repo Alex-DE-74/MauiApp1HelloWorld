@@ -76,4 +76,93 @@ public class AppDatabase
 
         return await database.DeleteAsync(exercise);
     }
+
+    // =========================================================
+// DailyPlan
+// =========================================================
+
+public async Task<DailyPlan?> GetDailyPlanAsync(string date)
+{
+    var database = await GetDatabaseAsync();
+
+    return await database
+        .Table<DailyPlan>()
+        .Where(x => x.Date == date)
+        .FirstOrDefaultAsync();
+}
+
+public async Task<int> InsertDailyPlanAsync(
+    DailyPlan dailyPlan)
+{
+    var database = await GetDatabaseAsync();
+
+    return await database.InsertAsync(dailyPlan);
+}
+
+public async Task<int> DeleteDailyPlanAsync(
+    DailyPlan dailyPlan)
+{
+    var database = await GetDatabaseAsync();
+
+    return await database.DeleteAsync(dailyPlan);
+}
+
+
+// =========================================================
+// DailyExercise
+// =========================================================
+
+public async Task<List<DailyExercise>>
+    GetDailyExercisesAsync(int dailyPlanId)
+{
+    var database = await GetDatabaseAsync();
+
+    return await database
+        .Table<DailyExercise>()
+        .Where(x => x.DailyPlanId == dailyPlanId)
+        .ToListAsync();
+}
+
+public async Task<int> InsertDailyExerciseAsync(
+    DailyExercise dailyExercise)
+{
+    var database = await GetDatabaseAsync();
+
+    return await database.InsertAsync(dailyExercise);
+}
+
+public async Task<int> DeleteDailyExerciseAsync(
+    DailyExercise dailyExercise)
+{
+    var database = await GetDatabaseAsync();
+
+    return await database.DeleteAsync(dailyExercise);
+}
+
+public async Task<int> SaveDailyExerciseAsync(
+    DailyExercise dailyExercise)
+{
+    var database = await GetDatabaseAsync();
+
+    if (dailyExercise.Id == 0)
+        return await database.InsertAsync(dailyExercise);
+
+    return await database.UpdateAsync(dailyExercise);
+}
+
+    
+// =========================================================
+// TrainingResult
+// =========================================================
+
+public async Task<int> GetTrainingResultCountAsync(
+    int dailyExerciseId)
+{
+    var database = await GetDatabaseAsync();
+
+    return await database
+        .Table<TrainingResult>()
+        .Where(x => x.DailyExerciseId == dailyExerciseId)
+        .CountAsync();
+}
 }
