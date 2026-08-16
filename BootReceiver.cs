@@ -2,7 +2,7 @@
 using Android.App;
 using Android.Content;
 
-namespace MauiApp1HelloWorld;
+namespace KidJumpUp;
 
 // KORREKTUR: Explizite Nutzung von 'IntentFilterAttribute', um den Konflikt zu lösen
 [BroadcastReceiver(Enabled = true, Exported = false, DirectBootAware = true)]
