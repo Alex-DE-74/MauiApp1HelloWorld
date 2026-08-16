@@ -4,58 +4,32 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     x:Class="KidJumpUp.Pages.ExercisesPage"
-    Title="Planen">
+    Title="Übungen">
 
     <Grid
         Padding="20"
         RowDefinitions="Auto,*,Auto">
 
         <!-- Kopf -->
-        <VerticalStackLayout
+        <Grid
             Grid.Row="0"
-            Spacing="4"
+            ColumnDefinitions="*,Auto"
             Margin="0,0,0,15">
 
             <Label
-                Text="Planen"
+                Grid.Column="0"
+                Text="Übungen"
                 FontSize="28"
-                FontAttributes="Bold" />
+                FontAttributes="Bold"
+                VerticalOptions="Center" />
 
-            <Grid
-                ColumnDefinitions="Auto,*,Auto"
-                Margin="0,8,0,0">
+            <Button
+                Grid.Column="1"
+                Text="+ Übung"
+                Clicked="OnAddExerciseClicked"
+                VerticalOptions="Center" />
 
-                <Button
-                    Grid.Column="0"
-                    Text="◀"
-                    Clicked="OnPreviousDayClicked" />
-
-                <VerticalStackLayout
-                    Grid.Column="1"
-                    HorizontalOptions="Center"
-                    Spacing="2">
-
-                    <Label
-                        x:Name="DayTitleLabel"
-                        FontSize="22"
-                        FontAttributes="Bold"
-                        HorizontalTextAlignment="Center" />
-
-                    <Label
-                        x:Name="DateLabel"
-                        FontSize="14"
-                        HorizontalTextAlignment="Center" />
-
-                </VerticalStackLayout>
-
-                <Button
-                    Grid.Column="2"
-                    Text="▶"
-                    Clicked="OnNextDayClicked" />
-
-            </Grid>
-
-        </VerticalStackLayout>
+        </Grid>
 
 
         <!-- Übungen -->
@@ -69,13 +43,16 @@
 
                     <Grid
                         Padding="0,8"
-                        ColumnDefinitions="Auto,*,Auto">
+                        ColumnDefinitions="Auto,*,Auto,Auto">
 
+                        <!-- Aktiv -->
                         <CheckBox
                             Grid.Column="0"
-                            VerticalOptions="Center"
-                            CheckedChanged="OnExerciseCheckedChanged" />
+                            IsChecked="{Binding IsActive}"
+                            CheckedChanged="OnActiveChanged"
+                            VerticalOptions="Center" />
 
+                        <!-- Name -->
                         <Label
                             Grid.Column="1"
                             Text="{Binding Name}"
@@ -83,14 +60,24 @@
                             VerticalOptions="Center"
                             Margin="10,0" />
 
-                        <Entry
+                        <!-- Bearbeiten -->
+                        <Button
                             Grid.Column="2"
-                            Placeholder="Ziel"
-                            Keyboard="Numeric"
-                            WidthRequest="80"
-                            HorizontalTextAlignment="Center"
-                            VerticalOptions="Center"
-                            TextChanged="OnTargetTextChanged" />
+                            Text="✎"
+                            Clicked="OnEditExerciseClicked"
+                            CommandParameter="{Binding .}"
+                            Padding="10,5"
+                            Margin="0,0,8,0"
+                            VerticalOptions="Center" />
+
+                        <!-- Löschen -->
+                        <Button
+                            Grid.Column="3"
+                            Text="🗑"
+                            Clicked="OnDeleteExerciseClicked"
+                            CommandParameter="{Binding .}"
+                            Padding="10,5"
+                            VerticalOptions="Center" />
 
                     </Grid>
 
@@ -100,14 +87,60 @@
         </CollectionView>
 
 
-        <!-- Speichern -->
-        <Button
-            Grid.Row="2"
-            Text="Speichern"
-            FontSize="18"
-            HeightRequest="55"
-            Margin="0,15,0,0"
-            Clicked="OnSaveClicked" />
+        <!-- Floating Editor -->
+        <Grid
+            x:Name="ExerciseEditorOverlay"
+            Grid.RowSpan="3"
+            BackgroundColor="#80000000"
+            IsVisible="False"
+            ZIndex="10">
+
+            <Border
+                BackgroundColor="{AppThemeBinding Light=White, Dark=#202020}"
+                StrokeThickness="0"
+                Padding="20"
+                HorizontalOptions="Center"
+                VerticalOptions="Center"
+                WidthRequest="320">
+
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="16" />
+                </Border.StrokeShape>
+
+                <VerticalStackLayout
+                    Spacing="15">
+
+                    <Label
+                        x:Name="EditorTitle"
+                        Text="Neue Übung"
+                        FontSize="22"
+                        FontAttributes="Bold" />
+
+                    <Entry
+                        x:Name="ExerciseNameEntry"
+                        Placeholder="Name der Übung"
+                        FontSize="18"
+                        ReturnType="Done" />
+
+                    <HorizontalStackLayout
+                        HorizontalOptions="End"
+                        Spacing="10">
+
+                        <Button
+                            Text="Abbrechen"
+                            Clicked="OnCancelEditorClicked" />
+
+                        <Button
+                            Text="Speichern"
+                            Clicked="OnSaveExerciseClicked" />
+
+                    </HorizontalStackLayout>
+
+                </VerticalStackLayout>
+
+            </Border>
+
+        </Grid>
 
     </Grid>
 
