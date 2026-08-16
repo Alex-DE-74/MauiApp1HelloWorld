@@ -10,8 +10,8 @@
 
         <!--
             Hauptbereich.
-            Die Kopfzeile bleibt stehen,
-            nur die Liste darunter scrollt.
+            Die Kopfzeile bleibt sichtbar.
+            Nur die Übungsliste scrollt.
         -->
         <Grid
             Padding="20"
@@ -41,7 +41,7 @@
             </Grid>
 
 
-            <!-- Scrollbarer Übungsbereich -->
+            <!-- Scrollbare Übungsliste -->
             <CollectionView
                 x:Name="ExercisesCollection"
                 Grid.Row="1"
@@ -52,7 +52,7 @@
 
                         <Grid
                             Padding="0,8"
-                            ColumnDefinitions="Auto,*,Auto">
+                            ColumnDefinitions="Auto,*,Auto,Auto">
 
                             <!-- Aktiv / Inaktiv -->
                             <CheckBox
@@ -61,7 +61,7 @@
                                 CheckedChanged="OnActiveChanged"
                                 VerticalOptions="Center" />
 
-                            <!-- Name -->
+                            <!-- Übungsname -->
                             <Label
                                 Grid.Column="1"
                                 Text="{Binding Name}"
@@ -78,6 +78,30 @@
                                 Clicked="OnEditExerciseClicked"
                                 VerticalOptions="Center" />
 
+                            <!-- Löschen -->
+                            <Button
+                                Grid.Column="3"
+                                Text="🗑"
+                                FontSize="18"
+                                Padding="12,5"
+                                Clicked="OnDeleteExerciseClicked"
+                                VerticalOptions="Center">
+
+                                <Button.Triggers>
+                                    <DataTrigger
+                                        TargetType="Button"
+                                        Binding="{Binding CanDelete}"
+                                        Value="False">
+
+                                        <Setter
+                                            Property="Opacity"
+                                            Value="0.35" />
+
+                                    </DataTrigger>
+                                </Button.Triggers>
+
+                            </Button>
+
                         </Grid>
 
                     </DataTemplate>
@@ -89,8 +113,7 @@
 
 
         <!--
-            Floating Editor Overlay.
-            Standardmäßig unsichtbar.
+            Floating Editor Overlay
         -->
         <Grid
             x:Name="ExerciseEditorOverlay"
