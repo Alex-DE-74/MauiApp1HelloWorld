@@ -1,5 +1,5 @@
-using SQLite;
 using KidJumpUp.Models;
+using SQLite;
 
 namespace KidJumpUp.Data;
 
@@ -31,7 +31,8 @@ public class AppDatabase
     private async Task InitializeAsync()
     {
         if (_database == null)
-            throw new InvalidOperationException("Database connection is not initialized.");
+            throw new InvalidOperationException(
+                "Database connection is not initialized.");
 
         await _database.CreateTableAsync<Exercise>();
         await _database.CreateTableAsync<DailyPlan>();
@@ -49,6 +50,16 @@ public class AppDatabase
             .ToListAsync();
     }
 
+    public async Task<int> GetExerciseUsageCountAsync(int exerciseId)
+    {
+        var database = await GetDatabaseAsync();
+
+        return await database
+            .Table<DailyExercise>()
+            .Where(x => x.ExerciseId == exerciseId)
+            .CountAsync();
+    }
+
     public async Task<int> SaveExerciseAsync(Exercise exercise)
     {
         var database = await GetDatabaseAsync();
@@ -57,5 +68,12 @@ public class AppDatabase
             return await database.InsertAsync(exercise);
 
         return await database.UpdateAsync(exercise);
+    }
+
+    public async Task<int> DeleteExerciseAsync(Exercise exercise)
+    {
+        var database = await GetDatabaseAsync();
+
+        return await database.DeleteAsync(exercise);
     }
 }
