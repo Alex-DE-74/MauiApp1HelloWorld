@@ -1,7 +1,0 @@
-<Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <!-- DEPRECATED: This project was renamed to KidJumpUp.csproj -->
-    <IsDeprecated>true</IsDeprecated>
-    <Note>Project moved to KidJumpUp.csproj. Please open KidJumpUp.sln/KidJumpUp.csproj instead.</Note>
-  </PropertyGroup>
-</Project>
