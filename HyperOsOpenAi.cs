@@ -8,7 +8,7 @@ using Microsoft.Maui.ApplicationModel;
 using Microsoft.Maui.Controls;
 using Microsoft.Maui.Storage;
 
-namespace MauiApp1HelloWorld;
+namespace KidJumpUp;
 
 public static class HyperOsOpenAi
 {
