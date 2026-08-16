@@ -1,23 +1,27 @@
 using KidJumpUp.Data;
 using KidJumpUp.Services;
+using KidJumpUp.Pages;
 
 namespace KidJumpUp;
 
 public static class MauiProgram
 {
-	public static MauiApp CreateMauiApp()
-	{
-		var builder = MauiApp.CreateBuilder();
-		builder.Services.AddSingleton<AppDatabase>()
-        .Services.AddSingleton<ExerciseService>()
-        .Services.AddTransient<ExercisesPage>()
-		.UseMauiApp<App>()
-			.ConfigureFonts(fonts =>
-			{
-				fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
-				fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
-			});
+    public static MauiApp CreateMauiApp()
+    {
+        var builder = MauiApp.CreateBuilder();
 
-		return builder.Build();
-	}
+        builder
+            .UseMauiApp<App>()
+            .ConfigureFonts(fonts =>
+            {
+                fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
+                fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
+            });
+
+        builder.Services.AddSingleton<AppDatabase>();
+        builder.Services.AddSingleton<ExerciseService>();
+        builder.Services.AddTransient<ExercisesPage>();
+
+        return builder.Build();
+    }
 }
