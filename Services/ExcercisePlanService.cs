@@ -3,11 +3,11 @@ using KidJumpUp.Models;
 
 namespace KidJumpUp.Services;
 
-public class DailyPlanService
+public class ExcercisePlanService
 {
     private readonly AppDatabase _database;
 
-    public DailyPlanService(AppDatabase database)
+    public ExcercisePlanService(AppDatabase database)
     {
         _database = database;
     }
