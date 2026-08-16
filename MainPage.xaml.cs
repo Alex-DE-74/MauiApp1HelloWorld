@@ -73,12 +73,16 @@ public partial class MainPage : ContentPage
 		});
 	}
 
-private async void OnTestPlanClicked(object sender, EventArgs e)
+private async void OnTestExercisesClicked(object sender, EventArgs e)
 {
     await Shell.Current.GoToAsync(nameof(ExercisesPage));
 }
 	
-	private void OnCounterClicked(object sender, EventArgs e)
+private async void OnTestExercisesPlanClicked(object sender, EventArgs e)
+{
+    await Shell.Current.GoToAsync(nameof(ExercisesPlanPage));
+}
+		private void OnCounterClicked(object sender, EventArgs e)
 	{
 		count++;
 
