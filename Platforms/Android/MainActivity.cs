@@ -2,7 +2,7 @@ using Android.App;
 using Android.Content.PM;
 using Android.OS;
 
-namespace MauiApp1HelloWorld;
+namespace KidJumpUp;
 
 [Activity(
     Theme = "@style/Maui.SplashTheme",
