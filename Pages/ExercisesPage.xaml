@@ -15,7 +15,7 @@
             <Label
                 Grid.Column="0"
                 Text="Übungen"
-                FontSize="18"
+                FontSize="20"
                 TextColor="{AppThemeBinding
                         Light=White,
                         Dark=White}"
@@ -26,7 +26,7 @@
             <Button
     Grid.Column="1"
     Text="+ Übung"
-    FontSize="16"
+    FontSize="18"
     FontAttributes="Bold"
     Padding="10,5"
     Margin="0,0,8,0"
