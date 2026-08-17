@@ -5,12 +5,43 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     x:Class="KidJumpUp.Pages.ExercisesPage"
     Title="Übungen">
-    
-    <ContentPage.ToolbarItems>
-        <ToolbarItem
-            Text="+ Übung"
-            Clicked="OnAddExerciseClicked" />
-    </ContentPage.ToolbarItems>
+
+    <Shell.TitleView>
+        <Grid
+            ColumnDefinitions="*,Auto"
+            Padding="0,0,8,0">
+
+            <!-- Page-Titel -->
+            <Label
+                Grid.Column="0"
+                Text="Übungen"
+                FontSize="18"
+                FontAttributes="Bold"
+                VerticalOptions="Center" />
+
+            <!-- Echter MAUI-Button -->
+            <Button
+    Grid.Column="1"
+    Text="+ Übung"
+    FontSize="16"
+    FontAttributes="Bold"
+    Padding="12,5"
+    Margin="0,0,8,0"
+    BackgroundColor="{AppThemeBinding
+        Light=#F2F2F2,
+        Dark=#303030}"
+    BorderColor="{AppThemeBinding
+        Light=#B8B8B8,
+        Dark=#666666}"
+    BorderWidth="1"
+    CornerRadius="6"
+    TextColor="{AppThemeBinding
+        Light=#222222,
+        Dark=#FFFFFF}"
+    Clicked="OnAddExerciseClicked"
+    VerticalOptions="Center" />
+        </Grid>
+    </Shell.TitleView>
 
     <Grid
         Padding="20"
