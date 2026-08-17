@@ -200,7 +200,6 @@ public partial class ExercisePlanPage : ContentPage
 }
 
     private void OnTargetTextChanged(
-    private void OnTargetTextChanged(
     object sender,
     TextChangedEventArgs e)
 {
