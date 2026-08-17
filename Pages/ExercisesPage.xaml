@@ -5,6 +5,12 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     x:Class="KidJumpUp.Pages.ExercisesPage"
     Title="Übungen">
+    
+    <ContentPage.ToolbarItems>
+        <ToolbarItem
+            Text="+ Übung"
+            Clicked="OnAddExerciseClicked" />
+    </ContentPage.ToolbarItems>
 
     <Grid
         Padding="20"
