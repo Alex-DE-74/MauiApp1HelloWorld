@@ -16,6 +16,9 @@
                 Grid.Column="0"
                 Text="Übungen"
                 FontSize="18"
+                TextColor="{AppThemeBinding
+                        Light=White,
+                        Dark=White}"
                 FontAttributes="Bold"
                 VerticalOptions="Center" />
 
@@ -25,7 +28,7 @@
     Text="+ Übung"
     FontSize="16"
     FontAttributes="Bold"
-    Padding="12,5"
+    Padding="10,5"
     Margin="0,0,8,0"
     BackgroundColor="{AppThemeBinding
         Light=#F2F2F2,
