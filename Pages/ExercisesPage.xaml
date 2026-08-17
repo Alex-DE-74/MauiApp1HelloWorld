@@ -26,6 +26,7 @@
             <Button
                 Grid.Column="1"
                 Text="+ Übung"
+                FontSize="18"
                 Clicked="OnAddExerciseClicked"
                 VerticalOptions="Center" />
 
@@ -67,7 +68,7 @@
                             FontSize="24"
                             BackgroundColor="Transparent"
                             BorderWidth="0"
-                            Padding="8,2"
+                            Padding="6,2"
                             Margin="0,0,8,0"
                             Clicked="OnEditExerciseClicked"
                             CommandParameter="{Binding .}"
@@ -80,7 +81,7 @@
                             FontSize="22"
                             BackgroundColor="Transparent"
                             BorderWidth="0"
-                            Padding="8,2"
+                            Padding="6,2"
                             Clicked="OnDeleteExerciseClicked"
                             CommandParameter="{Binding .}"
                             VerticalOptions="Center" />
