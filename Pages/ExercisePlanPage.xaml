@@ -6,9 +6,51 @@
     x:Class="KidJumpUp.Pages.ExercisePlanPage"
     Title="Planen">
 
+    <Shell.TitleView>
+        <Grid
+            ColumnDefinitions="*,Auto"
+            Padding="0,0,8,0">
+
+            <!-- Page-Titel -->
+            <Label
+                Grid.Column="0"
+                Text="Planen"
+                FontSize="20"
+                TextColor="{AppThemeBinding
+                    Light=White,
+                    Dark=White}"
+                FontAttributes="Bold"
+                VerticalOptions="Center" />
+
+            <!-- Speichern -->
+            <Button
+                Grid.Column="1"
+                Text="Speichern"
+                FontSize="18"
+                FontAttributes="Bold"
+                Padding="10,5"
+                Margin="0,0,8,0"
+                BackgroundColor="{AppThemeBinding
+                    Light=#F2F2F2,
+                    Dark=#303030}"
+                BorderColor="{AppThemeBinding
+                    Light=#B8B8B8,
+                    Dark=#666666}"
+                BorderWidth="1"
+                CornerRadius="6"
+                TextColor="{AppThemeBinding
+                    Light=#222222,
+                    Dark=#FFFFFF}"
+                Clicked="OnSaveClicked"
+                VerticalOptions="Center" />
+
+        </Grid>
+    </Shell.TitleView>
+
+
     <Grid
         Padding="20"
-        RowDefinitions="Auto,Auto,*,Auto">
+        RowDefinitions="Auto,*">
 
         <!-- Kopfbereich -->
         <VerticalStackLayout
@@ -61,7 +103,7 @@
         <!-- Übungen -->
         <CollectionView
             x:Name="ExercisesCollection"
-            Grid.Row="2"
+            Grid.Row="1"
             SelectionMode="None">
 
             <CollectionView.ItemTemplate>
@@ -100,16 +142,6 @@
             </CollectionView.ItemTemplate>
 
         </CollectionView>
-
-
-        <!-- Speichern -->
-        <Button
-            Grid.Row="3"
-            Text="Speichern"
-            FontSize="18"
-            HeightRequest="55"
-            Margin="0,15,0,0"
-            Clicked="OnSaveClicked" />
 
     </Grid>
 
