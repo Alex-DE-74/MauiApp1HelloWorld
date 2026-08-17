@@ -39,8 +39,45 @@ public partial class ExercisePlanPage : ContentPage
         await LoadDayAsync();
     }
 
-
     private async Task LoadDayAsync()
+{
+    if (_loading)
+        return;
+
+    _loading = true;
+
+    try
+    {
+        UpdateDateDisplay();
+
+        _selectedExercises.Clear();
+
+        var planItems =
+            await _exercisePlanService
+                .GetPlanItemsAsync(_selectedDate);
+
+        foreach (var item in planItems)
+        {
+            if (item.IsSelected)
+            {
+                _selectedExercises[item.ExerciseId] =
+                    int.TryParse(
+                        item.TargetText,
+                        out var target)
+                        ? target
+                        : 0;
+            }
+        }
+
+        ExercisesCollection.ItemsSource = planItems;
+    }
+    finally
+    {
+        _loading = false;
+    }
+}
+
+    private async Task LoadDayAsync_vO()
     {
         if (_loading)
             return;
