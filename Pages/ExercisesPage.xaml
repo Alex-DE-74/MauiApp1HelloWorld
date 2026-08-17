@@ -64,21 +64,26 @@
                         <Button
                             Grid.Column="2"
                             Text="✎"
+                            FontSize="24"
+                            BackgroundColor="Transparent"
+                            BorderWidth="0"
+                            Padding="8,2"
+                            Margin="0,0,8,0"
                             Clicked="OnEditExerciseClicked"
                             CommandParameter="{Binding .}"
-                            Padding="10,5"
-                            Margin="0,0,8,0"
                             VerticalOptions="Center" />
 
                         <!-- Löschen -->
                         <Button
                             Grid.Column="3"
                             Text="🗑"
+                            FontSize="22"
+                            BackgroundColor="Transparent"
+                            BorderWidth="0"
+                            Padding="8,2"
                             Clicked="OnDeleteExerciseClicked"
                             CommandParameter="{Binding .}"
-                            Padding="10,5"
                             VerticalOptions="Center" />
-
                     </Grid>
 
                 </DataTemplate>
