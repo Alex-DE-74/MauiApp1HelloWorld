@@ -104,8 +104,8 @@
                         <!-- Bearbeiten -->
                         <Button
                             Grid.Column="2"
-                            Text="✎"
-                            FontSize="24"
+                            Text="📝"
+                            FontSize="22"
                             BackgroundColor="Transparent"
                             BorderWidth="0"
                             Padding="6,2"
