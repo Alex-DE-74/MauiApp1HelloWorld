@@ -172,67 +172,66 @@ public partial class ExercisePlanPage : ContentPage
 
 
     private void OnExerciseCheckedChanged(
-        object sender,
-        CheckedChangedEventArgs e)
+    object sender,
+    CheckedChangedEventArgs e)
+{
+    if (sender is not CheckBox checkBox)
+        return;
+
+    if (checkBox.BindingContext
+        is not ExercisePlanItem item)
     {
-        if (sender is not CheckBox checkBox)
-            return;
-
-        if (checkBox.BindingContext
-            is not Exercise exercise)
-        {
-            return;
-        }
-
-        if (e.Value)
-        {
-            if (!_selectedExercises.ContainsKey(
-                    exercise.Id))
-            {
-                _selectedExercises[exercise.Id] = 0;
-            }
-        }
-        else
-        {
-            _selectedExercises.Remove(
-                exercise.Id);
-        }
+        return;
     }
 
+    if (e.Value)
+    {
+        if (!_selectedExercises.ContainsKey(
+                item.ExerciseId))
+        {
+            _selectedExercises[item.ExerciseId] = 0;
+        }
+    }
+    else
+    {
+        _selectedExercises.Remove(
+            item.ExerciseId);
+    }
+}
 
     private void OnTargetTextChanged(
-        object sender,
-        TextChangedEventArgs e)
+    private void OnTargetTextChanged(
+    object sender,
+    TextChangedEventArgs e)
+{
+    if (sender is not Entry entry)
+        return;
+
+    if (entry.BindingContext
+        is not ExercisePlanItem item)
     {
-        if (sender is not Entry entry)
-            return;
-
-        if (entry.BindingContext
-            is not Exercise exercise)
-        {
-            return;
-        }
-
-        if (!_selectedExercises.ContainsKey(
-                exercise.Id))
-        {
-            return;
-        }
-
-        if (int.TryParse(
-                e.NewTextValue,
-                out var target))
-        {
-            _selectedExercises[exercise.Id] =
-                Math.Max(0, target);
-        }
-        else if (string.IsNullOrWhiteSpace(
-                     e.NewTextValue))
-        {
-            _selectedExercises[exercise.Id] = 0;
-        }
+        return;
     }
 
+    if (!_selectedExercises.ContainsKey(
+            item.ExerciseId))
+    {
+        return;
+    }
+
+    if (int.TryParse(
+            e.NewTextValue,
+            out var target))
+    {
+        _selectedExercises[item.ExerciseId] =
+            Math.Max(0, target);
+    }
+    else if (string.IsNullOrWhiteSpace(
+                 e.NewTextValue))
+    {
+        _selectedExercises[item.ExerciseId] = 0;
+    }
+}
 
     private async void OnSaveClicked(
         object sender,
