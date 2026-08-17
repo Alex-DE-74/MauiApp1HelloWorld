@@ -41,6 +41,12 @@ public partial class ExercisesPage : ContentPage
 
         ExerciseNameEntry.Focus();
     }
+    // Für Shell Item
+    public async Task AddExerciseAsync()
+    {
+    // bisheriger Inhalt von OnAddExerciseClicked()
+    OnAddExerciseClicked(null, null);
+    }
 
     private void OnEditExerciseClicked(object sender, EventArgs e)
     {
