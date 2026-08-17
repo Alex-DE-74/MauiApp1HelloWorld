@@ -178,6 +178,52 @@ public class ExercisePlanService
         return count > 0;
     }
 
+    public async Task<List<ExercisePlanItem>> GetPlanItemsAsync(
+    DateOnly date)
+{
+    var exercises =
+        await _database.GetExercisesAsync();
+
+    var plan =
+        await GetPlanAsync(date);
+
+    var dailyExercises =
+        plan == null
+            ? []
+            : await _database.GetDailyExercisesAsync(plan.Id);
+
+    var dailyByExerciseId =
+        dailyExercises.ToDictionary(
+            x => x.ExerciseId);
+
+    return exercises
+        .Where(x =>
+            x.IsActive ||
+            dailyByExerciseId.ContainsKey(x.Id))
+        .Select(x =>
+        {
+            if (dailyByExerciseId.TryGetValue(
+                    x.Id,
+                    out var dailyExercise))
+            {
+                return new ExercisePlanItem
+                {
+                    Exercise = x,
+                    IsSelected = true,
+                    TargetText =
+                        dailyExercise.Target.ToString()
+                };
+            }
+
+            return new ExercisePlanItem
+            {
+                Exercise = x,
+                IsSelected = false,
+                TargetText = string.Empty
+            };
+        })
+        .ToList();
+}
 
     private static string ToDatabaseDate(DateOnly date)
     {
