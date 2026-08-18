@@ -170,8 +170,59 @@ public partial class ExercisePlanPage : ContentPage
         await LoadDayAsync();
     }
 
+    private async void OnExerciseCheckedChanged(
+    object sender,
+    CheckedChangedEventArgs e)
+{
+    if (sender is not CheckBox checkBox)
+        return;
 
-    private void OnExerciseCheckedChanged(
+    if (checkBox.BindingContext
+        is not ExercisePlanItem item)
+    {
+        return;
+    }
+
+    if (e.Value)
+    {
+        if (!_selectedExercises.ContainsKey(
+                item.ExerciseId))
+        {
+            _selectedExercises[item.ExerciseId] = null;
+        }
+
+        if (checkBox.Parent is Grid grid)
+        {
+            var entry = grid.Children
+                .OfType<Entry>()
+                .FirstOrDefault();
+
+            if (entry != null)
+            {
+                await Task.Yield();
+                entry.Focus();
+            }
+        }
+    }
+    else
+    {
+        _selectedExercises.Remove(
+            item.ExerciseId);
+
+        if (checkBox.Parent is Grid grid)
+        {
+            var entry = grid.Children
+                .OfType<Entry>()
+                .FirstOrDefault();
+
+            entry?.Unfocus();
+        }
+
+        item.TargetText = string.Empty;
+    }
+}
+
+    private void OnExerciseCheckedChanged_v0(
     object sender,
     CheckedChangedEventArgs e)
 {
