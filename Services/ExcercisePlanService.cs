@@ -35,7 +35,7 @@ public class ExercisePlanService
 
     public async Task SavePlanAsync(
         DateOnly date,
-        Dictionary<int, int> selectedExercises)
+        Dictionary<int, int?> selectedExercises)
     {
         var databaseDate = ToDatabaseDate(date);
 
@@ -210,8 +210,7 @@ public class ExercisePlanService
                 {
                     Exercise = x,
                     IsSelected = true,
-                    TargetText =
-                        dailyExercise.Target.ToString()
+                    Target = dailyExercise.Target
                 };
             }
 
@@ -219,7 +218,7 @@ public class ExercisePlanService
             {
                 Exercise = x,
                 IsSelected = false,
-                TargetText = string.Empty
+                Target = null
             };
         })
         .ToList();
