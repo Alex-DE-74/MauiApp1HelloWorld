@@ -122,6 +122,7 @@
                             WidthRequest="80"
                             HorizontalTextAlignment="Center"
                             VerticalOptions="Center"
+                            IsEnabled="{Binding IsSelected}"
                             TextChanged="OnTargetTextChanged" />
 
                     </Grid>
