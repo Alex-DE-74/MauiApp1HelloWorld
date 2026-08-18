@@ -53,17 +53,8 @@
         RowDefinitions="Auto,*">
 
         <!-- Kopfbereich -->
-        <VerticalStackLayout
-            Grid.Row="0"
-            Spacing="4"
-            Margin="0,0,0,15">
-
-            <Label
-                Text="Planen"
-                FontSize="28"
-                FontAttributes="Bold" />
-
             <Grid
+                Grid.Row="0"
                 ColumnDefinitions="Auto,*,Auto"
                 Margin="0,8,0,0">
 
@@ -96,9 +87,6 @@
                     Clicked="OnNextDayClicked" />
 
             </Grid>
-
-        </VerticalStackLayout>
-
 
         <!-- Übungen -->
         <CollectionView
