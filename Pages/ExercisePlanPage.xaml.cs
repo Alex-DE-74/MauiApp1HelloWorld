@@ -170,7 +170,7 @@ public partial class ExercisePlanPage : ContentPage
         await LoadDayAsync();
     }
 
-    private async void OnExerciseCheckedChanged(
+    private async void OnExerciseCheckedChanged_v1(
     object sender,
     CheckedChangedEventArgs e)
 {
@@ -250,7 +250,7 @@ public partial class ExercisePlanPage : ContentPage
     }
 }
 
-    private void OnTargetTextChanged(
+    private void OnTargetTextChanged_v1(
     object sender,
     TextChangedEventArgs e)
 {
