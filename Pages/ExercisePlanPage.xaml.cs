@@ -189,7 +189,7 @@ public partial class ExercisePlanPage : ContentPage
         if (!_selectedExercises.ContainsKey(
                 item.ExerciseId))
         {
-            _selectedExercises[item.ExerciseId] = 0;
+            _selectedExercises[item.ExerciseId] = null;
         }
     }
     else
@@ -228,7 +228,7 @@ public partial class ExercisePlanPage : ContentPage
     else if (string.IsNullOrWhiteSpace(
                  e.NewTextValue))
     {
-        _selectedExercises[item.ExerciseId] = 0;
+        _selectedExercises[item.ExerciseId] = null;
     }
 }
 
