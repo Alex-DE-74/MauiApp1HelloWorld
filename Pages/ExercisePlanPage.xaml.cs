@@ -65,7 +65,7 @@ public partial class ExercisePlanPage : ContentPage
                         item.TargetText,
                         out var target)
                         ? target
-                        : 0;
+                        : null;
             }
         }
 
