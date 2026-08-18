@@ -1,17 +1,60 @@
-namespace KidJumpUp.Models;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
+using KidJumpUp.Models;
 
-public class ExercisePlanItem
+namespace KidJumpUp.Pages;
+
+public class ExercisePlanItem : INotifyPropertyChanged
 {
+    private bool _isSelected;
+    private int? _target;
+
     public Exercise Exercise { get; init; } = null!;
 
     public int ExerciseId => Exercise.Id;
 
     public string Name => Exercise.Name;
 
-    public bool IsSelected { get; set; }
+    public bool IsSelected
+    {
+        get => _isSelected;
+        set
+        {
+            if (_isSelected == value)
+                return;
 
-    public int? Target { get; set; }
+            _isSelected = value;
+            OnPropertyChanged();
+        }
+    }
+
+    private int? _target;
+
+public int? Target
+{
+    get => _target;
+    set
+    {
+        if (_target == value)
+            return;
+
+        _target = value;
+
+        OnPropertyChanged();
+        OnPropertyChanged(nameof(TargetText));
+    }
+}
 
     public string TargetText =>
         Target?.ToString() ?? string.Empty;
+    
+    public event PropertyChangedEventHandler? PropertyChanged;
+
+    private void OnPropertyChanged(
+        [CallerMemberName] string? propertyName = null)
+    {
+        PropertyChanged?.Invoke(
+            this,
+            new PropertyChangedEventArgs(propertyName));
+    }
 }
