@@ -10,5 +10,8 @@ public class ExercisePlanItem
 
     public bool IsSelected { get; set; }
 
-    public string TargetText { get; set; } = string.Empty;
+    public int? Target { get; set; }
+
+    public string TargetText =>
+        Target?.ToString() ?? string.Empty;
 }
