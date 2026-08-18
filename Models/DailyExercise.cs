@@ -15,5 +15,5 @@ public class DailyExercise
     public int ExerciseId { get; set; }
 
     [NotNull]
-    public int Target { get; set; }
+    public int? Target { get; set; }
 }
