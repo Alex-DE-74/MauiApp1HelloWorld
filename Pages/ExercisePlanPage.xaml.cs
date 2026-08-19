@@ -14,7 +14,8 @@ public partial class ExercisePlanPage : ContentPage
 
     // Noch nicht gespeicherter UI-Zustand:
     // ExerciseId -> Target
-    // private readonly Dictionary<int, int?> _selectedExercises = new();
+    // bald raus wenn _v x Versionen weg sind.
+    private readonly Dictionary<int, int?> _selectedExercises = new();
 
 
     public ExercisePlanPage(
