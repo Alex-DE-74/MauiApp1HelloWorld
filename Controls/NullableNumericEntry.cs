@@ -8,6 +8,9 @@ public class NullableNumericEntry<TValue, TConverter> : Entry
     where TConverter : NullableNumberConverter<TValue>, new()
 {
     private static readonly TConverter Converter = new();
+    private static readonly EqualityComparer<TValue?> Comparer
+        = EqualityComparer<TValue?>.Default;
+    Value = value;
 
     public static readonly BindableProperty ValueProperty =
         BindableProperty.Create(
