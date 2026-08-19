@@ -2,7 +2,7 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using KidJumpUp.Models;
 
-namespace KidJumpUp.Pages;
+namespace KidJumpUp.Models;
 
 public class ExercisePlanItem : INotifyPropertyChanged
 {
