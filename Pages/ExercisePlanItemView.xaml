@@ -12,7 +12,6 @@
         ColumnDefinitions="Auto,*,Auto">
 
         <CheckBox
-            x:Name="SelectionCheckBox"
             Grid.Column="0"
             IsChecked="{Binding IsSelected}"
             VerticalOptions="Center" />
@@ -25,22 +24,20 @@
             Margin="10,0" />
 
         <controls:NullableIntEntry
-    Grid.Column="2"
-    Value="{Binding Target, Mode=TwoWay}"
-    Placeholder="Ziel"
-    WidthRequest="80"
-    HorizontalTextAlignment="Center"
-    VerticalOptions="Center"
-    IsEnabled="{Binding IsSelected}">
+            Grid.Column="2"
+            Value="{Binding Target, Mode=TwoWay}"
+            Placeholder="Ziel"
+            WidthRequest="80"
+            HorizontalTextAlignment="Center"
+            VerticalOptions="Center"
+            IsEnabled="{Binding IsSelected}">
 
-    <controls:NullableIntEntry.Behaviors>
-        <behaviors:FocusOnTrueBehavior
-            Trigger="{Binding Source={RelativeSource AncestorType={x:Type ContentView}},
-                              Path=BindingContext.IsSelected,
-                              Mode=OneWay}" />
-    </controls:NullableIntEntry.Behaviors>
+            <controls:NullableIntEntry.Behaviors>
+                <behaviors:FocusOnTrueBehavior
+                    Trigger="{Binding IsSelected, Mode=OneWay}" />
+            </controls:NullableIntEntry.Behaviors>
 
-</controls:NullableIntEntry>
+        </controls:NullableIntEntry>
 
     </Grid>
 
