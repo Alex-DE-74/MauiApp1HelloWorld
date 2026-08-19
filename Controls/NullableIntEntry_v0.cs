@@ -52,7 +52,7 @@ public class NullableIntEntry_v0 : Entry
         object oldValue,
         object newValue)
     {
-        if (bindable is not NullableIntEntry entry)
+        if (bindable is not NullableIntEntry_v0 entry)
             return;
 
         var text =
