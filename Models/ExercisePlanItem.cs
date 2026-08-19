@@ -16,17 +16,22 @@ public class ExercisePlanItem : INotifyPropertyChanged
     public string Name => Exercise.Name;
 
     public bool IsSelected
+{
+    get => _isSelected;
+    set
     {
-        get => _isSelected;
-        set
-        {
-            if (_isSelected == value)
-                return;
+        if (_isSelected == value)
+            return;
 
-            _isSelected = value;
-            OnPropertyChanged();
-        }
+        _isSelected = value;
+
+        if (!value)
+            Target = null;
+
+        OnPropertyChanged();
     }
+}
+    
     public int? Target
     {
         get => _target;
