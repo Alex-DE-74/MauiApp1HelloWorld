@@ -9,29 +9,21 @@ public partial class ExercisePlanItemView : ContentView
         InitializeComponent();
     }
 
-    private void OnCheckedChanged(
-        object sender,
-        CheckedChangedEventArgs e)
+private async void OnCheckedChanged(
+    object sender,
+    CheckedChangedEventArgs e)
+{
+    if (BindingContext is not ExercisePlanItem item)
+        return;
+
+    item.Target = null;
+
+    if (e.Value)
     {
-        if (BindingContext is not ExercisePlanItem item)
-            return;
-
-        if (e.Value)
-        {
-            // Übung ausgewählt:
-            // Ziel ist zunächst leer.
-            item.TargetText = string.Empty;
-
-            // Entry ist durch das Binding jetzt aktiviert.
-            TargetEntry.Focus();
-        }
-        else
-        {
-            // Übung abgewählt:
-            // Ziel verwerfen.
-            item.TargetText = string.Empty;
-        }
+        await Task.Yield();
+        TargetEntry.Focus();
     }
+}
 
     private void OnTargetTextChanged(
         object sender,
