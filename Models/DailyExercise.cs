@@ -13,7 +13,6 @@ public class DailyExercise
 
     [NotNull]
     public int ExerciseId { get; set; }
-
-    [NotNull]
+    
     public int? Target { get; set; }
 }
