@@ -21,6 +21,7 @@ public static class MauiProgram
         builder.Services
             .AddSingleton<AppDatabase>()
             .AddSingleton<ExerciseService>()
+            .AddSingleton<ConfigService>()
             .AddTransient<ExercisesPage>()
             .AddSingleton<ExercisePlanService>()
             .AddTransient<ExercisePlanPage>();
