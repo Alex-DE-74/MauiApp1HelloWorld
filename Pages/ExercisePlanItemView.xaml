@@ -35,7 +35,9 @@
 
     <controls:NullableIntEntry.Behaviors>
         <behaviors:FocusOnTrueBehavior
-            Trigger="{Binding IsSelected, Mode=OneWay}" />
+            Trigger="{Binding Source={RelativeSource AncestorType={x:Type ContentView}},
+                              Path=BindingContext.IsSelected,
+                              Mode=OneWay}" />
     </controls:NullableIntEntry.Behaviors>
 
 </controls:NullableIntEntry>
