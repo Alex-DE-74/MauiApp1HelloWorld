@@ -4,6 +4,7 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:controls="clr-namespace:KidJumpUp.Controls"
+    xmlns:behaviors="clr-namespace:KidJumpUp.Behaviors"
     x:Class="KidJumpUp.Pages.ExercisePlanItemView">
 
     <Grid
@@ -25,14 +26,20 @@
             Margin="10,0" />
 
         <controls:NullableIntEntry
-            x:Name="TargetEntry"
-            Grid.Column="2"
-            Value="{Binding Target, Mode=TwoWay}"
-            Placeholder="Ziel"
-            WidthRequest="80"
-            HorizontalTextAlignment="Center"
-            VerticalOptions="Center"
-            IsEnabled="{Binding IsSelected}" />
+    Grid.Column="2"
+    Value="{Binding Target, Mode=TwoWay}"
+    Placeholder="Ziel"
+    WidthRequest="80"
+    HorizontalTextAlignment="Center"
+    VerticalOptions="Center"
+    IsEnabled="{Binding IsSelected}">
+
+    <controls:NullableIntEntry.Behaviors>
+        <behaviors:FocusOnTrueBehavior
+            Trigger="{Binding IsSelected, Mode=OneWay}" />
+    </controls:NullableIntEntry.Behaviors>
+
+</controls:NullableIntEntry>
 
     </Grid>
 
