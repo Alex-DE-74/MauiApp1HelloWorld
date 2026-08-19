@@ -241,7 +241,7 @@ private async Task LoadDayAsync()
             entry?.Unfocus();
         }
 
-        item.TargetText = string.Empty;
+        item.Target = null;
     }
 }
 
