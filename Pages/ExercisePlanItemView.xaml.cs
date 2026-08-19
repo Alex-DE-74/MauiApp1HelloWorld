@@ -25,28 +25,4 @@ private async void OnCheckedChanged(
     }
 }
 
-    private void OnTargetTextChanged(
-        object sender,
-        TextChangedEventArgs e)
-    {
-        if (BindingContext is not ExercisePlanItem item)
-            return;
-
-        if (string.IsNullOrWhiteSpace(e.NewTextValue))
-        {
-            item.Target = null;
-            return;
-        }
-
-        if (int.TryParse(
-                e.NewTextValue,
-                out var target))
-        {
-            item.Target = target;
-        }
-        else
-        {
-            item.Target = null;
-        }
-    }
 }
