@@ -4,7 +4,7 @@ using KidJumpUp.Converters;
 namespace KidJumpUp.Controls;
 
 public class NullableNumericEntry<TValue, TConverter> : Entry
-    where TValue : struct, IParsable<TValue>
+    where TValue : struct, IParsable<TValue>, IFormattable
     where TConverter : NullableNumberConverter<TValue>, new()
 {
     private static readonly TConverter Converter = new();
