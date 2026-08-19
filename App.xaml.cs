@@ -1,11 +1,19 @@
-﻿namespace KidJumpUp;
+using KidJumpUp.Services;
+
+namespace KidJumpUp;
 
 public partial class App : Application
 {
-	public App()
-	{
-		InitializeComponent();
+    public App(ConfigService configService)
+    {
+        InitializeComponent();
 
-		MainPage = new AppShell();
-	}
+        Resources["AppConfig"] = configService.Current;
+    }
+
+    protected override Window CreateWindow(
+        IActivationState? activationState)
+    {
+        return new Window(new AppShell());
+    }
 }
