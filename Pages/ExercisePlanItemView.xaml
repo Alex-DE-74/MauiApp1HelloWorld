@@ -27,6 +27,7 @@
             Grid.Column="2"
             Value="{Binding Target, Mode=TwoWay}"
             Placeholder="Ziel"
+            PlaceholderColor="{Binding Source={StaticResource AppConfig}, Path=ExerciseTargetPlaceholderColor}"
             FontSize="{Binding Source={StaticResource AppConfig}, Path=ExerciseTargetFontSize}"
             WidthRequest="80"
             HorizontalTextAlignment="Center"
