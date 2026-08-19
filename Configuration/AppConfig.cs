@@ -10,4 +10,7 @@ public class AppConfig
 
     public Thickness ExerciseRowPadding { get; set; } =
         new(0, 4);
+
+    public Color ExerciseTargetPlaceholderColor { get; set; } =
+        Colors.Gray;
 }
