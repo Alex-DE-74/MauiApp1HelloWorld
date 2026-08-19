@@ -4,7 +4,7 @@ using Microsoft.Maui.Controls;
 namespace KidJumpUp.Converters;
 
 public abstract class NullableNumberConverter<T> : IValueConverter
-    where T : struct, IParsable<T>
+    where T : struct, IParsable<T>, IFormattable
 {
     public object? Convert(
         object? value,
