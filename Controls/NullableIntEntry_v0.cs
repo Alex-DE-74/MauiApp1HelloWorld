@@ -4,7 +4,7 @@ using Microsoft.Maui.Controls;
 
 namespace KidJumpUp.Controls;
 
-public class NullableIntEntry : Entry
+public class NullableIntEntry_v0 : Entry
 {
     private static readonly NullableIntConverter Converter = new();
 
@@ -14,7 +14,7 @@ public class NullableIntEntry : Entry
         BindableProperty.Create(
             nameof(Value),
             typeof(int?),
-            typeof(NullableIntEntry),
+            typeof(NullableIntEntry_v0),
             default(int?),
             BindingMode.TwoWay,
             propertyChanged: OnValueChanged);
@@ -23,7 +23,7 @@ public class NullableIntEntry : Entry
         BindableProperty.Create(
             nameof(InvalidTextColor),
             typeof(Color),
-            typeof(NullableIntEntry),
+            typeof(NullableIntEntry_v0),
             Colors.Red);
 
     public int? Value
