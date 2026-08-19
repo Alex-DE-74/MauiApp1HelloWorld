@@ -27,23 +27,20 @@ public class ExercisePlanItem : INotifyPropertyChanged
             OnPropertyChanged();
         }
     }
-
-    private int? _target;
-
-public int? Target
-{
-    get => _target;
-    set
+    public int? Target
     {
-        if (_target == value)
-            return;
+        get => _target;
+        set
+        {
+            if (_target == value)
+                return;
 
-        _target = value;
+            _target = value;
 
-        OnPropertyChanged();
-        OnPropertyChanged(nameof(TargetText));
+            OnPropertyChanged();
+            OnPropertyChanged(nameof(TargetText));
+        }
     }
-}
 
     public string TargetText =>
         Target?.ToString() ?? string.Empty;
