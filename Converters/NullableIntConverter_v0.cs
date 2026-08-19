@@ -3,7 +3,7 @@ using Microsoft.Maui.Controls;
 
 namespace KidJumpUp.Converters;
 
-public class NullableIntConverter : IValueConverter
+public class NullableIntConverter_v0 : IValueConverter
 {
     public object Convert(
         object? value,
