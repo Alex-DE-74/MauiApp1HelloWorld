@@ -38,7 +38,7 @@ public class NullableIntEntry_v0 : Entry
         set => SetValue(InvalidTextColorProperty, value);
     }
 
-    public NullableIntEntry()
+    public NullableIntEntry_v0()
     {
         Keyboard = Keyboard.Numeric;
 
