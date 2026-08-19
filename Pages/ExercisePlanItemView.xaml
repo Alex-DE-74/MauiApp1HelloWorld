@@ -8,7 +8,7 @@
     x:Class="KidJumpUp.Pages.ExercisePlanItemView">
 
     <Grid
-        Padding="{Binding Source={StaticResource AppConfig}, Path=ExerciseRowPadding}"
+        Padding="{Binding Source={StaticResource AppConfig}, Path=ExerciseRowPadding, Mode=OneWay}"
         ColumnDefinitions="Auto,*,Auto">
 
         <CheckBox
@@ -19,7 +19,7 @@
         <Label
             Grid.Column="1"
             Text="{Binding Name}"
-            FontSize="{Binding Source={StaticResource AppConfig}, Path=ExerciseFontSize}"
+            FontSize="{Binding Source={StaticResource AppConfig}, Path=ExerciseFontSize, Mode=OneWay}"
             VerticalOptions="Center"
             Margin="10,0" />
 
@@ -27,8 +27,8 @@
             Grid.Column="2"
             Value="{Binding Target, Mode=TwoWay}"
             Placeholder="Ziel"
-            PlaceholderColor="{Binding Source={StaticResource AppConfig}, Path=ExerciseTargetPlaceholderColor}"
-            FontSize="{Binding Source={StaticResource AppConfig}, Path=ExerciseTargetFontSize}"
+            PlaceholderColor="{Binding Source={StaticResource AppConfig}, Path=ExerciseTargetPlaceholderColor, Mode=OneWay}"
+            FontSize="{Binding Source={StaticResource AppConfig}, Path=ExerciseTargetFontSize, Mode=OneWay}"
             WidthRequest="80"
             HorizontalTextAlignment="Center"
             VerticalOptions="Center"
