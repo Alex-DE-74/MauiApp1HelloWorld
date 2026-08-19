@@ -38,13 +38,9 @@ public class ExercisePlanItem : INotifyPropertyChanged
             _target = value;
 
             OnPropertyChanged();
-            OnPropertyChanged(nameof(TargetText));
         }
     }
 
-    public string TargetText =>
-        Target?.ToString() ?? string.Empty;
-    
     public event PropertyChangedEventHandler? PropertyChanged;
 
     private void OnPropertyChanged(
