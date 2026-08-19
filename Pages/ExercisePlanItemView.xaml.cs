@@ -9,20 +9,21 @@ public partial class ExercisePlanItemView : ContentView
         InitializeComponent();
     }
 
-private async void OnCheckedChanged(
-    object sender,
-    CheckedChangedEventArgs e)
-{
-    if (BindingContext is not ExercisePlanItem item)
-        return;
-
-    item.Target = null;
-
-    if (e.Value)
+    private async void OnCheckedChanged(
+        object sender,
+        CheckedChangedEventArgs e)
     {
-        await Task.Yield();
-        TargetEntry.Focus();
-    }
-}
+        if (BindingContext is not ExercisePlanItem item)
+            return;
 
+        if (e.Value)
+        {
+            await Task.Yield();
+            TargetEntry.Focus();
+        }
+        else
+        {
+            item.Target = null;
+        }
+    }
 }
