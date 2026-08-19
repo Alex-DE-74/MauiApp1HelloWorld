@@ -64,42 +64,6 @@ private async Task LoadDayAsync()
 }
     private async Task LoadDayAsync_v1()
 {
-    if (_loading)
-        return;
-
-    _loading = true;
-
-    try
-    {
-        UpdateDateDisplay();
-
-        _selectedExercises.Clear();
-
-        var planItems =
-            await _exercisePlanService
-                .GetPlanItemsAsync(_selectedDate);
-
-        foreach (var item in planItems)
-        {
-            if (item.IsSelected)
-            {
-                _selectedExercises[item.ExerciseId] =
-                    int.TryParse(
-                        item.TargetText,
-                        out var target)
-                        ? target
-                        : null;
-            }
-        }
-
-        ExercisesCollection.ItemsSource = planItems;
-    }
-    finally
-    {
-        _loading = false;
-    }
-}
-
     private async Task LoadDayAsync_vO()
     {
         if (_loading)
