@@ -128,7 +128,7 @@ public class NullableNumericEntry<TValue, TConverter> : Entry
             _ => null
         };
 
-        if (Value != value)
+        if (!Comparer.Equals(Value, value))
             Value = value;
     }
 
