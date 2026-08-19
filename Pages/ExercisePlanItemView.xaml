@@ -25,6 +25,7 @@
             Margin="10,0" />
 
         <controls:NullableIntEntry
+            x:Name="TargetEntry"
             Grid.Column="2"
             Value="{Binding Target, Mode=TwoWay}"
             Placeholder="Ziel"
