@@ -15,7 +15,6 @@
             x:Name="SelectionCheckBox"
             Grid.Column="0"
             IsChecked="{Binding IsSelected}"
-            CheckedChanged="OnCheckedChanged"
             VerticalOptions="Center" />
 
         <Label
