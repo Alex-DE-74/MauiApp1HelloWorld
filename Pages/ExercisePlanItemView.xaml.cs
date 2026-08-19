@@ -8,7 +8,7 @@ public partial class ExercisePlanItemView : ContentView
     {
         InitializeComponent();
     }
-
+/*
     private async void OnCheckedChanged(
         object sender,
         CheckedChangedEventArgs e)
@@ -26,4 +26,5 @@ public partial class ExercisePlanItemView : ContentView
             item.Target = null;
         }
     }
+    */
 }
