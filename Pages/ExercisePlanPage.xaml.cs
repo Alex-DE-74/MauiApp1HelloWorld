@@ -15,7 +15,7 @@ public partial class ExercisePlanPage : ContentPage
     // Noch nicht gespeicherter UI-Zustand:
     // ExerciseId -> Target
     // bald raus wenn _v x Versionen weg sind.
-    private readonly Dictionary<int, int?> _selectedExercises = new();
+    //private readonly Dictionary<int, int?> _selectedExercises = new();
 
 
     public ExercisePlanPage(
@@ -62,48 +62,6 @@ private async Task LoadDayAsync()
         _loading = false;
     }
 }
-    private async Task LoadDayAsync_v1()
-{
-    private async Task LoadDayAsync_vO()
-    {
-        if (_loading)
-            return;
-
-        _loading = true;
-
-        try
-        {
-            UpdateDateDisplay();
-
-            _selectedExercises.Clear();
-
-            var exercises =
-                await _exerciseService.GetExercisesAsync();
-
-            var dailyExercises =
-                await _exercisePlanService
-                    .GetDailyExercisesAsync(
-                        _selectedDate);
-
-            foreach (var dailyExercise in dailyExercises)
-            {
-                _selectedExercises[
-                    dailyExercise.ExerciseId] =
-                    dailyExercise.Target;
-            }
-
-            ExercisesCollection.ItemsSource = exercises
-                .Where(x => x.IsActive)
-                .ToList();
-
-            // Die Controls werden beim Erzeugen der
-            // CollectionView-Zeilen gesetzt.
-        }
-        finally
-        {
-            _loading = false;
-        }
-    }
 
 
     private void UpdateDateDisplay()
@@ -157,119 +115,7 @@ private async Task LoadDayAsync()
         await LoadDayAsync();
     }
 
-    private async void OnExerciseCheckedChanged_v1(
-    object sender,
-    CheckedChangedEventArgs e)
-{
-    if (sender is not CheckBox checkBox)
-        return;
-
-    if (checkBox.BindingContext
-        is not ExercisePlanItem item)
-    {
-        return;
-    }
-
-    if (e.Value)
-    {
-        if (!_selectedExercises.ContainsKey(
-                item.ExerciseId))
-        {
-            _selectedExercises[item.ExerciseId] = null;
-        }
-
-        if (checkBox.Parent is Grid grid)
-        {
-            var entry = grid.Children
-                .OfType<Entry>()
-                .FirstOrDefault();
-
-            if (entry != null)
-            {
-                await Task.Yield();
-                entry.Focus();
-            }
-        }
-    }
-    else
-    {
-        _selectedExercises.Remove(
-            item.ExerciseId);
-
-        if (checkBox.Parent is Grid grid)
-        {
-            var entry = grid.Children
-                .OfType<Entry>()
-                .FirstOrDefault();
-
-            entry?.Unfocus();
-        }
-
-        item.Target = null;
-    }
-}
-
-    private void OnExerciseCheckedChanged_v0(
-    object sender,
-    CheckedChangedEventArgs e)
-{
-    if (sender is not CheckBox checkBox)
-        return;
-
-    if (checkBox.BindingContext
-        is not ExercisePlanItem item)
-    {
-        return;
-    }
-
-    if (e.Value)
-    {
-        if (!_selectedExercises.ContainsKey(
-                item.ExerciseId))
-        {
-            _selectedExercises[item.ExerciseId] = null;
-        }
-    }
-    else
-    {
-        _selectedExercises.Remove(
-            item.ExerciseId);
-    }
-}
-
-    private void OnTargetTextChanged_v1(
-    object sender,
-    TextChangedEventArgs e)
-{
-    if (sender is not Entry entry)
-        return;
-
-    if (entry.BindingContext
-        is not ExercisePlanItem item)
-    {
-        return;
-    }
-
-    if (!_selectedExercises.ContainsKey(
-            item.ExerciseId))
-    {
-        return;
-    }
-
-    if (int.TryParse(
-            e.NewTextValue,
-            out var target))
-    {
-        _selectedExercises[item.ExerciseId] =
-            Math.Max(0, target);
-    }
-    else if (string.IsNullOrWhiteSpace(
-                 e.NewTextValue))
-    {
-        _selectedExercises[item.ExerciseId] = null;
-    }
-}
-
+    
 private async void OnSaveClicked(
     object sender,
     EventArgs e)
@@ -301,23 +147,6 @@ private async void OnSaveClicked(
 
     await LoadDayAsync();
 }
-
-    private async void OnSaveClicked_v1(
-        object sender,
-        EventArgs e)
-    {
-        await _exercisePlanService.SavePlanAsync(
-            _selectedDate,
-            new Dictionary<int, int?>(
-                _selectedExercises));
-
-        await DisplayAlert(
-            "Gespeichert",
-            $"Der Plan für {GetDayDescription()} wurde gespeichert.",
-            "OK");
-
-        await LoadDayAsync();
-    }
 
 
     private string GetDayDescription()
