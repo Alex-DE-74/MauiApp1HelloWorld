@@ -3,6 +3,7 @@
 <ContentView
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:controls="clr-namespace:KidJumpUp.Controls"
     x:Class="KidJumpUp.Pages.ExercisePlanItemView">
 
     <Grid
@@ -23,17 +24,14 @@
             VerticalOptions="Center"
             Margin="10,0" />
 
-        <Entry
-            x:Name="TargetEntry"
+        <controls:NullableIntEntry
             Grid.Column="2"
-            Text="{Binding TargetText}"
-            Keyboard="Numeric"
+            Value="{Binding Target, Mode=TwoWay}"
             Placeholder="Ziel"
             WidthRequest="80"
             HorizontalTextAlignment="Center"
             VerticalOptions="Center"
-            IsEnabled="{Binding IsSelected}"
-            TextChanged="OnTargetTextChanged" />
+            IsEnabled="{Binding IsSelected}" />
 
     </Grid>
 
