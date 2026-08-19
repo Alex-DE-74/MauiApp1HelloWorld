@@ -344,7 +344,7 @@ private async void OnSaveClicked(
     {
         await _exercisePlanService.SavePlanAsync(
             _selectedDate,
-            new Dictionary<int, int>(
+            new Dictionary<int, int?>(
                 _selectedExercises));
 
         await DisplayAlert(
