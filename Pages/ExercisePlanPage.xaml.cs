@@ -14,7 +14,7 @@ public partial class ExercisePlanPage : ContentPage
 
     // Noch nicht gespeicherter UI-Zustand:
     // ExerciseId -> Target
-    private readonly Dictionary<int, int> _selectedExercises = new();
+    // private readonly Dictionary<int, int?> _selectedExercises = new();
 
 
     public ExercisePlanPage(
@@ -39,7 +39,29 @@ public partial class ExercisePlanPage : ContentPage
         await LoadDayAsync();
     }
 
-    private async Task LoadDayAsync()
+private async Task LoadDayAsync()
+{
+    if (_loading)
+        return;
+
+    _loading = true;
+
+    try
+    {
+        UpdateDateDisplay();
+
+        var planItems =
+            await _exercisePlanService
+                .GetPlanItemsAsync(_selectedDate);
+
+        ExercisesCollection.ItemsSource = planItems;
+    }
+    finally
+    {
+        _loading = false;
+    }
+}
+    private async Task LoadDayAsync_v1()
 {
     if (_loading)
         return;
@@ -283,7 +305,39 @@ public partial class ExercisePlanPage : ContentPage
     }
 }
 
-    private async void OnSaveClicked(
+private async void OnSaveClicked(
+    object sender,
+    EventArgs e)
+{
+    var selectedExercises =
+        new Dictionary<int, int?>();
+
+    if (ExercisesCollection.ItemsSource
+        is IEnumerable<ExercisePlanItem> items)
+    {
+        foreach (var item in items)
+        {
+            if (!item.IsSelected)
+                continue;
+
+            selectedExercises[item.ExerciseId] =
+                item.Target;
+        }
+    }
+
+    await _exercisePlanService.SavePlanAsync(
+        _selectedDate,
+        selectedExercises);
+
+    await DisplayAlert(
+        "Gespeichert",
+        $"Der Plan für {GetDayDescription()} wurde gespeichert.",
+        "OK");
+
+    await LoadDayAsync();
+}
+
+    private async void OnSaveClicked_v1(
         object sender,
         EventArgs e)
     {
