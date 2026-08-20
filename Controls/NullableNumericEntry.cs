@@ -14,6 +14,19 @@ public class NullableNumericEntry<TValue, TConverter> : Entry
     // Bei Value-Änderungen den OnValueChanged unterdrücken und somit nicht mehr auf Text anwenden.
     private bool _suppressValueChanged;
 
+    public static readonly BindableProperty IsInputNonEmptyProperty =
+    BindableProperty.Create(
+        nameof(IsInputNonEmpty),
+        typeof(bool),
+        typeof(NullableNumericEntry<TValue, TConverter>),
+        false);
+
+    public bool IsInputNonEmpty
+    {
+        get => (bool)GetValue(IsInputNonEmptyProperty);
+        private set => SetValue(IsInputNonEmptyProperty, value);
+    }
+
     public static readonly BindableProperty ValueProperty =
         BindableProperty.Create(
             nameof(Value),
@@ -155,6 +168,9 @@ public class NullableNumericEntry<TValue, TConverter> : Entry
 
     private void UpdateValidationState(string? text)
     {
+        // 1. Prüfen, ob überhaupt Text da ist
+        IsInputNonEmpty = !string.IsNullOrWhiteSpace(text);
+
         var converted =
             Converter.ConvertBack(
                 text,
@@ -163,6 +179,7 @@ public class NullableNumericEntry<TValue, TConverter> : Entry
                 System.Globalization.CultureInfo.CurrentCulture);
 
         IsInputInvalid =
+            IsInputNonEmpty &&
             converted == BindableProperty.UnsetValue;
     }
 }
