@@ -103,7 +103,7 @@ public class NullableNumericEntry<TValue, TConverter> : Entry
             as string
             ?? string.Empty;
 
-        // if (entry.Text != text)
+        if (entry.Text != text)
             entry.Text = text;
 
         entry.UpdateValidationState(entry.Text);
