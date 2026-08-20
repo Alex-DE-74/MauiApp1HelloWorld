@@ -88,12 +88,12 @@ public class NullableNumericEntry<TValue, TConverter> : Entry
         object oldValue,
         object newValue)
     {
-        // Rückkopplung während der TextProperty-Änderung vermeiden.
-        if (entry._suppressValueChanged) return;
-        
         if (bindable is not NullableNumericEntry<TValue, TConverter> entry)
             return;
 
+        // Rückkopplung während der TextProperty-Änderung vermeiden.
+        if (entry._suppressValueChanged) return;
+        
         var text =
             Converter.Convert(
                 newValue,
