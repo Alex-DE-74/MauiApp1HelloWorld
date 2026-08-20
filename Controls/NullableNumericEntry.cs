@@ -92,7 +92,7 @@ public class NullableNumericEntry<TValue, TConverter> : Entry
                     }
                 }
             });
-"/
+*/
         TextChanged += OnTextChanged;
     }
 
