@@ -9,7 +9,7 @@
 
     <Grid
         Padding="{Binding Source={StaticResource AppConfig}, Path=ExerciseRowPadding, Mode=OneWay}"
-        ColumnDefinitions="Auto,*,Auto,Auto">
+        ColumnDefinitions="Auto,*,Auto,Auto,Auto">
 
         <CheckBox
             Grid.Column="0"
@@ -46,7 +46,7 @@
             Grid.Column="3"
             Value="{Binding Target, Mode=TwoWay}"
             Placeholder="Zlll"
-            FontSize="39"
+            FontSize="30"
             WidthRequest="80"
             HorizontalTextAlignment="Center"
             IsEnabled="{Binding IsSelected}"
@@ -58,6 +58,23 @@
             </controls:NullableIntEntry.Behaviors -->
 
         </controls:NullableIntEntry>
+
+        <Entry
+            Grid.Column="4"
+            Value="{Binding Target, Mode=TwoWay}"
+            Placeholder="Zlll"
+            FontSize="30"
+            WidthRequest="80"
+            HorizontalTextAlignment="Center"
+            IsEnabled="{Binding IsSelected}"
+            VerticalOptions="Center">
+            
+            <!-- controls:NullableIntEntry.Behaviors>
+                <behaviors:FocusOnTrueBehavior
+                    Trigger="{Binding IsSelected, Mode=OneWay}" />
+            </controls:NullableIntEntry.Behaviors -->
+
+        </Entry>
 
     </Grid>
 
