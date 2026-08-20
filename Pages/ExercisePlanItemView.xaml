@@ -34,10 +34,10 @@
             VerticalOptions="Center"
             IsEnabled="{Binding IsSelected}">
 
-            <controls:NullableIntEntry.Behaviors>
+            <!-- controls:NullableIntEntry.Behaviors>
                 <behaviors:FocusOnTrueBehavior
                     Trigger="{Binding IsSelected, Mode=OneWay}" />
-            </controls:NullableIntEntry.Behaviors>
+            </controls:NullableIntEntry.Behaviors -->
 
         </controls:NullableIntEntry>
 
