@@ -106,7 +106,15 @@ public class NullableNumericEntry<TValue, TConverter> : Entry
 
         // Rückkopplung während der TextProperty-Änderung vermeiden.
         if (entry._suppressValueChanged) return;
-        
+
+        // Wenn newValue null ist, setzen wir entry.Text auf null statt auf string.Empty!
+        if (newValue == null)
+        {
+            if (entry.Text != null)
+                entry.Text = null;
+        }
+        else
+        {
         var text =
             Converter.Convert(
                 newValue,
@@ -118,7 +126,7 @@ public class NullableNumericEntry<TValue, TConverter> : Entry
 
         if (entry.Text != text)
             entry.Text = text;
-
+        }
         entry.UpdateValidationState(entry.Text);
     }
 
