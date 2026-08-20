@@ -11,6 +11,9 @@ public class NullableNumericEntry<TValue, TConverter> : Entry
     private static readonly EqualityComparer<TValue?> Comparer
         = EqualityComparer<TValue?>.Default;
 
+    // Bei Value-Änderungen den OnValueChanged unterdrücken und somit nicht mehr auf Text anwenden.
+    private bool _suppressValueChanged;
+
     public static readonly BindableProperty ValueProperty =
         BindableProperty.Create(
             nameof(Value),
@@ -85,6 +88,9 @@ public class NullableNumericEntry<TValue, TConverter> : Entry
         object oldValue,
         object newValue)
     {
+        // Rückkopplung während der TextProperty-Änderung vermeiden.
+        if (entry._suppressValueChanged) return;
+        
         if (bindable is not NullableNumericEntry<TValue, TConverter> entry)
             return;
 
@@ -127,8 +133,23 @@ public class NullableNumericEntry<TValue, TConverter> : Entry
             _ => null
         };
 
+        // Wenn unterschiedlich, dann ohne Rückkopplung setzen.
         if (!Comparer.Equals(Value, value))
+            SetValueSilently(value);
+    }
+
+    private void SetValueSilently(TValue? value)
+    {
+        _suppressValueChanged = true;
+
+        try
+        {
             Value = value;
+        }
+        finally
+        {
+            _suppressValueChanged = false;
+        }
     }
 
     private void UpdateValidationState(string? text)
