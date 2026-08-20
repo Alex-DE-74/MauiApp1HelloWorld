@@ -144,7 +144,8 @@ public class NullableNumericEntry<TValue, TConverter> : Entry
 
         try
         {
-            Value = value;
+            // Bindung erhalten
+            SetCurrentValue(ValueProperty, value);
         }
         finally
         {
