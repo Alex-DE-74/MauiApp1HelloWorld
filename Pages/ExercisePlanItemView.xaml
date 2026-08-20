@@ -61,7 +61,6 @@
 
         <Entry
             Grid.Column="4"
-            Value="{Binding Target, Mode=TwoWay}"
             Placeholder="Zlll"
             FontSize="30"
             WidthRequest="80"
