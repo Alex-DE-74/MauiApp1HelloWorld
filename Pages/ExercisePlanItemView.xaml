@@ -48,7 +48,7 @@
             FontSize="39"
             WidthRequest="80"
             HorizontalTextAlignment="Center"
-            VerticalOptions="Center"
+            VerticalOptions="Center">
             
             <!-- controls:NullableIntEntry.Behaviors>
                 <behaviors:FocusOnTrueBehavior
