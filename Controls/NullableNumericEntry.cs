@@ -71,7 +71,7 @@ public class NullableNumericEntry<TValue, TConverter> : Entry
     public NullableNumericEntry()
     {
         Keyboard = Keyboard.Numeric;
-
+/*
         Triggers.Add(
             new DataTrigger(typeof(NullableNumericEntry<TValue, TConverter>))
             {
@@ -92,7 +92,7 @@ public class NullableNumericEntry<TValue, TConverter> : Entry
                     }
                 }
             });
-
+"/
         TextChanged += OnTextChanged;
     }
 
