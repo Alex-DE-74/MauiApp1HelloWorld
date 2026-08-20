@@ -27,7 +27,7 @@
             Grid.Column="2"
             Value="{Binding Target, Mode=TwoWay}"
             Placeholder="Zlll"
-            TextColor="Black
+            TextColor="Black"
             PlaceholderColor="{Binding Source={StaticResource AppConfig}, Path=ExerciseTargetPlaceholderColor, Mode=OneWay}"
             FontSize="{Binding Source={StaticResource AppConfig}, Path=ExerciseTargetFontSize, Mode=OneWay}"
             WidthRequest="80"
@@ -49,6 +49,7 @@
             FontSize="39"
             WidthRequest="80"
             HorizontalTextAlignment="Center"
+            IsEnabled="{Binding IsSelected}"
             VerticalOptions="Center">
             
             <!-- controls:NullableIntEntry.Behaviors>
