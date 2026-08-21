@@ -1,3 +1,4 @@
+#nullable enable
 using Microsoft.Maui.Controls;
 
 namespace KidJumpUp.Behaviors;
