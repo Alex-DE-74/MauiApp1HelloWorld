@@ -10,6 +10,26 @@ public class NullableNumericEntry<TValue, TConverter> : Entry
     where TValue : struct, IParsable<TValue>, IFormattable
     where TConverter : NullableNumberConverter<TValue>, new()
 {
+    protected override void OnHandlerChanged()
+    {    
+    base.OnHandlerChanged();
+
+    #if ANDROID
+    if (Handler?.PlatformView is AndroidX.AppCompat.Widget.AppCompatEditText nativeEditText)
+    {
+        if (!string.IsNullOrEmpty(Placeholder))
+        {
+            nativeEditText.Hint = Placeholder;
+        }
+
+        if (PlaceholderColor != Colors.Transparent)
+        {
+            nativeEditText.SetHintTextColor(PlaceholderColor.ToPlatform());
+        }
+    }
+    #endif
+    }
+        
     private static readonly TConverter Converter = new();
     private static readonly EqualityComparer<TValue?> Comparer
         = EqualityComparer<TValue?>.Default;
