@@ -145,7 +145,7 @@ private async void OnTestExercisePlanClicked(object sender, EventArgs e)
 			context, 
 			0, 
 			intent, 
-			Android.App.PendingIntentFlags.UpdateCurrent | Android.App.PendingIntentFlags.Immutable);
+			Android.App.PendingIntentFlags.UpdateCurrent | Android.App.PendingIntentFlags.Immutable)!;
 
 		var alarmManager = (Android.App.AlarmManager)context.GetSystemService(Android.Content.Context.AlarmService);
 		
@@ -315,7 +315,7 @@ private async void OnTestExercisePlanClicked(object sender, EventArgs e)
 			context,
 			requestCode, 
 			intent, 
-			Android.App.PendingIntentFlags.Immutable); 
+			Android.App.PendingIntentFlags.Immutable)!; 
 
 		// 2. NEU: Ziel bei Klick auf das System-Weckersymbol (Öffnet die MainActivity)
 		var mainActivityIntent = new Android.Content.Intent(context, typeof(MainActivity));
