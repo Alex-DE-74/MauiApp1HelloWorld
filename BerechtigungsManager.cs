@@ -114,7 +114,7 @@ private async Task<bool> PruefePostNotificationsBerechtigungAsync()
                 if (page != null)
                 {
                     // HIER DEIN HINWEIS: Erklärt dem Nutzer sofort, warum der Wecker abgebrochen wurde.
-                    await page.DisplayAlerAsynct(
+                    await page.DisplayAlertAsync(
                         "Benachrichtigungen erforderlich",
                         "Damit der Wecker Statusmeldungen anzeigen kann, müssen Benachrichtigungen erlaubt werden.",
                         "OK");
