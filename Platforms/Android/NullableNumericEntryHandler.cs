@@ -7,7 +7,7 @@ namespace DeinNamespace.Platforms.Android
 {
     public class NullableNumericEntryHandler : EntryHandler
     {
-        protected override AppCompatEditText CreatePlatformView()
+        protected override MauiAppCompatEditText CreatePlatformView()
         {
             var nativeView = base.CreatePlatformView();
             // Hier greifst du absolut sicher auf das fertige Android-Control zu, 
@@ -15,7 +15,7 @@ namespace DeinNamespace.Platforms.Android
             return nativeView;
         }
 
-        protected override void ConnectHandler(AppCompatEditText platformView)
+        protected override void ConnectHandler(MauiAppCompatEditText platformView)
         {
             base.ConnectHandler(platformView);
             // Platzhalter-Fix direkt beim Verbinden des Handlers
