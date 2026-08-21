@@ -183,7 +183,7 @@ public static async Task<bool> PruefeUndOeffneEchtenHyperOsAutostartAsync()
         var page = Microsoft.Maui.Controls.Application.Current?.MainPage;
         if (page != null)
         {
-            bestaetigt = await page.DisplayAlert(
+            bestaetigt = await page.DisplayAlertAsync(
                 "HyperOS Hintergrund-Autostart",
                 "Damit deine Wecker auch im Hintergrund zuverlässig funktionieren, "
                 + "muss für diese App der Hintergrund-Autostart erlaubt werden.\n\n"
@@ -302,7 +302,7 @@ public static class HyperOsOpenAi
             if (page == null)
                 return;
 
-            bestaetigt = await page.DisplayAlert(
+            bestaetigt = await page.DisplayAlertAsync(
                 "HyperOS Hintergrund-Autostart",
                 "Damit deine Wecker auch im Hintergrund zuverlässig funktionieren, "
                 + "muss für diese App der Hintergrund-Autostart erlaubt werden.\n\n"
