@@ -180,7 +180,7 @@ public static async Task<bool> PruefeUndOeffneEchtenHyperOsAutostartAsync()
     // 3. DIALOG ANZEIGEN
     await MainThread.InvokeOnMainThreadAsync(async () =>
     {
-        var page = Microsoft.Maui.Controls.Application.Current?.MainPage;
+        var page = Microsoft.Maui.Controls.Application.Current?.Windows[0].Page;
         if (page != null)
         {
             bestaetigt = await page.DisplayAlertAsync(
@@ -298,7 +298,7 @@ public static class HyperOsOpenAi
 
         await MainThread.InvokeOnMainThreadAsync(async () =>
         {
-            var page = Application.Current?.MainPage;
+            var page = Application.Current?.Windows[0].Page;
             if (page == null)
                 return;
 
