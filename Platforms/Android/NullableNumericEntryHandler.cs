@@ -1,4 +1,4 @@
-if ANDROID
+#if ANDROID
 using Microsoft.Maui.Handlers;
 using Microsoft.Maui.Platform;
 using AndroidX.AppCompat.Widget;
