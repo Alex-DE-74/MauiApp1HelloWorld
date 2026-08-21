@@ -1,6 +1,6 @@
 using Microsoft.Maui.Controls;
+using Microsoft.Maui.Platform;
 using KidJumpUp.Converters;
-
 namespace KidJumpUp.Controls;
 
 public class NullableNumericEntry<TValue, TConverter> : Entry
