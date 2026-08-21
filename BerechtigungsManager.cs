@@ -114,7 +114,7 @@ private async Task<bool> PruefePostNotificationsBerechtigungAsync()
                 if (page != null)
                 {
                     // HIER DEIN HINWEIS: Erklärt dem Nutzer sofort, warum der Wecker abgebrochen wurde.
-                    await page.DisplayAlert(
+                    await page.DisplayAlerAsynct(
                         "Benachrichtigungen erforderlich",
                         "Damit der Wecker Statusmeldungen anzeigen kann, müssen Benachrichtigungen erlaubt werden.",
                         "OK");
@@ -128,7 +128,7 @@ private async Task<bool> PruefePostNotificationsBerechtigungAsync()
                 // ─────────────────────────────────────────────────────────────────
                 if (page != null)
                 {
-                    await page.DisplayAlert(
+                    await page.DisplayAlertAsync(
                         "Benachrichtigungen dauerhaft gesperrt",
                         "Das System blockiert das automatische Pop-up, da die Anfrage zuvor mehrfach abgelehnt wurde.\n\n"
                         + "Bitte aktiviere die Benachrichtigungen manuell im nächsten Bildschirm unter 'Benachrichtigungen'.",
@@ -150,7 +150,7 @@ private async Task<bool> PruefePostNotificationsBerechtigungAsync()
                     if (page != null)
                     {
                         // HIER DER ZWEITE HINWEIS: Erklärt nach der Rückkehr das Scheitern.
-                        await page.DisplayAlert(
+                        await page.DisplayAlertAsync(
                             "Achtung ⚠️",
                             "Die Berechtigung wurde in den Einstellungen nicht aktiviert!\n\n"
                             + "Ohne Benachrichtigungen kann der Wecker keine Statusmeldungen anzeigen. "
@@ -183,7 +183,7 @@ private async Task<bool> PruefePostNotificationsBerechtigungAsync()
                 var page = Microsoft.Maui.Controls.Application.Current?.MainPage;
                 if (page != null)
                 {
-                    await page.DisplayAlert(
+                    await page.DisplayAlertAsync(
                         "Benachrichtigungen erforderlich",
                         "Damit der Wecker Statusmeldungen anzeigen kann, müssen Benachrichtigungen erlaubt werden.",
                         "OK");
@@ -241,7 +241,7 @@ private async Task<bool> PruefeScheduleExactAlarmBerechtigungAsync(Android.Conte
             var page = Microsoft.Maui.Controls.Application.Current?.MainPage;
             if (page != null)
             {
-                oeffnen = await page.DisplayAlert(
+                oeffnen = await page.DisplayAlertAsync(
                     "Berechtigung nötig ⚠️", 
                     "Bitte erlaube der App in den Android-Einstellungen, exakte Wecker zu stellen.", 
                     "Zu den Einstellungen", 
@@ -275,7 +275,7 @@ private async Task<bool> PruefeScheduleExactAlarmBerechtigungAsync(Android.Conte
                     var page = Microsoft.Maui.Controls.Application.Current?.MainPage;
                     if (page != null)
                     {
-                        oeffnen = await page.DisplayAlert(
+                        oeffnen = await page.DisplayAlertAsync(
                             "Berechtigung nötig ⚠️", 
                             "Bitte erlaube der App in den Android-Einstellungen, exakte Wecker zu stellen.", 
                             "Zu den Einstellungen", 
@@ -306,7 +306,7 @@ private async Task<bool> PruefeScheduleExactAlarmBerechtigungAsync(Android.Conte
                 var page = Microsoft.Maui.Controls.Application.Current?.MainPage;
                 if (page != null)
                 {
-                    oeffnenSperrbildschirm = await page.DisplayAlert(
+                    oeffnenSperrbildschirm = await page.DisplayAlertAsync(
                         "Sperrbildschirm-Recht nötig 🔓", 
                         "Damit der Wecker bei ausgeschaltetem Bildschirm anspringt, muss die App 'über anderen Apps eingeblendet' werden dürfen.", 
                         "Zu den Einstellungen", 
