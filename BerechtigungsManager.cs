@@ -8,7 +8,7 @@ namespace KidJumpUp;
 public class BerechtigungsManager
 {
     private bool _warteAufEinstellung = false;
-    private TaskCompletionSource<bool> _tcs;
+    private TaskCompletionSource<bool> _tcs = null!;
 
     public async Task<bool> PruefeAlleBerechtigungenAsync()
     {
@@ -81,7 +81,7 @@ public class BerechtigungsManager
             
             MainThread.BeginInvokeOnMainThread(() =>
             {
-                _tcs?.TrySetResult(true);
+                _tcs.TrySetResult(true);
             });
         }
     }
