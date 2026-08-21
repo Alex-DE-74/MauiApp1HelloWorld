@@ -29,15 +29,17 @@ public class MainActivity : MauiAppCompatActivity
                 "MauiApp1HelloWorld",
                 NotificationImportance.High);
 
-            var manager = (NotificationManager)GetSystemService(NotificationService);
+            var manager = (NotificationManager)GetSystemService(NotificationService)!;
             manager.CreateNotificationChannel(channel);
         }
     }
 
     protected void ShowAlarmTime()
     {
-
-        var prefs = GetSharedPreferences("alarm", Android.Content.FileCreationMode.Private);
+        // GetSharedPreferences() öffnet bzw. 
+        // erstellt einen persistenten Preferences-Speicher.
+        // Kann nicht Null sein.
+        var prefs = GetSharedPreferences("alarm", Android.Content.FileCreationMode.Private)!;
 
         long lastAlarm = prefs.GetLong("lastAlarm", 0);
 
