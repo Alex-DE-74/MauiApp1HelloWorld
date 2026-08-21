@@ -147,7 +147,7 @@ private async void OnTestExercisePlanClicked(object sender, EventArgs e)
 			intent, 
 			Android.App.PendingIntentFlags.UpdateCurrent | Android.App.PendingIntentFlags.Immutable)!;
 
-		var alarmManager = (Android.App.AlarmManager)context.GetSystemService(Android.Content.Context.AlarmService);
+		var alarmManager = (Android.App.AlarmManager)context.GetSystemService(Android.Content.Context.AlarmService)!;
 		
 		// Zeitberechnung
 		long triggerAtMs = Java.Lang.JavaSystem.CurrentTimeMillis() + (sekundenBisAlarm * 1000);
@@ -240,7 +240,7 @@ private async void OnTestExercisePlanClicked(object sender, EventArgs e)
 		try
 		{
 			var context = Android.App.Application.Context;
-			var alarmManager = (Android.App.AlarmManager)context.GetSystemService(Android.Content.Context.AlarmService);
+			var alarmManager = (Android.App.AlarmManager)context.GetSystemService(Android.Content.Context.AlarmService)!;
 
 			// 1. WECKER-PRÜFUNG (Prüft exakte Alarme ab Android 12)
 			if (alarmManager != null && Android.OS.Build.VERSION.SdkInt >= Android.OS.BuildVersionCodes.S)
@@ -303,7 +303,7 @@ private async void OnTestExercisePlanClicked(object sender, EventArgs e)
 
 	 public void StarteExaktenWecker(Android.Content.Context context, long sekundenBisAlarm)
 	{
-		var alarmManager = (Android.App.AlarmManager)context.GetSystemService(Android.Content.Context.AlarmService);
+		var alarmManager = (Android.App.AlarmManager)context.GetSystemService(Android.Content.Context.AlarmService)!;
     
 		if (alarmManager == null) return;
 
