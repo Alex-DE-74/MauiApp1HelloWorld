@@ -73,7 +73,7 @@ public class NullableNumericEntry<TValue, TConverter> : Entry
     public NullableNumericEntry()
     {
         Keyboard = Keyboard.Numeric;
-
+/*
         // Greift ein, sobald das native Android-Gegenstück bereitsteht
         HandlerChanged += (sender, args) =>
         {
@@ -104,6 +104,8 @@ if (nativeEditText != null)
 
             }
         };
+*/
+        
 /*
         Triggers.Add(
             new DataTrigger(typeof(NullableNumericEntry<TValue, TConverter>))
