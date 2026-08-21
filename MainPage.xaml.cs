@@ -1,3 +1,4 @@
+#nullable enable
 using KidJumpUp.Pages;
 
 namespace KidJumpUp;
