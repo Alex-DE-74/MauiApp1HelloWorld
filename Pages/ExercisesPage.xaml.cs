@@ -50,7 +50,7 @@ public partial class ExercisesPage : ContentPage
     }
     
     // Für Shell Item
-    public async Task AddExerciseAsync()
+    public Task AddExerciseAsync()
     {
         AddExercise();
         return Task.CompletedTask;
