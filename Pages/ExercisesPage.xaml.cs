@@ -30,7 +30,8 @@ public partial class ExercisesPage : ContentPage
         ExercisesCollection.ItemsSource = exercises;
     }
 
-    private void OnAddExerciseClicked(object sender, EventArgs e)
+    // bisheriger Inhalt von OnAddExerciseClicked(
+    private void AddExercise()
     {
         _editingExercise = null;
 
@@ -41,11 +42,17 @@ public partial class ExercisesPage : ContentPage
 
         ExerciseNameEntry.Focus();
     }
+
+    private void OnAddExerciseClicked(object sender, EventArgs e)
+    {
+        AddExercise();
+    }
+    
     // Für Shell Item
     public async Task AddExerciseAsync()
     {
-    // bisheriger Inhalt von OnAddExerciseClicked()
-    OnAddExerciseClicked(null, null);
+        AddExercise();
+        return Task.CompletedTask;
     }
 
     private void OnEditExerciseClicked(object sender, EventArgs e)
