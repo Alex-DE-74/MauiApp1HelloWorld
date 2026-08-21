@@ -85,7 +85,7 @@ public partial class ExercisesPage : ContentPage
 
         if (string.IsNullOrWhiteSpace(name))
         {
-            await DisplayAlert(
+            await DisplayAlertAsync(
                 "Übung",
                 "Bitte einen Übungsnamen eingeben.",
                 "OK");
@@ -146,7 +146,7 @@ public partial class ExercisesPage : ContentPage
 
         if (usageCount > 0)
         {
-            await DisplayAlert(
+            await DisplayAlertAsync(
                 "⚠ Trainingsplan vorhanden",
                 "Diese Übung wurde bereits in einem Trainingsplan " +
                 "verwendet und kann deshalb nicht gelöscht werden.",
@@ -155,7 +155,7 @@ public partial class ExercisesPage : ContentPage
             return;
         }
 
-        var confirmed = await DisplayAlert(
+        var confirmed = await DisplayAlertAsync(
             "Übung löschen?",
             $"„{exercise.Name}“ wirklich löschen?",
             "Löschen",
@@ -171,7 +171,7 @@ public partial class ExercisesPage : ContentPage
         {
             // Zwischen Prüfung und Löschung könnte theoretisch
             // ein anderer Vorgang die Übung verwendet haben.
-            await DisplayAlert(
+            await DisplayAlertAsync(
                 "⚠ Löschen nicht möglich",
                 "Die Übung wurde inzwischen in einem Trainingsplan " +
                 "verwendet und kann deshalb nicht gelöscht werden.",
