@@ -238,7 +238,7 @@ private async Task<bool> PruefeScheduleExactAlarmBerechtigungAsync(Android.Conte
         bool oeffnen = false;
         await MainThread.InvokeOnMainThreadAsync(async () =>
         {
-            var page = Microsoft.Maui.Controls.Application.Current?.MainPage;
+            var page = Microsoft.Maui.Controls.Application.Current?.Windows[0].Page;
             if (page != null)
             {
                 oeffnen = await page.DisplayAlertAsync(
@@ -303,7 +303,7 @@ private async Task<bool> PruefeScheduleExactAlarmBerechtigungAsync(Android.Conte
             bool oeffnenSperrbildschirm = false;
             await MainThread.InvokeOnMainThreadAsync(async () =>
             {
-                var page = Microsoft.Maui.Controls.Application.Current?.MainPage;
+                var page = Microsoft.Maui.Controls.Application.Current?.Windows[0].Page;
                 if (page != null)
                 {
                     oeffnenSperrbildschirm = await page.DisplayAlertAsync(
