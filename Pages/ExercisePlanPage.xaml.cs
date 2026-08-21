@@ -140,7 +140,7 @@ private async void OnSaveClicked(
         _selectedDate,
         selectedExercises);
 
-    await DisplayAlert(
+    await DisplayAlertAsync(
         "Gespeichert",
         $"Der Plan für {GetDayDescription()} wurde gespeichert.",
         "OK");
