@@ -104,7 +104,7 @@ private async Task<bool> PruefePostNotificationsBerechtigungAsync()
         if (status != PermissionStatus.Granted)
         {
             bool darfNochMalFragen = Permissions.ShouldShowRationale<Permissions.PostNotifications>();
-            var page = Microsoft.Maui.Controls.Application.Current?.MainPage;
+            var page = Microsoft.Maui.Controls.Application.Current?.Windows[0].Psge;
 
             if (darfNochMalFragen)
             {
@@ -180,7 +180,7 @@ private async Task<bool> PruefePostNotificationsBerechtigungAsync()
             var status = await Permissions.RequestAsync<Permissions.PostNotifications>();
             if (status != PermissionStatus.Granted)
             {
-                var page = Microsoft.Maui.Controls.Application.Current?.MainPage;
+                var page = Microsoft.Maui.Controls.Application.Current?.Windows[0].Page;
                 if (page != null)
                 {
                     await page.DisplayAlertAsync(
@@ -272,7 +272,7 @@ private async Task<bool> PruefeScheduleExactAlarmBerechtigungAsync(Android.Conte
                 bool oeffnen = false;
                 await MainThread.InvokeOnMainThreadAsync(async () =>
                 {
-                    var page = Microsoft.Maui.Controls.Application.Current?.MainPage;
+                    var page = Microsoft.Maui.Controls.Application.Current?.Windows[0].Page;
                     if (page != null)
                     {
                         oeffnen = await page.DisplayAlertAsync(
