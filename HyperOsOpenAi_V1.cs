@@ -26,7 +26,7 @@ public static class HyperOsOpenAi_V1
         {
             if (Microsoft.Maui.Controls.Application.Current?.MainPage != null)
             {
-                userKlick = await Microsoft.Maui.Controls.Application.Current.MainPage.DisplayAlerttAsync(
+                userKlick = await Microsoft.Maui.Controls.Application.Current.MainPage.DisplayAlertAsync(
                     "HyperOS Hintergrund-Schutz",
                     "Damit deine Wecker nach dem Wegwischen der App zuverlässig funktionieren, aktiviere bitte im nächsten Bildschirm den Schalter 'Hintergrund-Autostart'.",
                     "Zu den Einstellungen",
@@ -122,7 +122,7 @@ public static class HyperOsOpenAi_V1
         {
             if (Microsoft.Maui.Controls.Application.Current?.MainPage != null)
             {
-                userKlick = await Microsoft.Maui.Controls.Application.Current.MainPage.DisplayAlerttAsync(
+                userKlick = await Microsoft.Maui.Controls.Application.Current.MainPage.DisplayAlertAsync(
                     "HyperOS Hintergrund-Schutz",
                     "Damit deine Wecker nach dem Wegwischen der App zuverlässig funktionieren, aktiviere bitte im nächsten Bildschirm den 'Hintergrund-Autostart' für diese App.",
                     "Zu den Einstellungen",
