@@ -104,7 +104,7 @@ private async Task<bool> PruefePostNotificationsBerechtigungAsync()
         if (status != PermissionStatus.Granted)
         {
             bool darfNochMalFragen = Permissions.ShouldShowRationale<Permissions.PostNotifications>();
-            var page = Microsoft.Maui.Controls.Application.Current?.Windows[0].Psge;
+            var page = Microsoft.Maui.Controls.Application.Current?.Windows[0].Page;
 
             if (darfNochMalFragen)
             {
