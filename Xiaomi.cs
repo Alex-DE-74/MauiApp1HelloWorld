@@ -53,7 +53,8 @@ public static async Task PruefeUndOeffneAutostartWennNoetigAsync()
                 // Wechselt sauber auf den MAUI UI-Thread für den Dialog
                 await Microsoft.Maui.Controls.Application.Current.Dispatcher.DispatchAsync(async () =>
                 {
-                    bool userKlick = await Microsoft.Maui.Controls.Application.Current.MainPage.DisplayAlert(
+					var page = Microsoft.Maui.Controls.Application.Current.Windows[0].Page;
+                    bool userKlick = await page.DisplayAlertAsync(
                         "HyperOS Optimierung",
                         "Bitte deaktiviere im nächsten Bildschirm die Option 'App-Aktivität bei Nichtbenutzung pausieren', damit deine Wecker im Hintergrund zuverlässig funktionieren.",
                         "Zu den Einstellungen",
