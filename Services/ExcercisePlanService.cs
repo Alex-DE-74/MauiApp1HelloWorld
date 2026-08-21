@@ -1,3 +1,4 @@
+#nullable enable
 using KidJumpUp.Data;
 using KidJumpUp.Models;
 
