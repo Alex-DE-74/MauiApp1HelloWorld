@@ -15,16 +15,29 @@ public class NullableNumericEntry<TValue, TConverter> : Entry
     base.OnHandlerChanged();
 
     #if ANDROID
-    if (Handler?.PlatformView is AndroidX.AppCompat.Widget.AppCompatEditText nativeEditText)
+    try
     {
-        if (!string.IsNullOrEmpty(Placeholder))
+        if (Handler?.PlatformView is Android.Widget.EditText nativeEdit)
         {
-            nativeEditText.Hint = Placeholder;
-        }
+            if (!string.IsNullOrEmpty(Placeholder))
+            {
+                nativeEdit.Hint = Placeholder;
+            }
 
-        if (PlaceholderColor != Colors.Transparent)
+            if (PlaceholderColor != Colors.Transparent)
+            {
+                nativeEdit.SetHintTextColor(PlaceholderColor.ToPlatform());
+            }
+        }
+    }
+    catch
+    {
+        // Fängt absolut jeden Absturz ab
+        // Holt sich den aktuellen Android-Context direkt vom Handler oder PlatformView
+        var context = Handler?.Context ?? Platform.CurrentActivity;
+        if (context != null)
         {
-            nativeEditText.SetHintTextColor(PlaceholderColor.ToPlatform());
+            Android.Widget.Toast.MakeText(context, $"Fehler: {ex.Message}", Android.Widget.ToastLength.Short)?.Show();
         }
     }
     #endif
