@@ -12,7 +12,8 @@ namespace KidJumpUp.Controls;
 public class NullableIntEntry
     : NullableNumericEntry<int, NullableIntConverter>
 {
-
+/*
+/) Funktioniert so nicht!
     // Statischer Konstruktor läuft einmalig beim ersten Laden der Klasse
     static NullableIntEntry()
     {
@@ -35,4 +36,5 @@ public class NullableIntEntry
             }
         });
     }
+*/
 }
