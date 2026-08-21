@@ -71,6 +71,37 @@ public class NullableNumericEntry<TValue, TConverter> : Entry
     public NullableNumericEntry()
     {
         Keyboard = Keyboard.Numeric;
+
+        // Greift ein, sobald das native Android-Gegenstück bereitsteht
+        HandlerChanged += (sender, args) =>
+        {
+            if (Handler is EntryHandler entryHandler)
+            {
+                #if ANDROID
+var nativeEditText = entryHandler.PlatformView;
+if (nativeEditText != null)
+{
+    // 1. Platzhalter-Text setzen
+    nativeEditText.Hint = Placeholder;
+    
+    // 2. Platzhalter-Farbe
+    if (PlaceholderColor != Colors.Transparent)
+    {
+        nativeEditText.SetHintTextColor(PlaceholderColor.ToPlatform());
+    }
+
+    // 3. Platzhalter-Schriftgröße (Falls gewünscht)
+    // Android erwartet hier normalerweise Pixel oder Sp, deshalb rechnet man FontSize in SP um:
+    if (FontSize > 0)
+    {
+        // Alternativ kannst du hier die Schriftgröße des Platzhalters steuern, 
+        // falls Android sie fehlerhaft übernimmt.
+    }
+}
+#endif
+
+            }
+        };
 /*
         Triggers.Add(
             new DataTrigger(typeof(NullableNumericEntry<TValue, TConverter>))
