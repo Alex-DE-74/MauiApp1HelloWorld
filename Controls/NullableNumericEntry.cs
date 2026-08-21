@@ -1,5 +1,7 @@
 using Microsoft.Maui.Controls;
 using Microsoft.Maui.Platform;
+using Microsoft.Maui.Handlers;
+
 using KidJumpUp.Converters;
 namespace KidJumpUp.Controls;
 
