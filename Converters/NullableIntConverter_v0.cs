@@ -1,3 +1,4 @@
+#nullable enable
 using System.Globalization;
 using Microsoft.Maui.Controls;
 
@@ -5,7 +6,7 @@ namespace KidJumpUp.Converters;
 
 public class NullableIntConverter_v0 : IValueConverter
 {
-    public object Convert(
+    public object? Convert(
         object? value,
         Type targetType,
         object? parameter,
@@ -17,7 +18,7 @@ public class NullableIntConverter_v0 : IValueConverter
         return string.Empty;
     }
 
-    public object ConvertBack(
+    public object? ConvertBack(
         object? value,
         Type targetType,
         object? parameter,
