@@ -34,14 +34,26 @@ Microsoft.Maui.Handlers.EntryHandler.Mapper.AppendToMapping("FixDerivedEntries",
     {
         if (handler.PlatformView is Android.Widget.EditText nativeEdit && view is Entry entry)
         {
-            if (entry.TextColor != Colors.Transparent)
+            // 1. Textfarbe (das hat vorher stabil funktioniert)
+            if (entry.TextColor != null && entry.TextColor != Colors.Transparent)
             {
-                nativeEdit.SetTextColor(entry.TextColor.ToPlatform());
+                nativeEdit.SetTextColor(new Android.Graphics.Color(
+                    (byte)(entry.TextColor.Red * 255),
+                    (byte)(entry.TextColor.Green * 255),
+                    (byte)(entry.TextColor.Blue * 255),
+                    (byte)(entry.TextColor.Alpha * 255)
+                ));
             }
 
-            if (entry.PlaceholderColor != Colors.Transparent)
+            // 2. Platzhalter-Farbe absolut absturzsicher mit Null-Prüfung
+            if (entry.PlaceholderColor != null && entry.PlaceholderColor != Colors.Transparent)
             {
-                nativeEdit.SetHintTextColor(entry.PlaceholderColor.ToPlatform());
+                nativeEdit.SetHintTextColor(new Android.Graphics.Color(
+                    (byte)(entry.PlaceholderColor.Red * 255),
+                    (byte)(entry.PlaceholderColor.Green * 255),
+                    (byte)(entry.PlaceholderColor.Blue * 255),
+                    (byte)(entry.PlaceholderColor.Alpha * 255)
+                ));
             }
         }
     }
