@@ -46,6 +46,7 @@
             Grid.Column="3"
             Value="{Binding Target, Mode=TwoWay}"
             Placeholder="Zlll"
+            TextColor="Blue"
             FontSize="30"
             WidthRequest="80"
             HorizontalTextAlignment="Center"
