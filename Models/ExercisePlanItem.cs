@@ -9,6 +9,7 @@ public class ExercisePlanItem : INotifyPropertyChanged
 {
     private bool _isSelected;
     private int? _target;
+    private string _text;
 
     public Exercise Exercise { get; init; } = null!;
 
@@ -42,6 +43,20 @@ public class ExercisePlanItem : INotifyPropertyChanged
                 return;
 
             _target = value;
+
+            OnPropertyChanged();
+        }
+    }
+    
+    public string Text
+    {
+        get => _text;
+        set
+        {
+            if (_text == value)
+                return;
+
+            _text = value;
 
             OnPropertyChanged();
         }
