@@ -77,7 +77,7 @@
 
         </Entry>
 
-        <controls:TextEntry
+        <Entry
             Grid.Column="5"
             Text="{Binding Text, Mode=TwoWay}"
             Placeholder="Zlll"
@@ -94,7 +94,7 @@
                     Trigger="{Binding IsSelected, Mode=OneWay}" />
             </controls:NullableIntEntry.Behaviors -->
 
-        </controls:TextEntry>
+        </Entry>
 
 
     </Grid>
