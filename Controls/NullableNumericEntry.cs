@@ -11,9 +11,6 @@ public class NullableNumericEntry<TValue, TConverter> : Entry
     where TConverter : NullableNumberConverter<TValue>, new()
 {
     protected override void OnHandlerChanged()
-    protected override void OnHandlerChanged()
-
-     protected override void OnHandlerChanged()
     {   
     base.OnHandlerChanged();
 
