@@ -63,7 +63,8 @@
         <Entry
             Grid.Column="4"
             Placeholder="Zlll"
-            FontSize="30"
+            PlaceholderColor="{Binding Source={StaticResource AppConfig}, Path=ExerciseTargetPlaceholderColor, Mode=OneWay}"
+            FontSize="{Binding Source={StaticResource AppConfig}, Path=ExerciseTargetFontSize, Mode=OneWay}"
             WidthRequest="80"
             HorizontalTextAlignment="Center"
             IsEnabled="{Binding IsSelected}"
