@@ -17,6 +17,7 @@ public class NullableNumericEntry<TValue, TConverter> : Entry
     #if ANDROID
     try
     {
+        /*
         if (Handler?.PlatformView is Android.Widget.EditText nativeEdit)
         {
             // 1. Platzhalter-Text setzen
@@ -37,6 +38,7 @@ public class NullableNumericEntry<TValue, TConverter> : Entry
                 nativeEdit.SetTextColor(TextColor.ToPlatform());
             }
         }
+        */
     }
     catch (Exception ex)
     {
