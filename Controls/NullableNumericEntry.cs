@@ -11,7 +11,7 @@ public class NullableNumericEntry<TValue, TConverter> : Entry
     where TConverter : NullableNumberConverter<TValue>, new()
 {
     protected override void OnHandlerChanged()
-    {   
+{
     base.OnHandlerChanged();
 
     #if ANDROID
@@ -19,24 +19,19 @@ public class NullableNumericEntry<TValue, TConverter> : Entry
     {
         if (Handler?.PlatformView is Android.Widget.EditText nativeEdit)
         {
-            // 1. Nur den echten Hint-Text setzen
+            // 1. Platzhalter-Text setzen
             if (!string.IsNullOrEmpty(Placeholder))
             {
                 nativeEdit.Hint = Placeholder;
             }
 
-            // 2. Platzhalter-Farbe explizit setzen
+            // 2. Platzhalter-Farbe nur setzen, wenn du eine explizit definiert hast
             if (PlaceholderColor != Colors.Transparent)
             {
                 nativeEdit.SetHintTextColor(PlaceholderColor.ToPlatform());
             }
-            else
-            {
-                // Standard-Hint-Farbe von Android nutzen, falls transparent
-                nativeEdit.SetHintTextColor(nativeEdit.CurrentHintTextColor);
-            }
 
-            // 3. WICHTIG: Erzwingen, dass normaler Text auch wie normaler Text aussieht
+            // 3. Normale Textfarbe erzwingen, damit eingegebene Zahlen kräftig bleiben
             if (TextColor != Colors.Transparent)
             {
                 nativeEdit.SetTextColor(TextColor.ToPlatform());
@@ -52,7 +47,7 @@ public class NullableNumericEntry<TValue, TConverter> : Entry
         }
     }
     #endif
-    }
+}
         
     private static readonly TConverter Converter = new();
     private static readonly EqualityComparer<TValue?> Comparer
