@@ -11,7 +11,10 @@ public class NullableNumericEntry<TValue, TConverter> : Entry
     where TConverter : NullableNumberConverter<TValue>, new()
 {
     protected override void OnHandlerChanged()
-    {    
+    protected override void OnHandlerChanged()
+
+     protected override void OnHandlerChanged()
+    {   
     base.OnHandlerChanged();
 
     #if ANDROID
@@ -19,22 +22,32 @@ public class NullableNumericEntry<TValue, TConverter> : Entry
     {
         if (Handler?.PlatformView is Android.Widget.EditText nativeEdit)
         {
+            // 1. Nur den echten Hint-Text setzen
             if (!string.IsNullOrEmpty(Placeholder))
             {
                 nativeEdit.Hint = Placeholder;
             }
 
+            // 2. Platzhalter-Farbe explizit setzen
             if (PlaceholderColor != Colors.Transparent)
             {
                 nativeEdit.SetHintTextColor(PlaceholderColor.ToPlatform());
+            }
+            else
+            {
+                // Standard-Hint-Farbe von Android nutzen, falls transparent
+                nativeEdit.SetHintTextColor(nativeEdit.CurrentHintTextColor);
+            }
+
+            // 3. WICHTIG: Erzwingen, dass normaler Text auch wie normaler Text aussieht
+            if (TextColor != Colors.Transparent)
+            {
+                nativeEdit.SetTextColor(TextColor.ToPlatform());
             }
         }
     }
     catch (Exception ex)
     {
-        // Fängt absolut jeden Absturz ab
-        // Holt sich den aktuellen Android-Context direkt vom Handler oder PlatformView
-        // Sicherer Zugriff auf den Android-Context für den Toast
         var context = Microsoft.Maui.ApplicationModel.Platform.CurrentActivity ?? Android.App.Application.Context;
         if (context != null)
         {
