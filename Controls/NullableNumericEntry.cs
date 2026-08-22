@@ -30,11 +30,12 @@ public class NullableNumericEntry<TValue, TConverter> : Entry
             }
         }
     }
-    catch
+    catch (Exception ex)
     {
         // Fängt absolut jeden Absturz ab
         // Holt sich den aktuellen Android-Context direkt vom Handler oder PlatformView
-        var context = Handler?.Context ?? Platform.CurrentActivity;
+        // Sicherer Zugriff auf den Android-Context für den Toast
+        var context = Microsoft.Maui.ApplicationModel.Platform.CurrentActivity ?? Android.App.Application.Context;
         if (context != null)
         {
             Android.Widget.Toast.MakeText(context, $"Fehler: {ex.Message}", Android.Widget.ToastLength.Short)?.Show();
