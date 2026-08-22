@@ -11,6 +11,7 @@ public class AppConfig
     public Thickness ExerciseRowPadding { get; set; } =
         new(0, 4);
 
-    public Color ExerciseTargetPlaceholderColor { get; set; } =
-        Colors.Gray;
+    public Color ExerciseTargetPlaceholderColor { get; set; } = 
+        Colors.Gray.WithAlpha(0.5f); // Oder ein feinerer Grauwert wie Color.FromArgb("#999999")
+
 }
