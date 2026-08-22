@@ -1,3 +1,5 @@
+using Microsoft.Maui.Platform;
+
 using KidJumpUp.Data;
 using KidJumpUp.Services;
 using KidJumpUp.Pages;
